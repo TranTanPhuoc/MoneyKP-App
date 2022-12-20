@@ -7,5 +7,5 @@
 - Redux Tookit
 
 <br>Thành viên:
--Trần Tấn Phước
--Đặng Nhật Khương
+- Trần Tấn Phước
+- Đặng Nhật Khương
