@@ -5,6 +5,7 @@
 <br>Ngoài ra còn sử dụng:
 - Axios
 - Redux Tookit
+
 <br>Thành viên:
-<br>-Trần Tấn Phước
-<br>-Đặng Nhật Khương
+-Trần Tấn Phước
+-Đặng Nhật Khương
