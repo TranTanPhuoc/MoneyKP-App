@@ -1,15 +1,13 @@
 import {  Text, SafeAreaView,} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from "./styles/LoginStyles";
-function Login(){
-    const navigation = useNavigation();
-    
+import styles from "./styles/ExchangeStyles";
+function Exchange(){
     return(
         <SafeAreaView style={styles.container} >
-            <Text>ABC</Text>
+            <Text>Exchange</Text>
         </SafeAreaView>
     );
 }
 
   
-export default Login;
+export default Exchange;
