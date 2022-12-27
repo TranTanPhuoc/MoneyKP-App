@@ -1,62 +1,53 @@
-import {  Text, SafeAreaView, TouchableOpacity, TextInput,View} from 'react-native';
+import {  Text, SafeAreaView, TouchableOpacity, TextInput,View, ActivityIndicator} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from "./styles/LoginStyles";
+import styles from "./styles/FotgotPasswordStyles";
 import { AntDesign, Entypo, Feather, FontAwesome5} from '@expo/vector-icons';
 import { useState } from 'react';
 import { Image } from 'react-native';
 // Import FireBase
-import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
+import{initializeAuth,sendPasswordResetEmail,} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import { Alert } from 'react-native';
-import { ActivityIndicator } from 'react-native';
 
-function Login(){
+function ForgotPassword(){
     const navigation = useNavigation();
-    const [isPassword,setPassword] = useState(true);
     const [email,setEmail] = useState("");
-    const [passWord,setPassWord] = useState("");
-    var user ;
     const [loading,setisLoading] = useState(false);
     const hanldPressRegister = () => {
         navigation.navigate("Register");
     };
-    const hanldPressForgotPassword = () => {
-        navigation.navigate("ForgotPassword");
-    };
-    // Hiện, ẩn mật khẩu
-    const hanldPress = () => {
-        if(isPassword){
-            setPassword(false);
-        }else{
-            setPassword(true);
-        }
+    const hanldPressLogin = () => {
+        navigation.navigate("Login");
     };
 
     // Connect FireBase
     const app = initializeApp(firebaseConfig);
     const auth = initializeAuth(app,{
     });
-    // Đăng nhập
-    const hanldPressLogin = ()=>{
+    const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const hanldPressSendEmail = ()=>{
         setisLoading(true);
-        signInWithEmailAndPassword(auth,email,passWord)
-        .then((result)=>{
-            if (!result.user.emailVerified) {
+        if(email == ""){
+            setisLoading(false);
+            Alert.alert("Thông báo","Email không được rỗng");
+        }
+        else if(regexEmail.test(email)){
+            sendPasswordResetEmail(auth,email).then(()=>{
                 setisLoading(false);
-                alert("Email chưa được xác thực vui lòng kiểm tra hộp thư của bạn");
-                return;
-            }
+                Alert.alert("Thông báo","Link reset đã gởi về email của bạn");
+                navigation.navigate("Login");
+            }).catch((err)=>{
+                console.log(err);
+                setisLoading(false);
+                Alert.alert("Thông báo","Xảy ra lỗi");
+            });
+        }
+        else{
             setisLoading(false);
-            const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
-            user = {id : auth.currentUser.uid, name: auth.currentUser.displayName,email: auth.currentUser.email, photo : auth.currentUser.photoURL}
-            console.log(user);
-        })
-        .catch(error =>{
-            setisLoading(false);
-            Alert.alert("Thông báo","Tài khoản không chính xác \n Mời bạn nhập lại tài khoản và mật khẩu");
-            console.log(error);
-        })
+            Alert.alert("Thông báo","Email của bạn không hợp lệ")
+        }
+       
     }
     return(
         <>
@@ -65,14 +56,14 @@ function Login(){
                     <ActivityIndicator color='#16C0E5' size='large' />
             </SafeAreaView>
         }
-        {(loading == false)&&
+        {(loading==false) &&
             <SafeAreaView style={styles.container} >
                 <View style={styles.containerTop}>
-                    <TouchableOpacity onPress={hanldPressRegister} style={{flex:0.2,justifyContent:'center',}}>
+                    <TouchableOpacity onPress={hanldPressLogin} style={{flex:0.2,justifyContent:'center',}}>
                         <AntDesign name="arrowleft" size={24} color="black" />
                     </TouchableOpacity>
                     <View style={{flex:0.6,justifyContent:'center',alignItems:'center'}}>
-                            <Text style={{fontSize:24,}}>Đăng nhập</Text>
+                            <Text style={{fontSize:24,}}>Quên mật khẩu</Text>
                     </View>
                     <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
                     </View>
@@ -84,25 +75,9 @@ function Login(){
                         </View>
                         <TextInput onChangeText={x=>setEmail(x)} value={email} placeholder="Vui lòng nhập Email" style={{marginRight:15,height:50,fontSize:22,flex:0.85}}/>
                     </View>
-                    <View style={styles.containerInput}>
-                        <View style={{flex:0.15,alignItems:'center',}}>
-                            <FontAwesome5 name="keyboard" size={24} color="black" />
-                        </View>
-                        <TextInput onChangeText={x=>setPassWord(x)} value={passWord} secureTextEntry={isPassword}  placeholder="Vui lòng nhập mật khẩu" style={{height:50,fontSize:22,flex:0.7}}/>
-                        <TouchableOpacity style={{justifyContent:'center',alignItems:'center',flex:0.15}} onPress={hanldPress}>
-                            {
-                                (isPassword)? <Entypo name="eye" size={24} color="black" /> : <Entypo name="eye-with-line" size={24} color="black" />
-                            }
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{display:'flex',flexDirection:'row',alignItems:'flex-end',justifyContent:'flex-end',width:"85%",marginTop:20,}}>
-                                <TouchableOpacity onPress={hanldPressForgotPassword}>
-                                    <Text style={{color:"#FF8247",fontSize:18,fontWeight:'bold'}}>Quên mật khẩu? </Text>
-                                </TouchableOpacity>
-                    </View>
                     <View style={styles.containerBottom}>
-                        <TouchableOpacity onPress={hanldPressLogin} style={styles.bottom} >
-                            <Text style={{fontSize:22, color:'#fff',fontWeight:'bold'}}> Đăng nhập</Text>
+                        <TouchableOpacity onPress={hanldPressSendEmail} style={styles.bottom} >
+                            <Text style={{fontSize:22, color:'#fff',fontWeight:'bold'}}> Lấy mật khẩu </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -134,4 +109,4 @@ function Login(){
 }
 
   
-export default Login;
+export default ForgotPassword;
