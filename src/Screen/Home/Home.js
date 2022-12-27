@@ -46,18 +46,18 @@ function Home(){
                     </View>
                     <View style={styles.containerTopName}>
                         <View style={{flex:0.2,justifyContent:'flex-end'}}>
-                            <Text style={{color:'#fff',fontSize:18,}}>Chào buổi chiều !</Text>
+                            <Text style={{color:'#000',fontSize:18,}}>Chào buổi chiều !</Text>
                         </View>
                         <View style={{flex:0.8,justifyContent:'center'}}>
-                            <Text style={{color:'#fff',fontSize:24,fontWeight:'bold'}}>Trần Tấn Phước </Text>
+                            <Text style={{color:'#000',fontSize:24,fontWeight:'bold'}}>Trần Tấn Phước </Text>
                         </View>
                     </View>
                     <View style={styles.containerTopIcon}>
                         <View style={{margin:10,}}>
-                            <Image style={{tintColor:'#fff',height:24,width:24}} source={require('../../../assets/icons/support.png')} />
+                            <Image style={{tintColor:'#000',height:24,width:24}} source={require('../../../assets/icons/support.png')} />
                         </View>
                         <View style={{margin:10,}}>
-                        <Image style={{tintColor:'#fff',height:24,width:24}} source={require('../../../assets/icons/bell.png')} />
+                        <Image style={{tintColor:'#000',height:24,width:24}} source={require('../../../assets/icons/bell.png')} />
                         </View>
                     </View>
                 </View>
@@ -69,11 +69,11 @@ function Home(){
                                     <View style={styles.containerItemTop}>
                                         <View style={{display:'flex',flexDirection:'row'}}>
                                             <Image source={require('../../../assets/icons/wallet.png')} style={{height:20,width:20,tintColor:item.color}}/>
-                                            <Text style={{color:'#fff',fontSize:18,marginLeft:10,}}>{item.name}</Text>
+                                            <Text style={{color:'#000',fontSize:18,marginLeft:10,}}>{item.name}</Text>
                                         </View>
-                                        <Image source={item.icon} style={{height:20,width:20,tintColor:'#fff',}}/>
+                                        <Image source={item.icon} style={{height:20,width:20,tintColor:'#000',}}/>
                                     </View>
-                                    <Text style={{color:'#fff',fontSize:18,marginTop:10,marginLeft:10, marginRight:10,}}>{formatter.format(item.price)}</Text>
+                                    <Text style={{color:'#000',fontSize:18,marginTop:10,marginLeft:10, marginRight:10,}}>{formatter.format(item.price)}</Text>
                                 </View>
                             );
                         })
@@ -87,18 +87,18 @@ function Home(){
                                     <View style={styles.containerItemTop}>
                                         <View style={{display:'flex',flexDirection:'row'}}>
                                             <Image source={require('../../../assets/icons/wallet.png')} style={{height:20,width:20,tintColor:item.color}}/>
-                                            <Text style={{color:'#fff',fontSize:18,marginLeft:10,}}>{item.name}</Text>
+                                            <Text style={{color:'#000',fontSize:18,marginLeft:10,}}>{item.name}</Text>
                                         </View>
-                                        <Image source={item.icon} style={{height:20,width:20,tintColor:'#fff',}}/>
+                                        <Image source={item.icon} style={{height:20,width:20,tintColor:'#000',}}/>
                                     </View>
-                                    <Text style={{color:'#fff',fontSize:18,marginTop:10,marginLeft:10, marginRight:10,}}>{formatter.format(item.price)}</Text>
+                                    <Text style={{color:'#000',fontSize:18,marginTop:10,marginLeft:10, marginRight:10,}}>{formatter.format(item.price)}</Text>
                                 </View>
                             );
                         })
                     }
                 </ScrollView>
                 <View style={styles.containerListJar}>
-                    <Text style={{color:'#fff',fontSize:24,marginLeft:10, marginRight:10,}}>Danh sách hũ</Text>
+                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Danh sách hũ</Text>
                     <View style={styles.containerListJarItem}>
                             {
                                 dataListJar.map((item)=>{
@@ -106,17 +106,17 @@ function Home(){
                                         <View key={item.id} style={styles.containerListJarItem_Item}>
                                                 <View style={{flex:0.2,height:"100%",justifyContent:'center',marginLeft:10,}}>
                                                     <View style={{backgroundColor:item.color,height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
-                                                            <Image source={require('../../../assets/icons/jar.png')} style={{tintColor:'#fff'}}/>
+                                                            <Image source={require('../../../assets/icons/jar.png')} style={{tintColor:'#000'}}/>
                                                     </View>
                                                 </View>
                                                 <View style={{flex:0.7,height:"100%",}}>
                                                     <View style={{flex:0.4,justifyContent:'space-between',alignItems:'center',display:'flex',flexDirection:'row'}}>
-                                                        <Text style={{color:'#fff',fontSize:20,fontWeight:'bold'}}>{item.name}</Text>
+                                                        <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>{item.name}</Text>
                                                         <Text style={{color:'#FF4040',fontSize:18,}}>{formatter.format(item.price)}</Text>
                                                     </View>
                                                     <View style={{flex:0.2,justifyContent:'space-between',alignItems:'center',display:'flex',flexDirection:'row'}}>
-                                                        <Text style={{color:'#fff',fontSize:18,}}>Khả dụng</Text>
-                                                        <Text style={{color:'#fff',fontSize:18,}}>10%</Text>
+                                                        <Text style={{color:'#000',fontSize:18,}}>Khả dụng</Text>
+                                                        <Text style={{color:'#000',fontSize:18,}}>10%</Text>
                                                     </View>
                                                     <View style={{flex:0.3,alignItems:'center',display:'flex',flexDirection:'row'}}>
                                                         <View style={{backgroundColor:'red',width:"10%",height:5,borderRadius:20}}>
@@ -128,7 +128,7 @@ function Home(){
                                                     </View>
                                                 </View>
                                                 <View style={{flex:0.1,height:"100%",justifyContent:'center',alignItems:'center'}}>
-                                                    <AntDesign name="right" size={14} color="#fff" />
+                                                    <AntDesign name="right" size={14} color="#000" />
                                                 </View>
                                         </View>
                                     );
@@ -137,7 +137,7 @@ function Home(){
                     </View>
                 </View>
                 <View style={styles.containerListJar}>
-                    <Text style={{color:'#fff',fontSize:24,marginLeft:10, marginRight:10,}}>Cơ cấu các hủ</Text>
+                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Cơ cấu các hủ</Text>
                     <View style={styles.containerListJars}>
                         
                     </View>

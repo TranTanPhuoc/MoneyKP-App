@@ -2,7 +2,6 @@ import {Platform, StatusBar, StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor:'#2b2b4f',
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     },
     scrollview:{
@@ -38,7 +37,7 @@ const styles = StyleSheet.create({
     },
     containerItem:{
         flex:0.5,
-        backgroundColor:'#48485e',
+        backgroundColor:'#E6E6FA',
         height:80,
         margin:5,
         borderRadius:10,
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
         marginTop:10,
         height:600,
         width: "100%",
-        backgroundColor:"#48485e",
+        backgroundColor:"#E6E6FA",
         borderRadius:40,
     },
     containerListJarItem_Item:{
@@ -76,7 +75,7 @@ const styles = StyleSheet.create({
         marginTop:10,
         height:400,
         width: "100%",
-        backgroundColor:"#48485e",
+        backgroundColor:"#E6E6FA",
         borderRadius:40,
     }
 });

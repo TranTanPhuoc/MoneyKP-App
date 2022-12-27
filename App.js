@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Tabs from './src/BottomTabBar/Tabs';
+import ForgotPassword from './src/Screen/Auth/ForgotPassword';
 import Login from './src/Screen/Auth/Login';
 import Register from './src/Screen/Auth/Register';
 import Home from './src/Screen/Home/Home';
@@ -15,6 +16,7 @@ export default function App() {
               <Stack.Screen name='Register' component={Register}/>
               <Stack.Screen name='Tabs' component={Tabs}/>
               <Stack.Screen name='Home' component={Home}/>
+              <Stack.Screen name='ForgotPassword' component={ForgotPassword}/>
           </Stack.Navigator>
           {/* <Tabs/> */}
       </NavigationContainer>
