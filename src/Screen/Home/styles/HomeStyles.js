@@ -74,9 +74,10 @@ const styles = StyleSheet.create({
     containerListJars:{
         marginTop:10,
         height:400,
-        width: "100%",
         backgroundColor:"#E6E6FA",
         borderRadius:40,
+        justifyContent:'center',
+        alignItems:'center'
     }
 });
 

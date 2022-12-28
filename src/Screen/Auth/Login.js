@@ -51,6 +51,7 @@ function Login(){
             const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
             user = {id : auth.currentUser.uid, name: auth.currentUser.displayName,email: auth.currentUser.email, photo : auth.currentUser.photoURL}
             console.log(user);
+            navigation.navigate("Tabs");
         })
         .catch(error =>{
             setisLoading(false);
