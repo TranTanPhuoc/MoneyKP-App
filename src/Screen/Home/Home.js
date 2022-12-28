@@ -1,14 +1,14 @@
-import {  Text, SafeAreaView, ScrollView, View, Image, FlatList,} from 'react-native';
+import {  Text, SafeAreaView, ScrollView, View, Image, FlatList, Dimensions,} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from "./styles/HomeStyles";
 import 'intl';
 import 'intl/locale-data/jsonp/vi-VN';
 import 'intl/locale-data/jsonp/en';
 import { AntDesign } from '@expo/vector-icons';
-import { BarChart, LineChart, PieChart } from "react-native-gifted-charts";
+import { PieChart } from "react-native-chart-kit";
 
 function Home(){
-
+    const width = Dimensions.get('window').width-55;
     const data = [
         {id:1,name:'Thu nhập',price:10000000,color:'#03fc41',icon:require('../../../assets/icons/add.png')},
         {id:2,name:'Chi tiêu',price:4000000,color:'#fc3030',icon:require('../../../assets/icons/minus.png')},
@@ -26,17 +26,28 @@ function Home(){
         {id:6,name:'Thiện tâm',price:0,color:'#F4A460'},
     ];
     const dataJar = [
-        {id:1,name:'Thiết yếu',tl:35,color:'#FF9999'},
-        {id:2,name:'Giáo dục',lt:20,color:'#6699FF'},
-        {id:3,name:'Tiết kiệm',lt:10,color:'#FF6600'},
-        {id:4,name:'Hưởng thụ',lt:5,color:'#00EE00'},
-        {id:5,name:'Đầu tư',lt:20,color:'#8DEEEE'},
-        {id:6,name:'Thiện tâm',lt:10,color:'#F4A460'},
+        {id:1,name:'Thiết yếu',population:35,color:'#FF9999',legendFontColor: '#000',legendFontSize: 15},
+        {id:2,name:'Giáo dục',population:20,color:'#6699FF',legendFontColor: '#000',legendFontSize: 15},
+        {id:3,name:'Tiết kiệm',population:10,color:'#FF6600',legendFontColor: '#000',legendFontSize: 15},
+        {id:4,name:'Hưởng thụ',population:5,color:'#00EE00',legendFontColor: '#000',legendFontSize: 15},
+        {id:5,name:'Đầu tư',population:20,color:'#8DEEEE',legendFontColor: '#000',legendFontSize: 15},
+        {id:6,name:'Thiện tâm',population:10,color:'#F4A460',legendFontColor: '#000',legendFontSize: 15},
     ];
     const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'VND',
       });
+
+      
+    const chartConfig = {
+        backgroundColor: '#e26a00',
+        backgroundGradientTo: '#ffa726',
+        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+        strokeWidth: 2, // optional, default 3
+        barPercentage: 0.5,
+        useShadowColorFromDataset: false 
+      };
+
     return(
         <SafeAreaView style={styles.container} >
             <ScrollView   style={styles.scrollview}>
@@ -139,7 +150,16 @@ function Home(){
                 <View style={styles.containerListJar}>
                     <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Cơ cấu các hủ</Text>
                     <View style={styles.containerListJars}>
-                        
+                        <PieChart
+                            data={dataJar}
+                            height={300}
+                            width={width}
+                            chartConfig={chartConfig}
+                            accessor="population"
+                            backgroundColor="transparent"
+                            paddingLeft="25"
+                            hasLegend={true}
+                            />
                     </View>
                 </View>
             </ScrollView>
