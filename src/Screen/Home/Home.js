@@ -5,10 +5,10 @@ import 'intl';
 import 'intl/locale-data/jsonp/vi-VN';
 import 'intl/locale-data/jsonp/en';
 import { AntDesign } from '@expo/vector-icons';
-import { PieChart } from "react-native-chart-kit";
+import { PieChart, BarChart } from "react-native-chart-kit";
 
 function Home(){
-    const width = Dimensions.get('window').width-55;
+    const width = Dimensions.get('window').width;
     const data = [
         {id:1,name:'Thu nhập',price:10000000,color:'#03fc41',icon:require('../../../assets/icons/add.png')},
         {id:2,name:'Chi tiêu',price:4000000,color:'#fc3030',icon:require('../../../assets/icons/minus.png')},
@@ -25,7 +25,8 @@ function Home(){
         {id:5,name:'Đầu tư',price:0,color:'#8DEEEE'},
         {id:6,name:'Thiện tâm',price:0,color:'#F4A460'},
     ];
-    const dataJar = [
+    // Data biểu đồ tròn
+    const dataPieChart = [
         {id:1,name:'Thiết yếu',population:35,color:'#FF9999',legendFontColor: '#000',legendFontSize: 15},
         {id:2,name:'Giáo dục',population:20,color:'#6699FF',legendFontColor: '#000',legendFontSize: 15},
         {id:3,name:'Tiết kiệm',population:10,color:'#FF6600',legendFontColor: '#000',legendFontSize: 15},
@@ -33,21 +34,54 @@ function Home(){
         {id:5,name:'Đầu tư',population:20,color:'#8DEEEE',legendFontColor: '#000',legendFontSize: 15},
         {id:6,name:'Thiện tâm',population:10,color:'#F4A460',legendFontColor: '#000',legendFontSize: 15},
     ];
+    // Data biểu đồ cột
+    const dataLineChart = {
+        labels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4','Tuần 5'],
+        datasets: [
+            {
+              data: [20, 45, 28, 80, 99],
+              color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+              strokeWidth: 2 // optional
+            },
+            {
+              data: [30, 55, 38, 90, 109],
+              color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
+              strokeWidth: 2 // optional
+            }
+          ]
+      };
+    // Định dạng tiền tệ VNĐ
     const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'VND',
       });
 
-      
-    const chartConfig = {
+    // Biểu đồ tròn
+    const chartConfigPie = {
         backgroundColor: '#e26a00',
         backgroundGradientTo: '#ffa726',
         color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
         strokeWidth: 2, // optional, default 3
         barPercentage: 0.5,
-        useShadowColorFromDataset: false 
+        useShadowColorFromDataset: false ,
+        borderWidth:0.5,
       };
-
+      // Biểu đồ cột
+      const chartConfigBarChart = {
+        backgroundGradientFrom: '#9E9E9E',
+        backgroundGradientTo: '#B8B8C8',
+        decimalPlaces: 2, // optional, defaults to 2dp
+        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+        labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+        style: {
+            borderRadius: 16
+        },
+        propsForDots: {
+            r: '6',
+            strokeWidth: '2',
+            stroke: '#ffa726'
+        }
+      };
     return(
         <SafeAreaView style={styles.container} >
             <ScrollView   style={styles.scrollview}>
@@ -148,17 +182,32 @@ function Home(){
                     </View>
                 </View>
                 <View style={styles.containerListJar}>
+                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Báo cáo thu chi</Text>
+                    <View style={styles.containerListJars}>
+                    <BarChart
+                        data={dataLineChart}
+                        width={width-40}
+                        height={200}
+                        chartConfig={chartConfigBarChart}
+                        withInnerLines={false}
+                        withOuterLines={false}
+                        withDots={false}
+                        withShadow={false}
+                        fromZero={true}
+                        bezier
+                    />
+                    </View>
+                </View>
+                <View style={styles.containerListJar}>
                     <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Cơ cấu các hủ</Text>
                     <View style={styles.containerListJars}>
                         <PieChart
-                            data={dataJar}
+                            data={dataPieChart}
                             height={300}
                             width={width}
-                            chartConfig={chartConfig}
+                            chartConfig={chartConfigPie}
                             accessor="population"
-                            backgroundColor="transparent"
-                            paddingLeft="25"
-                            hasLegend={true}
+                            paddingLeft='30'
                             />
                     </View>
                 </View>
