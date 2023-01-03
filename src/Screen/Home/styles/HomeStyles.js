@@ -14,6 +14,8 @@ const styles = StyleSheet.create({
         display:'flex',
         flexDirection:'row',
         flex:1,
+        marginLeft:15,
+        marginRight:15,
     },
     containerTopImage:{
         flex:0.15,
@@ -41,12 +43,11 @@ const styles = StyleSheet.create({
         height:80,
         margin:5,
         borderRadius:10,
-        
+        justifyContent:'center',
     },
     containerItemTop:{
         marginLeft:10,
         marginRight:10,
-        marginTop:10,
         display:'flex',
         flexDirection:'row',
         justifyContent:'space-between',
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
         marginTop:20,
     },
     containerListJarItem:{
-        marginTop:10,
+        marginTop:20,
         height:600,
         width: "100%",
         backgroundColor:"#E6E6FA",
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
         flex:1,
     },
     containerListJars:{
-        marginTop:10,
+        marginTop:20,
         height:400,
         backgroundColor:"#E6E6FA",
         borderRadius:40,

@@ -118,7 +118,9 @@ function Home(){
                                         </View>
                                         <Image source={item.icon} style={{height:20,width:20,tintColor:'#000',}}/>
                                     </View>
-                                    <Text style={{color:'#000',fontSize:18,marginTop:10,marginLeft:10, marginRight:10,}}>{formatter.format(item.price)}</Text>
+                                    <View>
+                                        <Text style={{color:'#000',fontSize:18,marginTop:10,marginLeft:10, marginRight:10,}}>{formatter.format(item.price)}</Text>
+                                    </View>
                                 </View>
                             );
                         })
