@@ -5,6 +5,76 @@ const styles = StyleSheet.create({
         backgroundColor:'#fff',
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     },
+    containerHeader:{
+        height:200,
+        marginTop:20,
+        backgroundColor:'#E6E6FA',
+        borderRadius:20,
+    },
+    containerInfoWallet:{
+        marginTop:15,
+        flex:1,
+    },
+    containerItem:{
+        flex:0.5,
+        backgroundColor:'#E6E6FA',
+        height:80,
+        margin:5,
+        borderRadius:10,
+        
+    },
+    containerItemTop:{
+        marginLeft:10,
+        marginRight:10,
+        marginTop:10,
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center'
+    },
+    containerHeaderTop:{
+        flex:0.7,
+    },
+    containerHeaderBottom:{
+        flex:0.3,
+        borderTopWidth:0.75,
+        borderColor:"#fff",
+        marginLeft:20,
+        justifyContent:'center',
+        marginRight:20,
+    },
+    containerListJar:{
+        marginTop:20,
+    },
+    containerListJarItem:{
+        height:320,
+        width: "100%",
+        backgroundColor:"#E6E6FA",
+        borderRadius:40,
+        marginTop:10,
+    },
+    containerListJarItem_Item:{
+        height:80,
+        display:'flex',
+        flexDirection:'row',
+        alignItems:'center',
+        marginRight:15,
+        marginLeft:15,
+        flex:1,
+    },
+    scrollview:{
+        marginLeft:10,
+        marginRight:10, 
+        marginBottom:80,
+     },
+     containerListJars:{
+        marginTop:10,
+        height:400,
+        backgroundColor:"#E6E6FA",
+        borderRadius:40,
+        justifyContent:'center',
+        alignItems:'center'
+    }
 });
 
 export default styles;
