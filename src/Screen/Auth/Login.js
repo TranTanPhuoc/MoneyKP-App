@@ -49,7 +49,7 @@ function Login(){
             }
             setisLoading(false);
             const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
-            user = {id : auth.currentUser.uid, name: auth.currentUser.displayName,email: auth.currentUser.email, photo : auth.currentUser.photoURL}
+            user = {id : auth.currentUser.uid, name: auth.currentUser.displayName,email: auth.currentUser.email, photo : auth.currentUser.photoURL,accessToken:accessToken}
             console.log(user);
             navigation.navigate("Tabs");
         })
