@@ -13,12 +13,13 @@ function Account(){
                         <Image source={{uri:'https://res.cloudinary.com/drljnqaai/image/upload/v1671783897/KhoaLuan/313270093_816356566288400_2893180884073968601_n.jpg_gufop7.jpg'}} style={{height:60,width:60,borderRadius:40,}}/>
                     </View>
                     <View style={styles.containerTopName}>
-                        <View style={{flex:0.2,justifyContent:'flex-end'}}>
-                            <Text style={{color:'#000',fontSize:18,}}>Chào buổi chiều !</Text>
-                        </View>
                         <View style={{flex:0.8,justifyContent:'center'}}>
                             <Text style={{color:'#000',fontSize:24,fontWeight:'bold'}}>Trần Tấn Phước </Text>
                         </View>
+                        <View style={{flex:0.2,justifyContent:'flex-end'}}>
+                            <Text style={{color:'#000',fontSize:18,}}>Tài khoản thường</Text>
+                        </View>
+                        
                     </View>
                     <TouchableOpacity style={styles.containerTopIcon}>
                         <Image style={{tintColor:'red',height:24,width:24}} source={require('../../../assets/icons/logout.png')} />
