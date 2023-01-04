@@ -6,17 +6,10 @@ import Exchange from '../Screen/Exchange/Exchange';
 import Home from '../Screen/Home/Home';
 import Info from '../Screen/Info/Info';
 import Wallet from '../Screen/Wallet/Wallet';
-
+import { AntDesign } from '@expo/vector-icons';
+import { Text } from 'react-native';
 const Tab = createBottomTabNavigator();
-const CustomTabBar = ({children,onPress})=>{
-    <TouchableOpacity style={{top:-30,justifyContent:'center',alignItems:'center',...styles.shadow}} onPress={onPress}>
-        <View style={{height:70,width:70,borderRadius:35,}}>
-            {children}
-        </View>
-    </TouchableOpacity>
-}
-
-const Tabs = () =>{
+const Tabs = ({navigation}) =>{
     return (
         <Tab.Navigator screenOptions={{
             tabBarShowLabel:false,
@@ -37,14 +30,23 @@ const Tabs = () =>{
                     <LinearGradient colors={['#8b60f0', '#703050', '#c2387c','#8390e6']} style={{height:60,width:60,justifyContent:'center',alignItems:'center',top:-30,borderRadius:50,}}>
                         <Image source={require('../../assets/icons/plus.png')} resizeMode="contain" style={{width:25,height:25,tintColor: '#fff'}}/>
                     </LinearGradient>
-                    )
+                    ), headerLeft: ()=>(
+                            <View style={{marginLeft:10,}}>
+                                <TouchableOpacity onPress={()=>{
+                                    navigation.goBack();
+                                }}>
+                                    <AntDesign name="arrowleft" size={24} color="black" />
+                                </TouchableOpacity>
+                            </View>
+                    ),
+                    title:"Thêm giao dịch",
                     }}/>
             <Tab.Screen name='Info' component={Info}  options={{tabBarIcon:({focused})=>(
                     <Image source={require('../../assets/icons/info.png')} resizeMode="contain" style={{width:22,height:22,tintColor:focused? '#000': '#748c94'}}/>
-            )}}/>
-            <Tab.Screen name='Settings' component={Account}  options={{tabBarIcon:({focused})=>(
+            ),headerTitle:"Thông tin"}}/>
+            <Tab.Screen name='Settings' component={Account}   options={{tabBarIcon:({focused})=>(
                     <Image source={require('../../assets/icons/user.png')} resizeMode="contain" style={{width:22,height:22,tintColor:focused? '#000': '#748c94'}}/>
-            )}}/>
+            ),headerTitle:"Cài đặt"}}/>
         </Tab.Navigator>
     );
 }
