@@ -1,4 +1,4 @@
-import {  Text, SafeAreaView, Alert,} from 'react-native';
+import {  Text, SafeAreaView, Alert, Image,} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from "./styles/ExchangeStyles";
 import { ScrollView } from 'react-native';
@@ -7,12 +7,24 @@ import { TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { TextInput } from 'react-native';
 import { useEffect } from 'react';
+import SelectDropdown  from 'react-native-select-dropdown';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import * as Calendar from 'expo-calendar';
+import CalendarPicker from 'react-native-calendar-picker';
+import { Modal } from 'react-native';
+import moment from 'moment';
 function Exchange(){
     const [colorThuNhap,setcolorThuNhap] = useState("#F9B79C");
     const [colorChiTieu,setcolorChiTieu] = useState(""); // "#91D8E5"
     const [colorChuyenTien,setcolorChuyenTien] = useState(""); // "#fedcba"
     const [money,setMoney] = useState("");
     const [wordsMoney,setWordsMoney] = useState("");
+    const [valuesDefaut,setvaluesDefaut] = useState('Thiết yếu');
+    const [colorSelect,setColorSelect] = useState("#FF9999");
+    const [modalVisible, setModalVisible] = useState(false);
+    const [dateGD, setDate] = useState("");
+    const [noteGD,setNoteGD] = useState("");
+    const [tagGD,setTagGD] = useState("");
     const hanldThuNhap = () =>{
         setcolorThuNhap("#F9B79C");
         setcolorChiTieu("#E6E6FA");
@@ -28,7 +40,6 @@ function Exchange(){
         setcolorChiTieu("#E6E6FA");
         setcolorChuyenTien("#fedcba");
     }
-
     function convertVNDToWords(amount) {
         const units = ["", "Một ", "Hai ", "Ba ", "Bốn ", "Năm ", "Sáu ", "Bảy ", "Tám ", "Chín "];
         const teens = ["", "Mười một ", "Mười hai ", "Mười ba ", "Mười bốn ", "Mười lăm ", "Mười sáu ", "Mười bảy ", "Mười tám ", "Mười chín "];
@@ -110,9 +121,28 @@ function Exchange(){
             setWordsMoney(convertVNDToWords(money)+"Đồng") : setWordsMoney("");
         
     },[money])
-
+    const data = ["Thiếu yếu", "Giáo dục", "Tiết kiệm", "Hưởng thụ","Đầu tư","Thiện tâm"];
+    const onDateChange =(date) => {
+       setDate(date);
+       setModalVisible(!modalVisible);
+      }
     return(
         <SafeAreaView style={styles.container} >
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalVisible(!modalVisible);
+                    }}>
+                       <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <CalendarPicker onDateChange={onDateChange}>
+                                </CalendarPicker>
+                            </View>
+                        </View>
+                </Modal>
             <ScrollView  style={styles.scrollview}>
                 <View style={styles.containerTop}>
                     <TouchableOpacity onPress={hanldThuNhap} style={{flex:0.33333,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorThuNhap}}>
@@ -145,6 +175,72 @@ function Exchange(){
                             <Text style={{fontSize:20,fontStyle:'italic',textAlign:'center'}}>{wordsMoney}</Text>
                     </View>
                 }
+                <View style={styles.containerJar}>
+                    <SelectDropdown 
+                        data={data} 
+                        defaultButtonText={valuesDefaut} 
+                        buttonTextStyle = {{fontSize:16,}}
+                        onSelect={(selectedItem, index) => { 
+                            setvaluesDefaut(selectedItem);
+                            (index == 0) ?  setColorSelect("#FF9999") : (index == 1)? setColorSelect("#6699FF") : 
+                            (index == 2)? setColorSelect("#FF6600") : (index == 3) ? setColorSelect("#00EE00") :
+                            (index == 4) ? setColorSelect("#8DEEEE") : setColorSelect("#F4A460")
+                        }} 
+                        renderDropdownIcon={isOpened => {
+                        return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={18} />;
+                        }}
+                        renderCustomizedButtonChild= {value =>{
+                            return (
+                                <View style={{ flexDirection: 'row', marginRight: 8,alignItems:'center',flex:1}}>
+                                    <View style={{flex:0.3,height:"100%",justifyContent:'center',alignItems:'center'}}>
+                                        <View style={[styles.containercustomSelectDropDown,{backgroundColor:colorSelect}]}>
+                                            <Image source={require('../../../assets/icons/jar.png')} />
+                                        </View>
+                                    </View>
+                                    <View>
+                                        <Text style={{fontSize:26,marginLeft:20}}>{valuesDefaut}</Text>
+                                        <Text style={{fontSize:18,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
+                                    </View>
+                                </View>
+                            );
+                        }}
+                        buttonStyle = {styles.containerSelectDropDown}
+                        />
+                </View>
+                <View style={styles.containerNote}>
+                        <TouchableOpacity onPress={() => setModalVisible(true)}  style={{flex:0.3,display:'flex',flexDirection:'row',borderRadius:20,}}>
+                            <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
+                                    <Image source={require('../../../assets/icons/calendar.png')}/>
+                            </View>
+                            <View  style={{flex:0.8,justifyContent:'center',alignItems:'center',borderBottomWidth:1,display:'flex',flexDirection:'row',width:"100%",}}>
+                                <View style={{flex:0.8,width:"100%"}}>
+                                    <Text style={{fontSize:16,}}>{dateGD.toString()}</Text>
+                                </View>
+                                <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
+                                    <Image source={require('../../../assets/icons/reset.png')}/>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                        <View style={{flex:0.3,display:'flex',flexDirection:'row'}}>
+                            <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
+                                    <Image source={require('../../../assets/icons/note.png')}/>
+                            </View>
+                            <View  style={{flex:0.8,justifyContent:'center',borderBottomWidth:1}}>
+                                 <TextInput value={noteGD} onChange={x=>setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{fontSize:16,marginLeft:10,marginRight:20,}}/>
+                            </View>
+                        </View>
+                        <View style={{flex:0.25,display:'flex',flexDirection:'row'}}>
+                            <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
+                                    <Image source={require('../../../assets/icons/tag.png')}/>
+                            </View>
+                            <View  style={{flex:0.8,justifyContent:'center',borderBottomWidth:1}}>
+                                <TextInput value={tagGD} onChange={x=>setTagGD(x)} placeholder='Nhập hashTag giao dịch' style={{fontSize:16,marginLeft:10,marginRight:20,}}/>
+                            </View>
+                        </View>
+                        <View style={{flex:0.15,display:'flex',flexDirection:'row',borderRadius:20,}}>
+
+                        </View>
+                </View>
             </ScrollView>
         </SafeAreaView>
     );
