@@ -1,7 +1,15 @@
-import {  Text, SafeAreaView, ScrollView, View,} from 'react-native';
+import {  Text, SafeAreaView, ScrollView, View, TouchableOpacity,} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from "./styles/InfoStyles";
+import axios from 'axios';
 function Info(){
+    // const hanldCallApi = () =>{
+    //     axios.get('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user').then((res)=>{
+    //         console.log(res.data)
+    //     }).catch((err)=>{
+    //         console.log(err);
+    //     })
+    // }
     return(
         <SafeAreaView style={styles.container} >
             <ScrollView   style={styles.scrollview}>
@@ -27,6 +35,9 @@ function Info(){
                 <View style={{marginLeft:20,marginTop:10,}}>
                     <Text style={{fontSize:18,fontWeight:'normal',textAlign:'justify'}}>6.  Chi tiêu thiện tâm: Hộp này dành cho các khoản chi tiêu liên quan đến việc giúp đỡ người khác và hoạt động từ thiện.</Text>
                 </View>
+                {/* <TouchableOpacity onPress={hanldCallApi}>
+                     <Text> Test API</Text>
+                </TouchableOpacity> */}
             </ScrollView>
         </SafeAreaView>
     );
