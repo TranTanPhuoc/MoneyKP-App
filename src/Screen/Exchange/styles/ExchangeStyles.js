@@ -93,6 +93,29 @@ const styles = StyleSheet.create({
       shadowRadius: 4,
       elevation: 5,
     },
+    containerButton:{
+      marginTop:20,
+      height:80,
+      justifyContent:'center',
+      alignItems:'center',
+      flex:1,
+    },
+    buttonStyle:{
+      backgroundColor: '#f5866e',
+      height:50,
+      width:"70%",
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+      borderRadius:20,
+      justifyContent:'center',
+      alignItems:'center'
+    }
 });
 
 export default styles;

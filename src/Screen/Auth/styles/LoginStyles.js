@@ -2,7 +2,7 @@ import {Platform, StatusBar, StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor:'#fff',
+        backgroundColor:'#F5F5FA',
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     },
     containerTop:{
@@ -44,6 +44,14 @@ const styles = StyleSheet.create({
         alignItems:'center',
         marginRight:10,
         marginLeft:10,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
     },
     containerFooter:{
         flex:0.2,

@@ -241,6 +241,11 @@ function Exchange(){
 
                         </View>
                 </View>
+                <View style={styles.containerButton}>
+                    <TouchableOpacity style={styles.buttonStyle}>
+                        <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Lưu</Text>
+                    </TouchableOpacity>
+                </View>
             </ScrollView>
         </SafeAreaView>
     );
