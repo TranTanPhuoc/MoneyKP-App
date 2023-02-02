@@ -41,9 +41,9 @@ const width = Dimensions.get('window').width;
         setData([...data]);
     };
 
-    useEffect(()=>{
-        console.log(data);
-    },[data])
+    // useEffect(()=>{
+    //     console.log(data);
+    // },[data])
     const hanldSave = ()=>{
         (tong == 100)? Alert.alert("Thông báo","Lưu thành công") : Alert.alert("Thông báo", "Tổng tỉ lệ phải bằng 100");
     }

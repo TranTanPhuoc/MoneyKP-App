@@ -4,6 +4,7 @@ import styles from "./styles/RegisterStyles";
 import { AntDesign, Entypo, Feather, FontAwesome5} from '@expo/vector-icons';
 import { useState } from 'react';
 import { Image } from 'react-native';
+import axios from 'axios';
 // Import FireBase
 import{initializeAuth,createUserWithEmailAndPassword, sendEmailVerification} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
@@ -13,6 +14,7 @@ function Register(){
     const [isPassword,setPassword] = useState(true);
     const [isPasswordConfirm,setisPasswordConfirm] = useState(true);
     const [email,setEmail] = useState("");
+    const [userName,setuserName] = useState("");
     const [passWord,setPassWord] = useState("");
     const [passWordConfirm,setPasswordConfirm] = useState("");
     const [loading,setisLoading] = useState(false);
@@ -66,6 +68,14 @@ function Register(){
                     setisLoading(false);
                     var user = userCredential.user;
                     sendEmailVerification(user);
+                    var urlImage = "https://thpt-phamhongthai.edu.vn/wp-content/uploads/2022/08/anh-avatar-viet-nam-cute-ngau-tuyet-dep-1.jpg"
+                    axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user',{
+                        id : userCredential.user.uid, name: userName,email: userCredential.user.email, photo : urlImage
+                    }).then(()=>{
+                        console.log("Call api thành công r");
+                    }).catch((err)=>{
+                        console.log(err)
+                    })
                     Alert.alert("Thông báo",`Đăng ký thành công ! ${'\n'}Mời bạn kiểm tra email để xác nhận`);
                     setEmail("");
                     setPassWord("");
@@ -100,6 +110,12 @@ function Register(){
                     </View>
                 </View>
                 <View style={styles.containerBody}>
+                    <View style={styles.containerInput}>
+                        <View style={{flex:0.15,alignItems:'center'}}>
+                            <Feather name="user" size={26} color="black" />
+                        </View>
+                        <TextInput onChangeText={x=>setuserName(x)} value={userName} placeholder="Vui lòng nhập tên người dùng" style={{marginRight:15,height:50,fontSize:22,flex:0.85}}/>
+                    </View>
                     <View style={styles.containerInput}>
                         <View style={{flex:0.15,alignItems:'center'}}>
                             <Feather name="mail" size={26} color="black" />
