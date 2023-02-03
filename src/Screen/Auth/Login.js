@@ -8,9 +8,10 @@ import { Image } from 'react-native';
 import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
+
 import { Alert } from 'react-native';
 import { ActivityIndicator } from 'react-native';
-
+import axios from 'axios';
 function Login(){
     const navigation = useNavigation();
     const [isPassword,setPassword] = useState(true);
@@ -49,8 +50,6 @@ function Login(){
             }
             setisLoading(false);
             const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
-            user = {id : auth.currentUser.uid, name: auth.currentUser.displayName,email: auth.currentUser.email, photo : auth.currentUser.photoURL,accessToken:accessToken}
-            console.log(user);
             navigation.navigate("Tabs");
         })
         .catch(error =>{

@@ -6,6 +6,12 @@ import 'intl/locale-data/jsonp/vi-VN';
 import 'intl/locale-data/jsonp/en';
 import { AntDesign } from '@expo/vector-icons';
 import { PieChart, BarChart } from "react-native-chart-kit";
+// Import FireBase
+import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
+import {initializeApp} from 'firebase/app';
+import { firebaseConfig } from "../../../firebase/ConnectFirebase";
+import { useEffect } from 'react';
+import axios from 'axios';
 
 function Home(){
     const width = Dimensions.get('window').width;
@@ -82,7 +88,22 @@ function Home(){
             stroke: '#ffa726'
         }
       };
-    return(
+
+     // Connect FireBase
+     const app = initializeApp(firebaseConfig);
+     const auth = initializeAuth(app,{
+     });
+    //  const idUser = auth.currentUser.uid;
+    //  useEffect(()=>{
+    //     axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user/${idUser}`)
+    //     .then((res)=>{
+    //             console.log(res.data)
+    //     }).catch((err)=>{
+    //         console.log(err);
+    //     })
+    //  },[])
+    
+     return(
         <SafeAreaView style={styles.container} >
             <ScrollView   style={styles.scrollview}>
                 <View style={styles.containerTop}>
