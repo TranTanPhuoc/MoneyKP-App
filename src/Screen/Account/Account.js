@@ -1,12 +1,67 @@
-import {  Text, SafeAreaView, ScrollView, View,Image} from 'react-native';
+import {  Text, SafeAreaView, ScrollView, View,Image, Alert, Modal} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from "./styles/AccountStyles";
 import { TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-
-function Account(){
+// Import FireBase
+import{signOut,initializeAuth} from 'firebase/auth';
+import {initializeApp} from 'firebase/app';
+import { firebaseConfig } from "../../../firebase/ConnectFirebase";
+import { useState } from 'react';
+import { Platform } from 'react-native';
+function Account({navigation}){
+    const [modalVisible, setModalVisible] = useState(false);
+    const hanldPressExit = () =>{
+        // Connect FireBase
+        const app = initializeApp(firebaseConfig);
+        const auth = initializeAuth(app,{
+        });
+        signOut(auth).then(()=>{
+            navigation.navigate("Login");
+        }).catch((err)=>{
+            console.log("Lỗi")
+        })
+    }
+    const handSetPercentJar = () =>{
+        navigation.navigate("SetPercentJar");
+    }
     return(
         <SafeAreaView style={styles.container} >
+                <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setModalVisible(!modalVisible);
+                }}>
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
+                                <Text style={{fontSize:20,fontWeight:"bold"}}>
+                                        Thông tin
+                                </Text>
+                            </View>
+                            <View style={{flex:0.5,justifyContent:'center',}}>
+                                <Text style={{fontSize:18}}>Phần mềm: KPMoney</Text>
+                                <Text style={{fontSize:18}}>Phiên bản : 1.0.0</Text>
+                                {
+                                     Platform.OS === "android" ? 
+                                     <Text style={{fontSize:18}}>Thiết bị : Android</Text> : 
+                                     <Text style={{fontSize:18}}>Thiết bị : Iphone</Text>
+                                }
+                                 <Text style={{fontSize:18}}>Phiên bản điện thoại: {Platform.Version}</Text>
+                            </View>
+                            <View style={{flex:0.3,borderTopWidth:0.5,width:"100%"}}>
+                                <TouchableOpacity onPress={()=>setModalVisible(!modalVisible)} style={{flex:1,justifyContent:'center',alignItems:'center',}}>
+                                    <Text style={{fontSize:20,fontWeight:"bold",color:'#1874CD'}}>
+                                            Thoát
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+            </Modal>
             <ScrollView  style={styles.scrollview}>
                 <View style={styles.containerTop}>
                     <View style={styles.containerTopImage}>
@@ -21,7 +76,7 @@ function Account(){
                         </View>
                         
                     </View>
-                    <TouchableOpacity style={styles.containerTopIcon}>
+                    <TouchableOpacity onPress={hanldPressExit} style={styles.containerTopIcon}>
                         <Image style={{tintColor:'red',height:24,width:24}} source={require('../../../assets/icons/logout.png')} />
                     </TouchableOpacity>
                 </View>
@@ -95,7 +150,7 @@ function Account(){
                             <AntDesign name="right" size={14} color="#000" />
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.containerPrInfoItem}>
+                    <TouchableOpacity onPress={handSetPercentJar} style={styles.containerPrInfoItem}>
                         <View style={{flex:0.2,height:"100%",justifyContent:'center',alignItems:'center',}}>
                             <View style={{height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
                                 <Image source={require('../../../assets/icons/settingsicon.png')} style={{tintColor:'#000',height:28,width:28}}/>
@@ -112,7 +167,7 @@ function Account(){
                     </TouchableOpacity>
                 </View>
                 <View style={styles.containerPrInfo2}>
-                    <TouchableOpacity style={styles.containerPrInfoItem}>
+                    <TouchableOpacity  onPress={() => setModalVisible(true)}  style={styles.containerPrInfoItem}>
                         <View style={{flex:0.2,height:"100%",justifyContent:'center',alignItems:'center',}}>
                             <View style={{height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
                                 <Image source={require('../../../assets/icons/info.png')} style={{tintColor:'#000',height:28,width:28}}/>

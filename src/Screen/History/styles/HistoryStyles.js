@@ -29,8 +29,6 @@ const styles = StyleSheet.create({
       marginLeft:10,
       marginRight:10,
       marginTop:10,
-      display:'flex',
-      flexDirection:'row',
       flex:1,
       marginBottom:10,
       borderRadius:20,
@@ -43,7 +41,17 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.5,
       shadowRadius: 2,
    },
-   
+   containerItem:{
+    height:80,
+    margin:5,
+    borderRadius:10,
+    alignItems:'center',
+    marginLeft:10,
+    marginRight:10,
+    display:'flex',
+    flexDirection:'row',
+    flex:1,
+   }
 });
 
 export default styles;

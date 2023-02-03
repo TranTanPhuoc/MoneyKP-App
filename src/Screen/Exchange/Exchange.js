@@ -128,21 +128,21 @@ function Exchange(){
       }
     return(
         <SafeAreaView style={styles.container} >
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
-                    setModalVisible(!modalVisible);
-                    }}>
-                       <View style={styles.centeredView}>
-                            <View style={styles.modalView}>
-                                <CalendarPicker onDateChange={onDateChange}>
-                                </CalendarPicker>
-                            </View>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setModalVisible(!modalVisible);
+                }}>
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <CalendarPicker onDateChange={onDateChange}>
+                            </CalendarPicker>
                         </View>
-                </Modal>
+                    </View>
+            </Modal>
             <ScrollView  style={styles.scrollview}>
                 <View style={styles.containerTop}>
                     <TouchableOpacity onPress={hanldThuNhap} style={{flex:0.33333,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorThuNhap}}>
