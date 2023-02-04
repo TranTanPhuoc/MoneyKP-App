@@ -50,6 +50,7 @@ function Login(){
             }
             setisLoading(false);
             const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+            console.log(accessToken);
             navigation.navigate("Tabs");
         })
         .catch(error =>{

@@ -13,7 +13,7 @@ import * as Calendar from 'expo-calendar';
 import CalendarPicker from 'react-native-calendar-picker';
 import { Modal } from 'react-native';
 import moment from 'moment';
-function Exchange(){
+function Exchange({navigation}){
     const [colorThuNhap,setcolorThuNhap] = useState("#F9B79C");
     const [colorChiTieu,setcolorChiTieu] = useState(""); // "#91D8E5"
     const [colorChuyenTien,setcolorChuyenTien] = useState(""); // "#fedcba"
@@ -242,6 +242,11 @@ function Exchange(){
                         </View>
                 </View>
                 <View style={styles.containerButton}>
+                    <TouchableOpacity onPress={()=>{
+                         navigation.goBack();
+                    }} style={styles.buttonStyle}>
+                        <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Hủy</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.buttonStyle}>
                         <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Lưu</Text>
                     </TouchableOpacity>
