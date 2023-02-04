@@ -1,4 +1,4 @@
-import {  Text, SafeAreaView, ScrollView, View,Image, Alert, Modal} from 'react-native';
+import {  Text, SafeAreaView, ScrollView, View,Image, Alert, Modal, Dimensions} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from "./styles/AccountStyles";
 import { TouchableOpacity } from 'react-native';
@@ -11,6 +11,8 @@ import { useState } from 'react';
 import { Platform } from 'react-native';
 function Account({navigation}){
     const [modalVisible, setModalVisible] = useState(false);
+    const { height, width } = Dimensions.get('window');
+    console.log(width);
     const hanldPressExit = () =>{
         // Connect FireBase
         const app = initializeApp(firebaseConfig);
@@ -36,13 +38,13 @@ function Account({navigation}){
                 setModalVisible(!modalVisible);
                 }}>
                     <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
+                        <View style={[styles.modalView,{height:height-500,width:width-50,}]}>
                             <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
                                 <Text style={{fontSize:20,fontWeight:"bold"}}>
                                         Thông tin
                                 </Text>
                             </View>
-                            <View style={{flex:0.5,justifyContent:'center',}}>
+                            <View style={{flex:0.6,justifyContent:'center',}}>
                                 <Text style={{fontSize:18}}>Phần mềm: KPMoney</Text>
                                 <Text style={{fontSize:18}}>Phiên bản : 1.0.0</Text>
                                 {
@@ -52,7 +54,7 @@ function Account({navigation}){
                                 }
                                  <Text style={{fontSize:18}}>Phiên bản điện thoại: {Platform.Version}</Text>
                             </View>
-                            <View style={{flex:0.3,borderTopWidth:0.5,width:"100%"}}>
+                            <View style={{flex:0.2,borderTopWidth:0.5,width:"100%",}}>
                                 <TouchableOpacity onPress={()=>setModalVisible(!modalVisible)} style={{flex:1,justifyContent:'center',alignItems:'center',}}>
                                     <Text style={{fontSize:20,fontWeight:"bold",color:'#1874CD'}}>
                                             Thoát

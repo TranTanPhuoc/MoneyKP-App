@@ -1,4 +1,4 @@
-import {  Text, SafeAreaView, ScrollView, View, Image, FlatList, Dimensions,} from 'react-native';
+import {  Text, SafeAreaView, ScrollView, View, Image, FlatList, Dimensions, TouchableOpacity,} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from "./styles/HomeStyles";
 import 'intl';
@@ -13,7 +13,7 @@ import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import { useEffect } from 'react';
 import axios from 'axios';
 
-function Home(){
+function Home({navigation}){
     const width = Dimensions.get('window').width;
     const data = [
         {id:1,name:'Thu nhập',price:10000000,color:'#03fc41',icon:require('../../../assets/icons/add.png')},
@@ -171,7 +171,9 @@ function Home(){
                             {
                                 dataListJar.map((item)=>{
                                     return (
-                                        <View key={item.id} style={styles.containerListJarItem_Item}>
+                                        <TouchableOpacity onPress={()=>{
+                                            navigation.navigate("DetailJar");
+                                        }} key={item.id} style={styles.containerListJarItem_Item}>
                                                 <View style={{flex:0.2,height:"100%",justifyContent:'center',marginLeft:10,}}>
                                                     <View style={{backgroundColor:item.color,height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
                                                             <Image source={require('../../../assets/icons/jar.png')} style={{tintColor:'#000'}}/>
@@ -198,7 +200,7 @@ function Home(){
                                                 <View style={{flex:0.1,height:"100%",justifyContent:'center',alignItems:'center'}}>
                                                     <AntDesign name="right" size={14} color="#000" />
                                                 </View>
-                                        </View>
+                                        </TouchableOpacity>
                                     );
                                 })
                             }

@@ -99,11 +99,13 @@ const styles = StyleSheet.create({
       justifyContent:'center',
       alignItems:'center',
       flex:1,
+      display:"flex",
+      flexDirection:"row",
     },
     buttonStyle:{
       backgroundColor: '#f5866e',
       height:50,
-      width:"70%",
+      width:"40%",
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
@@ -114,7 +116,9 @@ const styles = StyleSheet.create({
       elevation: 5,
       borderRadius:20,
       justifyContent:'center',
-      alignItems:'center'
+      alignItems:'center',
+      marginRight:20,
+      marginLeft:20,
     }
 });
 
