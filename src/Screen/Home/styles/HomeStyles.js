@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
     },
     containerListJarItem:{
         marginTop:20,
-        height:600,
         width: "100%",
         backgroundColor:"#E6E6FA",
         borderRadius:40,
