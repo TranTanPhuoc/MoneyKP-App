@@ -10,11 +10,11 @@ import { PieChart, BarChart } from "react-native-chart-kit";
 import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-
 function Home({navigation}){
-    const width = Dimensions.get('window').width;
+    const { height, width } = Dimensions.get('window');
+    
     const data = [
         {id:1,name:'Thu nhập',price:10000000,color:'#03fc41',icon:require('../../../assets/icons/add.png')},
         {id:2,name:'Chi tiêu',price:4000000,color:'#fc3030',icon:require('../../../assets/icons/minus.png')},
@@ -23,23 +23,10 @@ function Home({navigation}){
         {id:3,name:'Tài sản',price:20000000,color:'#03fc41',icon:require('../../../assets/icons/add.png')},
         {id:4,name:'Khoản nợ',price:0,color:'#fc3030',icon:require('../../../assets/icons/minus.png')},
     ];
-    const dataListJar = [
-        {id:1,name:'Thiết yếu',price:0,color:'#FF9999'},
-        {id:2,name:'Giáo dục',price:0,color:'#6699FF'},
-        {id:3,name:'Tiết kiệm',price:0,color:'#FF6600'},
-        {id:4,name:'Hưởng thụ',price:0,color:'#00EE00'},
-        {id:5,name:'Đầu tư',price:0,color:'#8DEEEE'},
-        {id:6,name:'Thiện tâm',price:0,color:'#F4A460'},
-    ];
+    const [dataListJar,setdataListJar] = useState([]);
+    const [dataPieChart,setdataPieChart] = useState([]);
     // Data biểu đồ tròn
-    const dataPieChart = [
-        {id:1,name:'Thiết yếu',population:35,color:'#FF9999',legendFontColor: '#000',legendFontSize: 15},
-        {id:2,name:'Giáo dục',population:20,color:'#6699FF',legendFontColor: '#000',legendFontSize: 15},
-        {id:3,name:'Tiết kiệm',population:10,color:'#FF6600',legendFontColor: '#000',legendFontSize: 15},
-        {id:4,name:'Hưởng thụ',population:5,color:'#00EE00',legendFontColor: '#000',legendFontSize: 15},
-        {id:5,name:'Đầu tư',population:20,color:'#8DEEEE',legendFontColor: '#000',legendFontSize: 15},
-        {id:6,name:'Thiện tâm',population:10,color:'#F4A460',legendFontColor: '#000',legendFontSize: 15},
-    ];
+    
     // Data biểu đồ cột
     const dataLineChart = {
         labels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4','Tuần 5'],
@@ -57,10 +44,13 @@ function Home({navigation}){
           ]
       };
     // Định dạng tiền tệ VNĐ
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'VND',
-      });
+    const moneyFormat = (amount) => {
+        return amount.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+          maximumFractionDigits: 3,
+        });
+      };
 
     // Biểu đồ tròn
     const chartConfigPie = {
@@ -88,21 +78,31 @@ function Home({navigation}){
             stroke: '#ffa726'
         }
       };
-
+    const [widthTotalIncome,setWidthIcome] = useState(0);
      // Connect FireBase
      const app = initializeApp(firebaseConfig);
      const auth = initializeAuth(app,{
      });
-    //  const idUser = auth.currentUser.uid;
-    //  useEffect(()=>{
-    //     axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user/${idUser}`)
-    //     .then((res)=>{
-    //             console.log(res.data)
-    //     }).catch((err)=>{
-    //         console.log(err);
-    //     })
-    //  },[])
-    
+    useEffect(()=>{
+        const idUser = auth.currentUser.uid;
+        console.log(idUser)
+        const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/1`,{
+            headers: { authorization: accessToken },
+        })
+        .then((res)=>{
+                setdataListJar(res.data);
+                setdataPieChart(res.data.map((item)=>{
+                    let randomColor = '#'+(Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
+                    
+                    var obj = {id:item.id,name:item.name,population:item.precent,color:randomColor,legendFontColor: '#000',legendFontSize: 15};
+                    return obj;
+                }));
+        }).catch((err)=>{
+            console.log(err);
+        })
+    },[])
+        
      return(
         <SafeAreaView style={styles.container} >
             <ScrollView   style={styles.scrollview}>
@@ -140,7 +140,7 @@ function Home({navigation}){
                                         <Image source={item.icon} style={{height:20,width:20,tintColor:'#000',}}/>
                                     </View>
                                     <View>
-                                        <Text style={{color:'#000',fontSize:18,marginTop:10,marginLeft:10, marginRight:10,}}>{formatter.format(item.price)}</Text>
+                                        <Text style={{color:'#000',fontSize:18,marginTop:10,marginLeft:10, marginRight:10,}}>{moneyFormat(item.price)}</Text>
                                     </View>
                                 </View>
                             );
@@ -159,7 +159,7 @@ function Home({navigation}){
                                         </View>
                                         <Image source={item.icon} style={{height:20,width:20,tintColor:'#000',}}/>
                                     </View>
-                                    <Text style={{color:'#000',fontSize:18,marginTop:10,marginLeft:10, marginRight:10,}}>{formatter.format(item.price)}</Text>
+                                    <Text style={{color:'#000',fontSize:18,marginTop:10,marginLeft:10, marginRight:10,}}>{moneyFormat(item.price)}</Text>
                                 </View>
                             );
                         })
@@ -182,19 +182,15 @@ function Home({navigation}){
                                                 <View style={{flex:0.7,height:"100%",}}>
                                                     <View style={{flex:0.4,justifyContent:'space-between',alignItems:'center',display:'flex',flexDirection:'row'}}>
                                                         <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>{item.name}</Text>
-                                                        <Text style={{color:'#FF4040',fontSize:18,}}>{formatter.format(item.price)}</Text>
+                                                        <Text style={{color:'#FF4040',fontSize:16,}}>{moneyFormat(item.totalIncome)}</Text>
                                                     </View>
                                                     <View style={{flex:0.2,justifyContent:'space-between',alignItems:'center',display:'flex',flexDirection:'row'}}>
                                                         <Text style={{color:'#000',fontSize:18,}}>Khả dụng</Text>
-                                                        <Text style={{color:'#000',fontSize:18,}}>10%</Text>
+                                                        <Text style={{color:'#000',fontSize:16,}}>{((item.totalIncome-item.totalSpending)/item.totalIncome * 100).toFixed(2)} %</Text>
                                                     </View>
-                                                    <View style={{flex:0.3,alignItems:'center',display:'flex',flexDirection:'row'}}>
-                                                        <View style={{backgroundColor:'red',width:"10%",height:5,borderRadius:20}}>
-
-                                                        </View>
-                                                        <View style={{backgroundColor:'blue',width:"90%",height:5,borderRadius:20,}}>
-
-                                                        </View>
+                                                    <View style={{flex:0.3,alignItems:'center',display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
+                                                        <Text style={{color:'#000',fontSize:18,}}>Tiền khả dụng: </Text>
+                                                        <Text style={{color:'red',fontSize:16,}}>{moneyFormat(item.totalIncome-item.totalSpending)}</Text>
                                                     </View>
                                                 </View>
                                                 <View style={{flex:0.1,height:"100%",justifyContent:'center',alignItems:'center'}}>
@@ -228,11 +224,11 @@ function Home({navigation}){
                     <View style={styles.containerListJars}>
                         <PieChart
                             data={dataPieChart}
-                            height={300}
+                            height={250}
                             width={width}
                             chartConfig={chartConfigPie}
                             accessor="population"
-                            paddingLeft='30'
+                            paddingLeft='10'
                             />
                     </View>
                 </View>
