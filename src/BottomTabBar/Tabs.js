@@ -30,15 +30,16 @@ const Tabs = ({navigation}) =>{
                     <LinearGradient colors={['#8b60f0', '#703050', '#c2387c','#8390e6']} style={{height:60,width:60,justifyContent:'center',alignItems:'center',top:-30,borderRadius:50,}}>
                         <Image source={require('../../assets/icons/plus.png')} resizeMode="contain" style={{width:25,height:25,tintColor: '#fff'}}/>
                     </LinearGradient>
-                    ), headerLeft: ()=>(
-                            <View style={{marginLeft:10,}}>
-                                <TouchableOpacity onPress={()=>{
-                                    navigation.goBack();
-                                }}>
-                                    <AntDesign name="arrowleft" size={24} color="black" />
-                                </TouchableOpacity>
-                            </View>
-                    ),
+                    ), 
+                    // headerLeft: ()=>(
+                    //         <View style={{marginLeft:10,}}>
+                    //             <TouchableOpacity onPress={()=>{
+                    //                 navigation.goBack();
+                    //             }}>
+                    //                 <AntDesign name="arrowleft" size={24} color="black" />
+                    //             </TouchableOpacity>
+                    //         </View>
+                    // ),
                     title:"Thêm giao dịch",
                     }}/>
             <Tab.Screen name='Info' component={Info}  options={{tabBarIcon:({focused})=>(
