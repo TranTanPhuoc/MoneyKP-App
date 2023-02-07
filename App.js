@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Tabs from './src/BottomTabBar/Tabs';
+import User from './src/Screen/Account/User';
 import ForgotPassword from './src/Screen/Auth/ForgotPassword';
 import Login from './src/Screen/Auth/Login';
 import Register from './src/Screen/Auth/Register';
@@ -16,7 +17,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-          <Stack.Navigator initialRouteName={'Login'} screenOptions={{headerShown:false}}>
+          <Stack.Navigator initialRouteName={'User'} screenOptions={{headerShown:false}}>
               <Stack.Screen name='Login' component={Login}/>
               <Stack.Screen name='Register' component={Register}/>
               <Stack.Screen name='Tabs' component={Tabs}/>
@@ -27,6 +28,7 @@ export default function App() {
               <Stack.Screen name='History' component={History}/>
               <Stack.Screen name='DetailJar' component={DetailJar}/>
               <Stack.Screen name='Exchange' component={Exchange}/>
+              <Stack.Screen name='User' component={User}/>
           </Stack.Navigator>
           {/* <Tabs/> */}
       </NavigationContainer>

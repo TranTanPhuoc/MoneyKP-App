@@ -185,6 +185,7 @@ function Exchange({navigation}){
                             (index == 0) ?  setColorSelect("#FF9999") : (index == 1)? setColorSelect("#6699FF") : 
                             (index == 2)? setColorSelect("#FF6600") : (index == 3) ? setColorSelect("#00EE00") :
                             (index == 4) ? setColorSelect("#8DEEEE") : setColorSelect("#F4A460")
+                            // console.log(index + selectedItem);
                         }} 
                         renderDropdownIcon={isOpened => {
                         return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={18} />;
