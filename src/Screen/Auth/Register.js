@@ -68,14 +68,92 @@ function Register(){
                     setisLoading(false);
                     var user = userCredential.user;
                     sendEmailVerification(user);
+                    const accessToken =`Bearer ${userCredential.user.stsTokenManager.accessToken}`;
                     var urlImage = "https://thpt-phamhongthai.edu.vn/wp-content/uploads/2022/08/anh-avatar-viet-nam-cute-ngau-tuyet-dep-1.jpg"
-                    axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user',{
-                        id : userCredential.user.uid, name: userName,email: userCredential.user.email, photo : urlImage
-                    }).then(()=>{
-                        console.log("Call api thành công r");
+                    axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user',
+                    {
+                        id : userCredential.user.uid, name: userName,email: userCredential.user.email, urlPic : urlImage
+                    },
+                    {
+                        headers:{
+                            authorization: accessToken 
+                        }
+                    }
+                    ).then(()=>{
+                        console.log("Call api get User thành công r");
+                        const dataListJar = [
+                            {
+                                userId:  userCredential.user.uid,
+                                name: "Cần thiết",
+                                precent: 50,
+                                availableBalances: 0,
+                                totalSpending: 0,
+                                totalIncome: 0,
+                                type: 1
+                            },
+                            {
+                                userId:  userCredential.user.uid,
+                                name: "Giáo dục",
+                                precent: 10,
+                                availableBalances: 0,
+                                totalSpending: 0,
+                                totalIncome: 0,
+                                type: 1
+                            },
+                            {
+                                userId:  userCredential.user.uid,
+                                name: "Tiết kiệm",
+                                precent: 15,
+                                availableBalances: 0,
+                                totalSpending: 0,
+                                totalIncome: 0,
+                                type: 1
+                            },
+                            {
+                                userId:  userCredential.user.uid,
+                                name: "Hưởng thụ",
+                                precent: 10,
+                                availableBalances: 0,
+                                totalSpending: 0,
+                                totalIncome: 0,
+                                type: 1
+                            },
+                            {
+                                userId:  userCredential.user.uid,
+                                name: "Đầu tư",
+                                precent: 10,
+                                availableBalances: 0,
+                                totalSpending: 0,
+                                totalIncome: 0,
+                                type: 1
+                            },
+                            {
+                                userId:  userCredential.user.uid,
+                                name: "Từ thiện",
+                                precent: 5,
+                                availableBalances: 0,
+                                totalSpending: 0,
+                                totalIncome: 0,
+                                type: 1
+                            }
+                        ]
+                        axios({
+                            url:'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
+                            method:'POST',
+                            headers:{
+                                authorization: accessToken 
+                            },
+                            data: dataListJar
+                        }
+                        ).then(()=>{
+                            console.log("Call api Tạo hủ thành công r");
+                        }).catch((err)=>{
+                            console.log(err)
+                        });
                     }).catch((err)=>{
                         console.log(err)
-                    })
+                    });
+                    
                     Alert.alert("Thông báo",`Đăng ký thành công ! ${'\n'}Mời bạn kiểm tra email để xác nhận`);
                     setEmail("");
                     setPassWord("");
