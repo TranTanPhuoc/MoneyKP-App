@@ -1,0 +1,62 @@
+Lưu lại token để kiểm tra đăng nhập.
+
+import React from 'react';
+import { AsyncStorage } from 'react-native';
+
+const saveToken = async (token) => {
+  try {
+    await AsyncStorage.setItem('@token', token);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const LoginScreen = ({ navigation }) => {
+  const handleLogin = async () => {
+    // Code to perform login logic here
+
+    // If login successful, save token
+    const token = 'YOUR_TOKEN_HERE';
+    saveToken(token);
+
+    // Navigate to another screen
+    navigation.navigate('Home');
+  };
+
+  return (
+    // Login form goes here
+  );
+};
+
+export default LoginScreen;
+
+// Màn hình 2 
+import React, { useEffect, useState } from 'react';
+import { AsyncStorage } from 'react-native';
+
+const MainApp = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      try {
+        const token = await AsyncStorage.getItem('@token');
+        if (token !== null) {
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkLogin();
+  }, []);
+
+  if (isLoggedIn) {
+    return <HomeScreen />;
+  }
+
+  return <LoginScreen />;
+};
+
+export default MainApp;

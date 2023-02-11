@@ -10,7 +10,7 @@ import { PieChart, BarChart } from "react-native-chart-kit";
 import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import axios from 'axios';
 function Home({navigation}){
     const { height, width } = Dimensions.get('window');
@@ -85,7 +85,6 @@ function Home({navigation}){
      });
     useEffect(()=>{
         const idUser = auth.currentUser.uid;
-        console.log(idUser)
         const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/1`,{
             headers: { authorization: accessToken },
@@ -94,7 +93,6 @@ function Home({navigation}){
                 setdataListJar(res.data);
                 setdataPieChart(res.data.map((item)=>{
                     let randomColor = '#'+(Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
-                    
                     var obj = {id:item.id,name:item.name,population:item.precent,color:randomColor,legendFontColor: '#000',legendFontSize: 15};
                     return obj;
                 }));
@@ -103,6 +101,10 @@ function Home({navigation}){
         })
     },[])
         
+
+    const [dataTime, setdataTime] = useState([]);
+
+  
      return(
         <SafeAreaView style={styles.container} >
             <ScrollView   style={styles.scrollview}>
@@ -186,7 +188,7 @@ function Home({navigation}){
                                                     </View>
                                                     <View style={{flex:0.2,justifyContent:'space-between',alignItems:'center',display:'flex',flexDirection:'row'}}>
                                                         <Text style={{color:'#000',fontSize:18,}}>Khả dụng</Text>
-                                                        <Text style={{color:'#000',fontSize:16,}}>{((item.totalIncome-item.totalSpending)/item.totalIncome * 100).toFixed(2)} %</Text>
+                                                        <Text style={{color:'#000',fontSize:16,}}>{(item.totalIncome == 0 && item.totalSpending == 0)? 0 : ((item.totalIncome-item.totalSpending)/item.totalIncome * 100).toFixed(2)} %</Text>
                                                     </View>
                                                     <View style={{flex:0.3,alignItems:'center',display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
                                                         <Text style={{color:'#000',fontSize:18,}}>Tiền khả dụng: </Text>
