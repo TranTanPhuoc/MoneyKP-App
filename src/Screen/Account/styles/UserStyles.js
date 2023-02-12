@@ -48,8 +48,6 @@ const styles = StyleSheet.create({
     avt:{
         height:100,
         width:100,
-        backgroundColor:'red',
-        borderRadius:100,
     },
     camera:{
         height:40,

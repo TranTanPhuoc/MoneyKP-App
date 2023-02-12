@@ -7,9 +7,28 @@ import { Feather } from '@expo/vector-icons';
 import { TextInput } from 'react-native';
 import { useState } from 'react';
 import * as ImagePicker  from 'expo-image-picker';
+// Import FireBase
+import{signOut,initializeAuth} from 'firebase/auth';
+import {initializeApp} from 'firebase/app';
+import { firebaseConfig } from "../../../firebase/ConnectFirebase";
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { useEffect } from 'react';
+import { reload_IU } from '../../redux/action/ActionRedux';
+
 function User({navigation}){
-    const [name,setName] = useState("Trần Tấn Phước");
-    const [mail,setMail] = useState("trantanphuoc262@gmail.com");
+    const [name,setName] = useState("");
+    const [mail,setMail] = useState("");
+    const [avtPic,setavtPic] = useState("https://res.cloudinary.com/drljnqaai/image/upload/v1676181723/KhoaLuan/images_dcewqt.png");
+    // Connect FireBase
+    const app = initializeApp(firebaseConfig);
+    const auth = initializeAuth(app,{
+    });
+    const idUser = auth.currentUser.uid;
+    const idReload = useSelector(state => state.reload.idReload);
+    const [idIU,setIdIU] = useState(idReload);
+    const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+    const dispatch = useDispatch();
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
@@ -40,6 +59,20 @@ function User({navigation}){
           console.log(result);
         }
       };
+
+      useEffect(()=>{
+        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user/${idUser}`,{
+            headers: { authorization: accessToken },
+        })
+        .then((res)=>{
+                setMail(res.data.email);
+                setName(res.data.name);
+                setavtPic(res.data.urlPic);
+                dispatch(reload_IU(idReload+1));
+            }).catch((err)=>{
+                console.log(err);
+            })
+        },[idIU])
     return(
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
@@ -62,7 +95,7 @@ function User({navigation}){
             <ScrollView style={styles.viewBody}>
                 <View style={styles.viewBody_avt}>
                     <View style={styles.avt}>
-                        
+                        <Image source={{uri:avtPic}} style={{height:"100%",width:"100%",borderRadius:100,}}/>
                     </View>
                     <TouchableOpacity onPress={pickImage} style={styles.camera}>
                         <Feather name="camera" size={24} color="black" />   
@@ -71,7 +104,7 @@ function User({navigation}){
                 <View style={styles.containerFunc}>
                      <View style={styles.funcItem}>
                             <Text style={{fontSize:16,fontWeight:"800",flex:0.3,}}>Id người dùng:</Text>
-                            <Text style={{fontSize:16,fontWeight:"800",flex:0.7,}}>348237423845234</Text>
+                            <Text style={{fontSize:16,fontWeight:"600",flex:0.7,}}>{auth.currentUser.uid}</Text>
                      </View>
                      <View style={styles.funcItem}>
                             <Text style={{fontSize:16,fontWeight:"800",flex:0.3,}}>Họ và tên:</Text>
@@ -79,7 +112,7 @@ function User({navigation}){
                      </View>
                      <View style={styles.funcItemLast}>
                             <Text style={{fontSize:16,fontWeight:"800",flex:0.3,}}>Email:</Text>
-                            <TextInput onChangeText={x => setMail(x)} style={{fontSize:16,fontWeight:"800",flex:0.7,height:"100%",}}>{mail}</TextInput>
+                            <Text style={{fontSize:16,fontWeight:"600",flex:0.7,}}>{mail}</Text>
                      </View>
                 </View>
                 <View style={{marginTop:20,}}/>

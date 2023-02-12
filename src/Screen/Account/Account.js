@@ -12,7 +12,11 @@ import { Platform } from 'react-native';
 function Account({navigation}){
     const [modalVisible, setModalVisible] = useState(false);
     const { height, width } = Dimensions.get('window');
-    console.log(width);
+    
+    const hanldPressUpdateInfo = ()=>{
+        navigation.navigate("User");
+    }
+
     const hanldPressExit = () =>{
         // Connect FireBase
         const app = initializeApp(firebaseConfig);
@@ -83,7 +87,7 @@ function Account({navigation}){
                     </TouchableOpacity>
                 </View>
                 <View style={{borderWidth:1,marginTop:10,borderColor:"grey",borderRadius:10,}}></View>
-                <TouchableOpacity style={styles.containerEditInfo}>
+                <TouchableOpacity onPress={hanldPressUpdateInfo} style={styles.containerEditInfo}>
                     <Text style={{fontSize:20,}}>Sửa thông tin cá nhân</Text>
                     <AntDesign name="right" size={15} color="#000" />
                 </TouchableOpacity>
