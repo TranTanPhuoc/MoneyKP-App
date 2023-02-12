@@ -4,7 +4,7 @@
 <br>Framework được sử dụng trong phần mềm lần này là : React Native.
 <br>Ngoài ra còn sử dụng:
 - Axios
-- Redux Tookit
+- Redux 
 
 <br>Thành viên:
 - Trần Tấn Phước
