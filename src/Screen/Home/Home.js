@@ -10,26 +10,24 @@ import { PieChart, BarChart } from "react-native-chart-kit";
 import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect,  useState } from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { colorJar } from '../../../assets/AppColors/AppColors';
+import { reload_IU } from '../../redux/action/ActionRedux';
 function Home({navigation}){
     const { height, width } = Dimensions.get('window');
     const idReload = useSelector(state => state.reload.idReload);
     const [idIU,setIdIU] = useState(idReload);
-    const data = [
-        {id:1,name:'Thu nhập',price:10000000,color:'#03fc41',icon:require('../../../assets/icons/add.png')},
-        {id:2,name:'Chi tiêu',price:4000000,color:'#fc3030',icon:require('../../../assets/icons/minus.png')},
-    ];
-    const data2 = [
-        {id:3,name:'Tài sản',price:20000000,color:'#03fc41',icon:require('../../../assets/icons/add.png')},
-        {id:4,name:'Khoản nợ',price:0,color:'#fc3030',icon:require('../../../assets/icons/minus.png')},
-    ];
+    const [dataIncomeAndSpending,setdataIncomeAndSpending] = useState([]);
+    const [totalIncome,settotalIncome] = useState(0);
+    const [totalSpending,settotalSpending] = useState(0);
+    const [avtPic,setavtPic] = useState("https://res.cloudinary.com/drljnqaai/image/upload/v1676181723/KhoaLuan/images_dcewqt.png");
+    const [name,setName] = useState("");
     const [dataListJar,setdataListJar] = useState([]);
+    const dispatch = useDispatch();
     // Data biểu đồ tròn
     const [dataPieChart,setdataPieChart] = useState([]);
-    
-    
     // Data biểu đồ cột
     const dataLineChart = {
         labels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4','Tuần 5'],
@@ -86,41 +84,67 @@ function Home({navigation}){
      const app = initializeApp(firebaseConfig);
      const auth = initializeAuth(app,{
      });
+     const idUser = auth.currentUser.uid;
+     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+     useEffect(()=>{
+        setdataIncomeAndSpending(
+            [
+                {id:1,name:'Thu nhập',price:totalIncome,color:'#03fc41',icon:require('../../../assets/icons/add.png')},
+                {id:2,name:'Chi tiêu',price:totalSpending,color:'#fc3030',icon:require('../../../assets/icons/minus.png')},
+            ]
+        )
+     },[totalIncome,totalSpending])
     useEffect(()=>{
-        const idUser = auth.currentUser.uid;
-        const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+        
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/1`,{
             headers: { authorization: accessToken },
         })
         .then((res)=>{
                 setdataListJar(res.data);
-                setdataPieChart(res.data.map((item)=>{
-                    let randomColor = '#'+(Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
+                setdataPieChart(res.data.map((item,index)=>{
+                    let randomColor = colorJar[index]
                     var obj = {id:item.id,name:item.name,population:item.precent,color:randomColor,legendFontColor: '#000',legendFontSize: 15};
                     return obj;
                 }));
+                var totalIncomeItem = 0;
+                var totalSpendingItem = 0;
+                res.data.map((item)=>{
+                    totalIncomeItem += item.totalIncome;
+                })
+                settotalIncome(totalIncomeItem);
+                res.data.map((item)=>{
+                    totalSpendingItem += item.totalSpending
+                })
+                settotalSpending(totalSpendingItem);
         }).catch((err)=>{
             console.log(err);
         })
-    },[idReload])
-        
-
-    
-
-  
+    },[idIU])
+    useEffect(()=>{
+        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user/${idUser}`,{
+            headers: { authorization: accessToken },
+        })
+        .then((res)=>{
+                setName(res.data.name);
+                setavtPic(res.data.urlPic);
+                dispatch(reload_IU(idReload+1));
+            }).catch((err)=>{
+                console.log(err);
+            })
+        },[idIU])
      return(
         <SafeAreaView style={styles.container} >
             <ScrollView   style={styles.scrollview}>
                 <View style={styles.containerTop}>
                     <View style={styles.containerTopImage}>
-                        <Image source={{uri:'https://res.cloudinary.com/drljnqaai/image/upload/v1671783897/KhoaLuan/313270093_816356566288400_2893180884073968601_n.jpg_gufop7.jpg'}} style={{height:60,width:60,borderRadius:40,}}/>
+                        <Image source={{uri:avtPic}} style={{height:60,width:60,borderRadius:40,}}/>
                     </View>
                     <View style={styles.containerTopName}>
                         <View style={{flex:0.2,justifyContent:'flex-end'}}>
                             <Text style={{color:'#000',fontSize:18,}}>Chào buổi chiều !</Text>
                         </View>
                         <View style={{flex:0.8,justifyContent:'center'}}>
-                            <Text style={{color:'#000',fontSize:24,fontWeight:'bold'}}>Trần Tấn Phước </Text>
+                            <Text style={{color:'#000',fontSize:24,fontWeight:'bold'}}>{name}</Text>
                         </View>
                     </View>
                     <View style={styles.containerTopIcon}>
@@ -134,7 +158,7 @@ function Home({navigation}){
                 </View>
                 <ScrollView scrollEnabled={false} contentContainerStyle={{flexDirection:'row',flexWrap:'wrap'}} style={styles.containerInfoWallet}>
                     {
-                        data.map((item)=>{
+                        dataIncomeAndSpending.map((item)=>{
                             return (
                                 <View key={item.id} style={styles.containerItem}>
                                     <View style={styles.containerItemTop}>
@@ -153,34 +177,19 @@ function Home({navigation}){
                     }
                 </ScrollView>
                 <ScrollView scrollEnabled={false} contentContainerStyle={{flexDirection:'row',flexWrap:'wrap'}} style={styles.containerInfoWallet}>
-                    {
-                        data2.map((item)=>{
-                            return (
-                                <View key={item.id} style={styles.containerItem}>
-                                    <View style={styles.containerItemTop}>
-                                        <View style={{display:'flex',flexDirection:'row'}}>
-                                            <Image source={require('../../../assets/icons/wallet.png')} style={{height:20,width:20,tintColor:item.color}}/>
-                                            <Text style={{color:'#000',fontSize:18,marginLeft:10,}}>{item.name}</Text>
-                                        </View>
-                                        <Image source={item.icon} style={{height:20,width:20,tintColor:'#000',}}/>
-                                    </View>
-                                    <Text style={{color:'#000',fontSize:18,marginTop:10,marginLeft:10, marginRight:10,}}>{moneyFormat(item.price)}</Text>
-                                </View>
-                            );
-                        })
-                    }
+                    
                 </ScrollView>
                 <View style={styles.containerListJar}>
                     <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Danh sách hũ</Text>
                     <View style={styles.containerListJarItem}>
                             {
-                                dataListJar.map((item)=>{
+                                dataListJar.map((item,index)=>{
                                     return (
                                         <TouchableOpacity onPress={()=>{
                                             navigation.navigate("DetailJar");
                                         }} key={item.id} style={styles.containerListJarItem_Item}>
                                                 <View style={{flex:0.2,height:"100%",justifyContent:'center',marginLeft:10,}}>
-                                                    <View style={{backgroundColor:item.color,height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
+                                                    <View style={{backgroundColor:colorJar[index],height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
                                                             <Image source={require('../../../assets/icons/jar.png')} style={{tintColor:'#000'}}/>
                                                     </View>
                                                 </View>
