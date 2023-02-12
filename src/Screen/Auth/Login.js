@@ -11,13 +11,16 @@ import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 
 import { Alert } from 'react-native';
 import { ActivityIndicator } from 'react-native';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { reload_IU } from '../../redux/action/ActionRedux';
+
 function Login(){
     const navigation = useNavigation();
     const [isPassword,setPassword] = useState(true);
     const [email,setEmail] = useState("");
     const [passWord,setPassWord] = useState("");
-    var user ;
+    const dispatch = useDispatch();
+    
     const [loading,setisLoading] = useState(false);
     const hanldPressRegister = () => {
         navigation.navigate("Register");
@@ -52,6 +55,7 @@ function Login(){
             const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
             console.log(accessToken);
             navigation.navigate("Tabs");
+            dispatch(reload_IU(1));
         })
         .catch(error =>{
             setisLoading(false);

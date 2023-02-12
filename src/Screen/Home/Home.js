@@ -12,9 +12,11 @@ import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import { useEffect, useLayoutEffect, useState } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 function Home({navigation}){
     const { height, width } = Dimensions.get('window');
-    
+    const idReload = useSelector(state => state.reload.idReload);
+    const [idIU,setIdIU] = useState(idReload);
     const data = [
         {id:1,name:'Thu nhập',price:10000000,color:'#03fc41',icon:require('../../../assets/icons/add.png')},
         {id:2,name:'Chi tiêu',price:4000000,color:'#fc3030',icon:require('../../../assets/icons/minus.png')},
@@ -24,8 +26,9 @@ function Home({navigation}){
         {id:4,name:'Khoản nợ',price:0,color:'#fc3030',icon:require('../../../assets/icons/minus.png')},
     ];
     const [dataListJar,setdataListJar] = useState([]);
-    const [dataPieChart,setdataPieChart] = useState([]);
     // Data biểu đồ tròn
+    const [dataPieChart,setdataPieChart] = useState([]);
+    
     
     // Data biểu đồ cột
     const dataLineChart = {
@@ -78,7 +81,7 @@ function Home({navigation}){
             stroke: '#ffa726'
         }
       };
-    const [widthTotalIncome,setWidthIcome] = useState(0);
+    // const [widthTotalIncome,setWidthIcome] = useState(0);
      // Connect FireBase
      const app = initializeApp(firebaseConfig);
      const auth = initializeAuth(app,{
@@ -99,10 +102,10 @@ function Home({navigation}){
         }).catch((err)=>{
             console.log(err);
         })
-    },[])
+    },[idReload])
         
 
-    const [dataTime, setdataTime] = useState([]);
+    
 
   
      return(
