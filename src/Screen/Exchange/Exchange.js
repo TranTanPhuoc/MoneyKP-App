@@ -59,14 +59,9 @@ function Exchange({navigation}){
         const units = ["", "Một ", "Hai ", "Ba ", "Bốn ", "Năm ", "Sáu ", "Bảy ", "Tám ", "Chín "];
         const teens = ["", "Mười một ", "Mười hai ", "Mười ba ", "Mười bốn ", "Mười lăm ", "Mười sáu ", "Mười bảy ", "Mười tám ", "Mười chín "];
         const tens = ["", "Mười ", "Hai Mươi ", "Ba Mươi ", "Bốn Mươi ", "Năm Mươi ", "Sáu Mươi ", "Bảy Mươi ", "Tám Mươi ", "Chín Mươi "];
-        const high = ["", "Ngàn ", "Triệu ", "Tỷ ", "Ngàn tỷ ", "Triệu tỷ "];
-      
-        
         let words = "";
-      
         let remainingAmount = amount;
         let unit = 0;
-      
         while (remainingAmount > 0) {
           var divisor = Math.pow(1000, unit);
           var quotient = Math.floor(remainingAmount / divisor);
@@ -188,83 +183,100 @@ function Exchange({navigation}){
     }
     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const onHanldSave = ()  =>{
-        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
-        {
-            userId: idUser,
-            basketId:idJar,
-            createDate:dateGD,
-            moneyTransaction:money,
-            type:type,
-            note:noteGD
-        },
-        {
-            headers:{
-                authorization: accessToken 
-            }
+        var mess = "";
+        if(money == 0){
+            mess += "Số tiền phát sinh giao dịch không được bằng 0";
         }
-        ).then((res)=>{
-            if(res.status == 200){
-                if(type == 1){
-                    const income = parseInt(totalIncome) + parseInt(money);
-                    axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
-                    {
-                        id: idJar,
-                        userId:idUser,
-                        name:nameJar,
-                        precent:percentJar,
-                        availableBalances:0,
-                        totalSpending:totalSpending,
-                        totalIncome:income,
-                        type:1,
-                    },
-                    {
-                        headers:{
-                            authorization: accessToken 
-                        }
-                    }).then((res)=>{
-                        // (res.status == 200)? console.log('Lưu thu nhập thành công') : null;
-                        console.log(res.data);
-                        setidIU(idReload+1);
-                        dispatch(reload_IU(idIU));
-                    }).catch((err)=>{
-                        console.log(err);
-                    })
+        if(dateGD == ""){
+            mess += "\nNgày giao dịch không được rỗng ";
+        }
+        if(noteGD == ""){
+            mess += "\nGhi chú giao dịch không được rỗng ";
+        }
+        if(money == 0 || noteGD == "" || dateGD == "") {
+            Alert.alert("Thông báo",mess);
+        }
+        if(money != 0 && noteGD != "" && dateGD != ""){
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
+            {
+                userId: idUser,
+                basketId:idJar,
+                createDate:dateGD,
+                moneyTransaction:money,
+                type:type,
+                note:noteGD
+            },
+            {
+                headers:{
+                    authorization: accessToken 
                 }
-                else if(type == -1){
-                    const spending = parseInt(totalSpending) + parseInt(money);
-                    axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
-                    {
-                        id: idJar,
-                        userId:idUser,
-                        name:nameJar,
-                        precent:percentJar,
-                        availableBalances:0,
-                        totalSpending:spending,
-                        totalIncome:totalIncome,
-                        type:1,
-                    },
-                    {
-                        headers:{
-                            authorization: accessToken 
-                        }
-                    }).then((res)=>{
-                        (res.status == 200)? console.log('Lưu chi tiêu thành công') : null;
-                        setidIU(idReload+1);
-                        dispatch(reload_IU(idIU));
-                        setColorSelect("#FF9999");
-                    }).catch((err)=>{
-                        console.log(err);
-                    })
-                }
-                Alert.alert("Thông báo","Lưu thành công")
-                clearField();
-                navigation.navigate('Exchange');
             }
-            
-        }).catch((err)=>{
-            Alert.alert("Thông báo", "Lưu giao dịch lỗi")
-            console.log(err)
-        })
+            ).then((res)=>{
+                if(res.status == 200){
+                    if(type == 1){
+                        const income = parseInt(totalIncome) + parseInt(money);
+                        axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
+                        {
+                            id: idJar,
+                            userId:idUser,
+                            name:nameJar,
+                            precent:percentJar,
+                            availableBalances:0,
+                            totalSpending:totalSpending,
+                            totalIncome:income,
+                            type:1,
+                        },
+                        {
+                            headers:{
+                                authorization: accessToken 
+                            }
+                        }).then((res)=>{
+                            // (res.status == 200)? console.log('Lưu thu nhập thành công') : null;
+                            console.log(res.data);
+                            setidIU(idReload+1);
+                            const item = idReload+1;
+                            dispatch(reload_IU(item));
+                        }).catch((err)=>{
+                            console.log(err);
+                        })
+                    }
+                    else if(type == -1){
+                        const spending = parseInt(totalSpending) + parseInt(money);
+                        axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
+                        {
+                            id: idJar,
+                            userId:idUser,
+                            name:nameJar,
+                            precent:percentJar,
+                            availableBalances:0,
+                            totalSpending:spending,
+                            totalIncome:totalIncome,
+                            type:1,
+                        },
+                        {
+                            headers:{
+                                authorization: accessToken 
+                            }
+                        }).then((res)=>{
+                            (res.status == 200)? console.log('Lưu chi tiêu thành công') : null;
+                            setidIU(idReload+1);
+                            const item = idReload+1;
+                            dispatch(reload_IU(item));
+                            setColorSelect("#FF9999");
+                        }).catch((err)=>{
+                            console.log(err);
+                        })
+                    }
+                    Alert.alert("Thông báo","Lưu thành công")
+                    clearField();
+                    navigation.navigate('Exchange');
+                }
+                
+            }).catch((err)=>{
+                Alert.alert("Thông báo", "Lưu giao dịch lỗi")
+                console.log(err)
+            })
+        }
     }
     return(
         <SafeAreaView style={styles.container} >
