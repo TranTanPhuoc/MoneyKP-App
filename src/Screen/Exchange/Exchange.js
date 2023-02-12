@@ -19,6 +19,8 @@ import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import axios from 'axios';
 import { TextInput } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { reload_IU } from '../../redux/action/ActionRedux';
 
 function Exchange({navigation}){
     const [colorThuNhap,setcolorThuNhap] = useState("#F9B79C");
@@ -32,6 +34,10 @@ function Exchange({navigation}){
     const [noteGD,setNoteGD] = useState("");
     const [tagGD,setTagGD] = useState("");
     const [type,setType] = useState(1);
+    const idReload = useSelector(state => state.reload.idReload);
+    const dispatch = useDispatch();
+    const [idIU,setidIU] = useState(idReload);
+
     const hanldThuNhap = () =>{
         setcolorThuNhap("#F9B79C");
         setcolorChiTieu("#E6E6FA");
@@ -169,7 +175,7 @@ function Exchange({navigation}){
         }).catch((err)=>{
             console.log(err);
         })
-    },[])
+    },[idIU])
     const onDateChange =(date) => {
        setDate(date);
        setModalVisible(!modalVisible);
@@ -180,7 +186,6 @@ function Exchange({navigation}){
         setNoteGD("");
         setTagGD("");
     }
-    console.log(totalIncome);
     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const onHanldSave = ()  =>{
         axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
@@ -219,6 +224,8 @@ function Exchange({navigation}){
                     }).then((res)=>{
                         // (res.status == 200)? console.log('Lưu thu nhập thành công') : null;
                         console.log(res.data);
+                        setidIU(idReload+1);
+                        dispatch(reload_IU(idIU));
                     }).catch((err)=>{
                         console.log(err);
                     })
@@ -242,6 +249,9 @@ function Exchange({navigation}){
                         }
                     }).then((res)=>{
                         (res.status == 200)? console.log('Lưu chi tiêu thành công') : null;
+                        setidIU(idReload+1);
+                        dispatch(reload_IU(idIU));
+                        setColorSelect("#FF9999");
                     }).catch((err)=>{
                         console.log(err);
                     })
