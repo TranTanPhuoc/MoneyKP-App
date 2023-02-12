@@ -119,7 +119,20 @@ const styles = StyleSheet.create({
       alignItems:'center',
       marginRight:20,
       marginLeft:20,
-    }
+    },
+    modalViewNofi: {
+      backgroundColor: 'white',
+      borderRadius: 20,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    },
 });
 
 export default styles;

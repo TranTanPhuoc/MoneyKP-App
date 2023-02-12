@@ -119,7 +119,7 @@ function Home({navigation}){
         }).catch((err)=>{
             console.log(err);
         })
-    },[idIU])
+    },[idReload])
     useEffect(()=>{
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user/${idUser}`,{
             headers: { authorization: accessToken },

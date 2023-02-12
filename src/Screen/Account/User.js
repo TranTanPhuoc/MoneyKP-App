@@ -26,7 +26,6 @@ function User({navigation}){
     });
     const idUser = auth.currentUser.uid;
     const idReload = useSelector(state => state.reload.idReload);
-    const [idIU,setIdIU] = useState(idReload);
     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const dispatch = useDispatch();
 
@@ -72,7 +71,7 @@ function User({navigation}){
             }).catch((err)=>{
                 console.log(err);
             })
-        },[idIU])
+        },[idReload])
     return(
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
