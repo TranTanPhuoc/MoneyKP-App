@@ -29,8 +29,14 @@ function Wallet(){
     const [idIU,setIdIU] = useState(idReload);
     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const [dataIncomeAndSpending,setdataIncomeAndSpending] = useState([]);
-    const [totalIncome,settotalIncome] = useState(0);
-    const [totalSpending,settotalSpending] = useState(0);
+    const [totalIncome,settotalIncome] = useState(10);
+    const [totalSpending,settotalSpending] = useState(5);
+    // Data biểu đồ tròn
+    const [total,settotal] = useState(0);
+    const [dataPieChart,setdataPieChart] = useState([
+        {id:1,name:"Thu nhập",population:50,color:colorJar[0],legendFontColor: '#000',legendFontSize: 15},
+        {id:2,name:"Chi tiêu",population:50,color:colorJar[1],legendFontColor: '#000',legendFontSize: 15},
+    ]);
     const dataLineChart = {
         labels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4','Tuần 5'],
         datasets: [
@@ -69,13 +75,6 @@ function Wallet(){
           maximumFractionDigits: 3,
         });
       };
-
-    const dataPieChart = [
-        {id:1,name:'Tài sản',population:50,color:'#FF9999',legendFontColor: '#000',legendFontSize: 15},
-        {id:2,name:'Giấc mơ',population:0,color:'#6699FF',legendFontColor: '#000',legendFontSize: 15},
-        {id:3,name:'6 hủ',population:50,color:'#FF6600',legendFontColor: '#000',legendFontSize: 15},
-        {id:4,name:'Khoản nợ',population:0,color:'#F4A460',legendFontColor: '#000',legendFontSize: 15},
-    ];
     const chartConfigPie = {
         backgroundColor: '#e26a00',
         backgroundGradientTo: '#ffa726',
@@ -112,16 +111,34 @@ function Wallet(){
         }).catch((err)=>{
             console.log(err);
         })
-    },[idIU])
+    },[idReload])
+    useEffect(()=>{
+        const totalMoney = totalIncome + totalSpending;
+        const precentIncome = totalIncome/totalMoney *100;
+        const precentSpeeding = totalSpending/totalMoney *100;
+        setdataPieChart([
+            {id:1,name:"Thu nhập",population:precentIncome,color:colorJar[0],legendFontColor: '#000',legendFontSize: 15},
+            {id:2,name:"Chi tiêu",population:precentSpeeding,color:colorJar[1],legendFontColor: '#000',legendFontSize: 15},
+        ]);
+        settotal(totalIncome-totalSpending);
+    },[totalIncome,totalSpending])
     return(
         <SafeAreaView style={styles.container} >
             <ScrollView   style={styles.scrollview}>
                 <LinearGradient colors={['#c2387c','#8390e6']} style={styles.containerHeader}>
                     <View style={styles.containerHeaderTop}>
-                        
+                            <PieChart
+                                data={dataPieChart}
+                                height={150}
+                                width={width}
+                                chartConfig={chartConfigPie}
+                                accessor="population"
+                                paddingLeft='10'
+                                />
                     </View>
                     <View style={styles.containerHeaderBottom}>
                             <Text style={{color:"#fff",fontSize:24,}}>Tài sản</Text>
+                            <Text style={{color:"#fff",fontSize:24,}}>{moneyFormat(total)}</Text>
                     </View>
                 </LinearGradient>
                 <ScrollView scrollEnabled={false} contentContainerStyle={{flexDirection:'row',flexWrap:'wrap'}} style={styles.containerInfoWallet}>

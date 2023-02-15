@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     containerInput:{
         display:'flex',
         flexDirection:'row',
-        borderWidth:1,
+        borderWidth:0.5,
         marginRight:10,
         marginLeft:10,
         borderRadius:20,

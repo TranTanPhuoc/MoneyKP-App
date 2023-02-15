@@ -33,15 +33,20 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     containerHeaderTop:{
-        flex:0.7,
+        height:155,
+        justifyContent:'center',
+        alignItems:'center',
     },
     containerHeaderBottom:{
-        flex:0.3,
+        height:45,
         borderTopWidth:0.75,
         borderColor:"#fff",
         marginLeft:20,
-        justifyContent:'center',
+        justifyContent:'space-between',
         marginRight:20,
+        display:'flex',
+        flexDirection:"row",
+        alignItems:'center',
     },
     containerListJar:{
         marginTop:20,

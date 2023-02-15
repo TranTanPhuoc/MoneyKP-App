@@ -50,12 +50,12 @@ function Account({navigation}){
                         <Image style={{tintColor:'red',height:24,width:24}} source={require('../../../assets/icons/logout.png')} />
                     </TouchableOpacity>
                 </View>
-                <View style={{borderWidth:1,marginTop:10,borderColor:"grey",borderRadius:10,}}></View>
+                <View style={{borderWidth:0.5,marginTop:10,borderColor:"grey",borderRadius:10,}}></View>
                 <TouchableOpacity onPress={hanldPressUpdateInfo} style={styles.containerEditInfo}>
                     <Text style={{fontSize:20,}}>Sửa thông tin cá nhân</Text>
                     <AntDesign name="right" size={15} color="#000" />
                 </TouchableOpacity>
-                <View style={{borderWidth:1,marginTop:10,borderColor:"grey",borderRadius:10,}}></View>
+                <View style={{borderWidth:0.5,marginTop:10,borderColor:"grey",borderRadius:10,}}></View>
                 <View style={styles.containerPrInfo}>
                     <TouchableOpacity style={styles.containerPrInfoItem}>
                         <View style={{flex:0.2,height:"100%",justifyContent:'center',alignItems:'center',}}>
