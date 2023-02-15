@@ -51,7 +51,24 @@ const styles = StyleSheet.create({
     display:'flex',
     flexDirection:'row',
     flex:1,
-   }
+    justifyContent:'space-between'
+   },
+   containerSelectDropDown:{
+    borderRadius:20,
+    borderWidth:0.5,
+    borderColor:'black',
+    height:40,
+    borderRadius:20,
+    backgroundColor:'#fff',
+    shadowOffset:{
+      width:0,
+      height:1,
+    },
+    shadowColor:'#999999',
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    flex:0.4,    
+   },
 });
 
 export default styles;
