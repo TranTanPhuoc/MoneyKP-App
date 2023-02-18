@@ -71,8 +71,7 @@ const width = Dimensions.get('window').width;
                     authorization: accessToken 
                 },
                 data: listdata,
-            }
-            ).then(()=>{
+            }).then(()=>{
                 Alert.alert("Thông báo","Lưu thành công");
                 dispatch(reload_IU(reload_IU+1));
                 navigation.navigate("Tabs");

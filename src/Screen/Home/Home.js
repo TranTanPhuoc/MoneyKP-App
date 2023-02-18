@@ -186,7 +186,7 @@ function Home({navigation}){
                                 dataListJar.map((item,index)=>{
                                     return (
                                         <TouchableOpacity onPress={()=>{
-                                            navigation.navigate("DetailJar");
+                                            navigation.navigate("DetailJar",{id:item.id,name:item.name});
                                         }} key={item.id} style={styles.containerListJarItem_Item}>
                                                 <View style={{flex:0.2,height:"100%",justifyContent:'center',marginLeft:10,}}>
                                                     <View style={{backgroundColor:colorJar[index],height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>

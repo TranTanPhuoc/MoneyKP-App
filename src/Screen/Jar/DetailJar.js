@@ -3,7 +3,8 @@ import {  Text, SafeAreaView, Alert, Image,} from 'react-native';
 import styles from "./styles/DetailJarStyles";
 import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
-function DetailJar({navigation}){
+function DetailJar({navigation,route}){
+    const {id,name} = route.params;
     return(
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
@@ -30,7 +31,7 @@ function DetailJar({navigation}){
                     <Text style={{fontSize:18,marginLeft:20,}}>1. Thu nhập, chi tiêu, chuyển tiền</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=>{
-                    navigation.navigate("History");
+                    navigation.navigate("History",{id:id,name:name});
                 }} style={styles.button}>
                     <Text style={{fontSize:18,marginLeft:20,}}>2. Xem lịch sử giao dịch</Text>
                 </TouchableOpacity>
