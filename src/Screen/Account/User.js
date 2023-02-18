@@ -52,7 +52,6 @@ function User({navigation}){
             name: nameFile,
           };
           formData.append("file", _image);
-          console.log(formData);
         }
         else if(result.cancelled){
           console.log(result);
