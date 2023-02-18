@@ -14,14 +14,23 @@ import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import { colorJar } from '../../../assets/AppColors/AppColors';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { reload_IU } from '../../redux/action/ActionRedux';
 function SetPercentJar({navigation}){
 const width = Dimensions.get('window').width;
    var tong = 0;
    const [dataPieChart,setdataPieChart] = useState([]);
    const idReload = useSelector(state => state.reload.idReload);
+   const [data, setData] = useState([]);
+   const dispatch  = useDispatch();
     // Biểu đồ tròn
+     // Connect FireBase
+     const app = initializeApp(firebaseConfig);
+     const auth = initializeAuth(app,{
+     });
+     const idUser = auth.currentUser.uid;
+     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const chartConfigPie = {
         backgroundColor: '#e26a00',
         backgroundGradientTo: '#ffa726',
@@ -42,37 +51,98 @@ const width = Dimensions.get('window').width;
     };
 
     const hanldSave = ()=>{
-        (tong == 100)? Alert.alert("Thông báo","Lưu thành công") : Alert.alert("Thông báo", "Tổng tỉ lệ phải bằng 100");
+        const listdata = data.map((item)=>{
+            return {
+                id:item.id,
+                userId:item.userId,
+                name:item.name,
+                precent:item.population,
+                availableBalances:item.availableBalances,
+                totalSpending:item.totalSpending,
+                totalIncome:item.totalIncome,
+                type:item.type
+            };
+        });
+        if(tong == 100 || data != []){
+            axios({
+                url:'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
+                method:'POST',
+                headers:{
+                    authorization: accessToken 
+                },
+                data: listdata,
+            }
+            ).then(()=>{
+                Alert.alert("Thông báo","Lưu thành công");
+                dispatch(reload_IU(reload_IU+1));
+                navigation.navigate("Tabs");
+            }).catch((err)=>{
+                console.log(err)
+            });
+        }
+        else{
+            Alert.alert("Thông báo", "Tổng tỉ lệ phải bằng 100");
+        }
     }
     const deleteItem = (item) => {
-        const newData = data.filter(i => i.id !== item.id);
-        setData(newData);
+        if(item.population == 0 && tong == 100){
+            Alert.alert("Thông báo","Bạn có chắc chắn muốn xóa lọ không",[
+                {
+                    text: 'Thoát',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+                {
+                    text: 'Xóa',
+                    onPress: () => {
+                        axios.delete(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${item.id}`,{
+                            headers: { authorization: accessToken },
+                        }).then((res)=>{
+                            const newData = data.filter(i => i.id !== item.id);
+                            setData(newData);
+                            dispatch(reload_IU(999999));
+                        }).catch((err)=>{
+                            console.log(err)
+                        })
+                    },
+                    style: 'delete',
+                },
+            ]);
+            
+        }else{
+            Alert.alert("Thông báo","Lọ có phần trăm bằng 0 mới được xóa và tổng phần trăm các lọ bằng 100");
+        }
+       
     };
-     // Connect FireBase
-     const app = initializeApp(firebaseConfig);
-     const auth = initializeAuth(app,{
-     });
-     const idUser = auth.currentUser.uid;
-     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+    
+    
     useEffect(()=>{
-        
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/1`,{
             headers: { authorization: accessToken },
         })
         .then((res)=>{
-                setdataPieChart(res.data.map((item,index)=>{
-                    let randomColor = colorJar[index]
-                    var obj = {id:item.id,name:item.name,population:item.precent,color:randomColor,legendFontColor: '#000',legendFontSize: 15};
-                    return obj;
-                }));
+            setdataPieChart(res.data.map((item,index)=>{
+                let randomColor = colorJar[index]
+                var obj = {id:item.id,name:item.name,population:item.precent,color:randomColor,legendFontColor: '#000',legendFontSize: 15};
+                return obj;
+            }));
+            setData(res.data.map((item,index)=>{
+                var objItem = {
+                    id:item.id,
+                    userId:item.userId,
+                    name:item.name,
+                    population:item.precent,
+                    availableBalances:item.availableBalances,
+                    totalSpending:item.totalSpending,
+                    totalIncome:item.totalIncome,
+                    type:item.type
+                };
+                return objItem;
+            }));
         }).catch((err)=>{
             console.log(err);
         })
     },[idReload]);
-    const [data, setData] = useState([]);
-    useEffect(()=>{
-        setData(dataPieChart);
-    },[dataPieChart]);
     const hanldhanldAddJar = ()=>{
         navigation.navigate("Jar");
     }
@@ -100,10 +170,9 @@ const width = Dimensions.get('window').width;
                     <PieChart
                         data={dataPieChart}
                         height={220}
-                        width={width-40}
+                        width={width}
                         chartConfig={chartConfigPie}
                         accessor="population"
-                        paddingLeft='30'
                     /> 
                 </View>
                 <View style={styles.containerButton}>
