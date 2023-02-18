@@ -5,8 +5,49 @@ import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native';
 import { useState } from 'react';
+// Import FireBase
+import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
+import {initializeApp} from 'firebase/app';
+import { firebaseConfig } from "../../../firebase/ConnectFirebase";
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { reload_IU } from '../../redux/action/ActionRedux';
+
 function Jar({navigation}){
    const [jar,setJar] = useState("");
+   const idReload = useSelector(state => state.reload.idReload);
+    // Connect FireBase
+    const app = initializeApp(firebaseConfig);
+    const auth = initializeAuth(app,{
+    });
+    const idUser = auth.currentUser.uid;
+    const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+    const dispatch = useDispatch();
+    const hanldhanldAddJar = ()=>{
+        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
+            {
+                userId: idUser,
+                name:jar,
+                precent:0,
+                availableBalances:0,
+                totalSpending:0,
+                totalIncome:0,
+                type:1
+            },
+            {
+                headers:{
+                    authorization: accessToken 
+                }
+            }).then((res)=>{
+                dispatch(reload_IU(reload_IU+1));
+                Alert.alert("Thông báo","Thêm thành công");
+                navigation.goBack();
+
+            }).catch((err)=>{
+                console.log(err);
+            })
+    }
+
     return(
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
@@ -31,11 +72,11 @@ function Jar({navigation}){
                     <Image source={require('../../../assets/icons/jar.png')} />
                 </View>
                 <View style={{flex:0.8,justifyContent:'center',}}>
-                     <TextInput value={jar} onChange={x=>setJar(x)} style={{height:50,borderRadius:20,borderWidth:0.5,paddingLeft:15,fontSize:18,}} placeholder='Nhập tên lọ cần thêm'/>
+                     <TextInput value={jar} onChangeText={x=>setJar(x)} style={{height:50,borderRadius:20,borderWidth:0.5,paddingLeft:15,fontSize:18,}} placeholder='Nhập tên lọ cần thêm'/>
                 </View>
             </View>
             <View style={styles.containerButton}>
-                    <TouchableOpacity style={styles.buttonStyle}>
+                    <TouchableOpacity onPress={hanldhanldAddJar} style={styles.buttonStyle}>
                         <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Thêm</Text>
                     </TouchableOpacity>
             </View>

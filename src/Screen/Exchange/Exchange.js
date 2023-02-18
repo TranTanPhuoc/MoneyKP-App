@@ -11,7 +11,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import * as Calendar from 'expo-calendar';
 import CalendarPicker from 'react-native-calendar-picker';
 import { Modal } from 'react-native';
-import moment from 'moment';
 
 // Import FireBase
 import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
@@ -142,7 +141,7 @@ function Exchange({navigation}){
     const [totalIncome,settotalIncome] = useState();
     const [totalSpending,settotalSpending] = useState();
     const [nameJar,setNameJar] = useState("");
-    const [percentJar,setPercentJar] = useState();
+    const [precentJar,SetprecentJar] = useState();
     const idUser = auth.currentUser.uid;
     useEffect(()=>{
         const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
@@ -150,6 +149,7 @@ function Exchange({navigation}){
             headers: { authorization: accessToken },
         })
         .then((res)=>{
+                console.log(res.data);
                 setDataJar(res.data.map((item,index)=>{
                     var obj = item.name;
                     if(index == 0){
@@ -158,19 +158,20 @@ function Exchange({navigation}){
                         settotalIncome(item.totalIncome);
                         settotalSpending(item.totalSpending);
                         setNameJar(item.name)
-                        setPercentJar(item.percent)
+                        SetprecentJar(item.precent)
                     }
                     return obj;
                 }));
                 setdataJarTemp(res.data.map((item)=>{
-                    var obj = {id:item.id,name:item.name,population:item.precent,userId:item.userId,precent:item.precent,totalIncome:item.totalIncome,totalSpending:item.totalSpending};
-                    return obj;
+                    var objtemp = {id:item.id,name:item.name,population:item.precent,userId:item.userId,precent:item.precent,totalIncome:item.totalIncome,totalSpending:item.totalSpending};
+                    return objtemp;
                 }));
             
         }).catch((err)=>{
             console.log(err);
         })
-    },[idIU])
+    },[idIU]);
+    console.log(precentJar)
     const onDateChange =(date) => {
        setDate(date);
        setModalVisible(!modalVisible);
@@ -220,7 +221,7 @@ function Exchange({navigation}){
                             id: idJar,
                             userId:idUser,
                             name:nameJar,
-                            precent:percentJar,
+                            precent:precentJar,
                             availableBalances:0,
                             totalSpending:totalSpending,
                             totalIncome:income,
@@ -247,7 +248,7 @@ function Exchange({navigation}){
                             id: idJar,
                             userId:idUser,
                             name:nameJar,
-                            precent:percentJar,
+                            precent:precentJar,
                             availableBalances:0,
                             totalSpending:spending,
                             totalIncome:totalIncome,
@@ -343,7 +344,7 @@ function Exchange({navigation}){
                                     settotalIncome(item.totalIncome);
                                     settotalSpending(item.totalSpending);
                                     setNameJar(item.name);
-                                    setPercentJar(item.percent);
+                                    SetprecentJar(item.precent);
                                 }
                             })
                         }} 

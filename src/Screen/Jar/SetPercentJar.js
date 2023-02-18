@@ -9,18 +9,18 @@ import { PieChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+// Import FireBase
+import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
+import {initializeApp} from 'firebase/app';
+import { firebaseConfig } from "../../../firebase/ConnectFirebase";
+import { colorJar } from '../../../assets/AppColors/AppColors';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 function SetPercentJar({navigation}){
 const width = Dimensions.get('window').width;
    var tong = 0;
-   const dataPieChart = [
-    {id:1,name:'Thiết yếu',population:35,color:'#FF9999',legendFontColor: '#000',legendFontSize: 15},
-    {id:2,name:'Giáo dục',population:20,color:'#6699FF',legendFontColor: '#000',legendFontSize: 15},
-    {id:3,name:'Tiết kiệm',population:10,color:'#FF6600',legendFontColor: '#000',legendFontSize: 15},
-    {id:4,name:'Hưởng thụ',population:5,color:'#00EE00',legendFontColor: '#000',legendFontSize: 15},
-    {id:5,name:'Đầu tư',population:20,color:'#8DEEEE',legendFontColor: '#000',legendFontSize: 15},
-    {id:6,name:'Thiện tâm',population:10,color:'#F4A460',legendFontColor: '#000',legendFontSize: 15},
-    ];
-    const [data, setData] = useState(dataPieChart);
+   const [dataPieChart,setdataPieChart] = useState([]);
+   const idReload = useSelector(state => state.reload.idReload);
     // Biểu đồ tròn
     const chartConfigPie = {
         backgroundColor: '#e26a00',
@@ -41,9 +41,6 @@ const width = Dimensions.get('window').width;
         setData([...data]);
     };
 
-    // useEffect(()=>{
-    //     console.log(data);
-    // },[data])
     const hanldSave = ()=>{
         (tong == 100)? Alert.alert("Thông báo","Lưu thành công") : Alert.alert("Thông báo", "Tổng tỉ lệ phải bằng 100");
     }
@@ -51,6 +48,34 @@ const width = Dimensions.get('window').width;
         const newData = data.filter(i => i.id !== item.id);
         setData(newData);
     };
+     // Connect FireBase
+     const app = initializeApp(firebaseConfig);
+     const auth = initializeAuth(app,{
+     });
+     const idUser = auth.currentUser.uid;
+     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+    useEffect(()=>{
+        
+        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/1`,{
+            headers: { authorization: accessToken },
+        })
+        .then((res)=>{
+                setdataPieChart(res.data.map((item,index)=>{
+                    let randomColor = colorJar[index]
+                    var obj = {id:item.id,name:item.name,population:item.precent,color:randomColor,legendFontColor: '#000',legendFontSize: 15};
+                    return obj;
+                }));
+        }).catch((err)=>{
+            console.log(err);
+        })
+    },[idReload]);
+    const [data, setData] = useState([]);
+    useEffect(()=>{
+        setData(dataPieChart);
+    },[dataPieChart]);
+    const hanldhanldAddJar = ()=>{
+        navigation.navigate("Jar");
+    }
     return(
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
@@ -82,7 +107,7 @@ const width = Dimensions.get('window').width;
                     /> 
                 </View>
                 <View style={styles.containerButton}>
-                        <TouchableOpacity style={styles.buttonStyle}>
+                        <TouchableOpacity onPress={hanldhanldAddJar} style={styles.buttonStyle}>
                             <Text style={{fontSize:18,color:'#fff',fontWeight:'bold'}}>Thêm hủ mới</Text>
                         </TouchableOpacity>
                 </View>
