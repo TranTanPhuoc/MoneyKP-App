@@ -35,6 +35,11 @@ function DetailJar({navigation,route}){
                 }} style={styles.button}>
                     <Text style={{fontSize:18,marginLeft:20,}}>2. Xem lịch sử giao dịch</Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{
+                    navigation.navigate("Chart",{id:id,name:name});
+                }} style={styles.button}>
+                    <Text style={{fontSize:18,marginLeft:20,}}>3. Thống kê chi tiêu theo tháng, năm</Text>
+                </TouchableOpacity>
             </View>
            
         </SafeAreaView>
