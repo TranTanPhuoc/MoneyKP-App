@@ -63,7 +63,7 @@ const width = Dimensions.get('window').width;
                 type:item.type
             };
         });
-        if(tong == 100 || data != []){
+        if(tong == 100){
             axios({
                 url:'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
                 method:'POST',
@@ -73,7 +73,7 @@ const width = Dimensions.get('window').width;
                 data: listdata,
             }).then(()=>{
                 Alert.alert("Thông báo","Lưu thành công");
-                dispatch(reload_IU(reload_IU+1));
+                dispatch(reload_IU(idReload+1));
                 navigation.navigate("Tabs");
             }).catch((err)=>{
                 console.log(err)

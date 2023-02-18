@@ -80,7 +80,6 @@ function Register(){
                         }
                     }
                     ).then(()=>{
-                        console.log("Call api get User thành công r");
                         const dataListJar = [
                             {
                                 userId:  userCredential.user.uid,
@@ -146,7 +145,6 @@ function Register(){
                             data: dataListJar
                         }
                         ).then(()=>{
-                            console.log("Call api Tạo hủ thành công r");
                         }).catch((err)=>{
                             console.log(err)
                         });

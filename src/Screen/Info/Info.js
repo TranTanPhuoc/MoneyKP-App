@@ -3,13 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import styles from "./styles/InfoStyles";
 import axios from 'axios';
 function Info(){
-    // const hanldCallApi = () =>{
-    //     axios.get('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user').then((res)=>{
-    //         console.log(res.data)
-    //     }).catch((err)=>{
-    //         console.log(err);
-    //     })
-    // }
+    
     return(
         <SafeAreaView style={styles.container} >
             <ScrollView   style={styles.scrollview}>

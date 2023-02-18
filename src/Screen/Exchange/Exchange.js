@@ -149,7 +149,6 @@ function Exchange({navigation}){
             headers: { authorization: accessToken },
         })
         .then((res)=>{
-                console.log(res.data);
                 setDataJar(res.data.map((item,index)=>{
                     var obj = item.name;
                     if(index == 0){
@@ -171,7 +170,6 @@ function Exchange({navigation}){
             console.log(err);
         })
     },[idIU]);
-    console.log(precentJar)
     const onDateChange =(date) => {
        setDate(date);
        setModalVisible(!modalVisible);
@@ -233,7 +231,6 @@ function Exchange({navigation}){
                             }
                         }).then((res)=>{
                             // (res.status == 200)? console.log('Lưu thu nhập thành công') : null;
-                            console.log(res.data);
                             setidIU(idReload+1);
                             const item = idReload+1;
                             dispatch(reload_IU(item));
