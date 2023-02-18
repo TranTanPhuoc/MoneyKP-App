@@ -3,7 +3,6 @@ import {  Text, SafeAreaView, Alert, Image,} from 'react-native';
 import styles from "./styles/ChartStyles";
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
-import { TextInput } from 'react-native';
 import { useEffect, useState } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -12,30 +11,23 @@ import { Modal } from 'react-native';
 import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
-import { colorJar } from '../../../assets/AppColors/AppColors';
-import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { BarChart } from "react-native-chart-kit";
+import { Dimensions } from 'react-native';
 
 function Chart({navigation,route}){
-   const {id,name} = route.params;
-   const dataTK = ['Tất cả','Theo tháng','Theo năm'];
-   const dataJar = ['Tất cả','Thu nhập','Chi tiêu'];
-
-const [dataChart,setdataChart] = useState([]);
-    const moneyFormat = (amount) => {
-        return amount.toLocaleString("vi-VN", {
-          style: "currency",
-          currency: "VND",
-          maximumFractionDigits: 3,
-        });
-    };
-    const [valuesDefaut,setvaluesDefaut] = useState("Tất cả");
-    const [selectDefaut,setselectDefaut] = useState("Tất cả");
-    const idReload = useSelector(state => state.reload.idReload);
+    const {id,name} = route.params;
+    const dataTK = ['Theo tháng','Theo năm'];
+    const dataJar = ['Thu nhập','Chi tiêu'];
+    const [typeData,settypeData] = useState(1);
+    const [valuesDefaut,setvaluesDefaut] = useState("Theo tháng");
+    const [selectDefaut,setselectDefaut] = useState("Thu nhập");
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
-    const [month,setMonth] = useState(0);
-    const [year,setYear] = useState(2023);
+    const [month,setMonth] = useState(selectedDate.getMonth()+1);
+    const [year,setYear] = useState(selectedDate.getFullYear());
+    const [labels,setlabels] = useState([]);
+    const [datasets,setdatasets] = useState([]);
     const onDateChange = (event, selectedDate) => {
         if (selectedDate) {
           const newDate = new Date(selectedDate);
@@ -53,28 +45,292 @@ const [dataChart,setdataChart] = useState([]);
     });
     const idUser = auth.currentUser.uid;
     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+    const [data,setdata] = useState({
+        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31",""],
+        datasets: [
+          {
+            data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          },
+        ],
+      });
     useEffect(()=>{
-        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-basketId/${idUser}/${id}`,{
-            headers: { authorization: accessToken },
-        }).then((res)=>{
-            setdataChart(res.data.map((item,index)=>{
-                var obj = {
-                    basketId: item.basketId,
-                    createDate: item.createDate,
-                    id: item.id,
-                    moneyTransaction: item.moneyTransaction,
-                    note: item.note,
-                    type: item.type,
-                    userId: item.userId,
-                    color: colorJar[0],
-                    name:name
-                };
-                return obj;
-            }));
-        }).catch((err)=>{
-            console.log(err);
-        })
-    },[idReload])
+        if(valuesDefaut == "Theo năm"){
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type:typeData,
+                    userId:idUser,
+                    basketId:id,
+                    year:year,
+                    month:0
+                },
+                {
+                    headers:{
+                        authorization: accessToken 
+                    }
+                }).then((res)=>{
+                    
+                    setdata({
+                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""],
+                        datasets: [
+                        {
+                            data: res.data,
+                        },
+                        ],
+                    })
+                }).catch((err)=>{
+                    console.log(err);
+            })
+        }else if(valuesDefaut == "Theo tháng"){
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type:typeData,
+                    userId:idUser,
+                    basketId:id,
+                    year:year,
+                    month:month
+                },
+                {
+                    headers:{
+                        authorization: accessToken 
+                    }
+                }).then((res)=>{
+                    setlabels(
+                        res.data.map((item,index)=>{
+                            return index+1;
+                        })
+                    );
+                    setdatasets(
+                        res.data.map((item)=>{
+                            return item;
+                        })
+                    )
+                    // setdata({
+                    //     labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28",""],
+                    //     datasets: [
+                    //     {
+                    //         data: res.data,
+                    //     },
+                    //     ],
+                    // })
+                }).catch((err)=>{
+                    console.log(err);
+            })
+        }
+        
+    },[month]);
+
+    useEffect(()=>{
+        if(valuesDefaut == "Theo năm"){
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type:typeData,
+                    userId:idUser,
+                    basketId:id,
+                    year:year,
+                    month:0
+                },
+                {
+                    headers:{
+                        authorization: accessToken 
+                    }
+                }).then((res)=>{
+                    
+                    setdata({
+                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""],
+                        datasets: [
+                        {
+                            data: res.data,
+                        },
+                        ],
+                    })
+                }).catch((err)=>{
+                    console.log(err);
+            })
+        }else if(valuesDefaut == "Theo tháng"){
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type:typeData,
+                    userId:idUser,
+                    basketId:id,
+                    year:year,
+                    month:month
+                },
+                {
+                    headers:{
+                        authorization: accessToken 
+                    }
+                }).then((res)=>{
+                    // 
+                    // setdata({
+                    //     labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28",""],
+                    //     datasets: [
+                    //     {
+                    //         data: res.data,
+                    //     },
+                    //     ],
+                    // })
+                    setlabels(
+                        res.data.map((item,index)=>{
+                            return index+1;
+                        })
+                    );
+                    setdatasets(
+                        res.data.map((item)=>{
+                            return item;
+                        })
+                    )
+                }).catch((err)=>{
+                    console.log(err);
+            })
+        }
+        
+    },[year]);
+    
+    useEffect(()=>{
+        if(valuesDefaut == "Theo năm"){
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type:typeData,
+                    userId:idUser,
+                    basketId:id,
+                    year:year,
+                    month:0
+                },
+                {
+                    headers:{
+                        authorization: accessToken 
+                    }
+                }).then((res)=>{
+                    
+                    setdata({
+                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""],
+                        datasets: [
+                        {
+                            data: res.data,
+                        },
+                        ],
+                    })
+                }).catch((err)=>{
+                    console.log(err);
+            })
+        }else if(valuesDefaut == "Theo tháng"){
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type:typeData,
+                    userId:idUser,
+                    basketId:id,
+                    year:year,
+                    month:month
+                },
+                {
+                    headers:{
+                        authorization: accessToken 
+                    }
+                }).then((res)=>{
+                    // 
+                    // setdata({
+                    //     labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28",""],
+                    //     datasets: [
+                    //     {
+                    //         data: res.data,
+                    //     },
+                    //     ],
+                    // })
+                    setlabels(
+                        res.data.map((item,index)=>{
+                            return index+1;
+                        })
+                    );
+                    setdatasets(
+                        res.data.map((item)=>{
+                            return item;
+                        })
+                    )
+                }).catch((err)=>{
+                    console.log(err);
+            })
+        }
+        
+    },[valuesDefaut]);
+      
+    useEffect(()=>{
+        if(valuesDefaut == "Theo năm"){
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type:typeData,
+                    userId:idUser,
+                    basketId:id,
+                    year:year,
+                    month:0
+                },
+                {
+                    headers:{
+                        authorization: accessToken 
+                    }
+                }).then((res)=>{
+                    
+                    setdata({
+                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""],
+                        datasets: [
+                        {
+                            data: res.data,
+                        },
+                        ],
+                    })
+                }).catch((err)=>{
+                    console.log(err);
+            })
+        }else if(valuesDefaut == "Theo tháng"){
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type:typeData,
+                    userId:idUser,
+                    basketId:id,
+                    year:year,
+                    month:month
+                },
+                {
+                    headers:{
+                        authorization: accessToken 
+                    }
+                }).then((res)=>{
+                    setlabels(
+                        res.data.map((item,index)=>{
+                            return index+1;
+                        })
+                    );
+                    setdatasets(
+                        res.data.map((item)=>{
+                            return item;
+                        })
+                    )
+                }).catch((err)=>{
+                    console.log(err);
+            })
+        }
+        
+    },[selectDefaut]);
+
+    useEffect(()=>{
+        if(valuesDefaut == "Theo tháng"){
+            setdata({
+                labels: labels,
+                datasets: [
+                    {
+                        data: datasets,
+                    },
+                ],
+            })
+        }
+    },[datasets])
+
+    const chartConfig = {
+        backgroundGradientFrom: "#fff",
+        backgroundGradientTo: "#fff",
+        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        
+    };
+      
     return(
         <SafeAreaView style={styles.container} >
             <Modal
@@ -151,6 +407,7 @@ const [dataChart,setdataChart] = useState([]);
                         buttonTextStyle = {{fontSize:16,}}
                         onSelect={(selectedItem, index) => { 
                             setselectDefaut(selectedItem);
+                            (selectedItem == 'Thu nhập')? settypeData(1) : settypeData(-1);
                         }} 
                         renderDropdownIcon={isOpened => {
                         return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={16} />;
@@ -176,39 +433,23 @@ const [dataChart,setdataChart] = useState([]);
                         <Text style={{fontSize:20,fontWeight:'bold',marginTop:10,}}>Tháng: {selectedDate.toLocaleDateString('VN', { month: 'long', year: 'numeric' })}</Text>
                     </View>
                 }
-                {
-                    dataChart.map((item,index)=>{
-                        return(
-                            <View key={index} style={styles.containerItem}>
-                                <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
-                                    <View style={{backgroundColor:item.color,height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
-                                        <Image source={require('../../../assets/icons/jar.png')} style={{tintColor:'#000'}}/>
-                                    </View>
-                                </View>
-                                <View style={{flex:0.45,}}>
-                                    <View style={{marginBottom:10,}}>
-                                        <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>{item.name}</Text>
-                                    </View>
-                                    {
-                                        (item.type== 1)? <Text>Thu nhập</Text> : <Text>Chi tiền</Text>
-                                    }
-                                </View>
-                                <View style={{flex:0.35}}>
-                                    {
-                                        (item.type== 1)? 
-                                        <Text style={{color:'#339900',fontSize:20,fontWeight:'bold'}}>+ {moneyFormat(item.moneyTransaction)}</Text> : 
-                                        <Text style={{color:'#EE0000',fontSize:20,fontWeight:'bold'}}>- {moneyFormat(item.moneyTransaction)}</Text>
-                                    }
-                                </View>
-                            </View>
-                        );
-                    })
-                }
+                <ScrollView horizontal={true}>
+                    <BarChart
+                        data={data}
+                        width={(valuesDefaut == "Theo tháng")? Dimensions.get('window').width+1000 : Dimensions.get('window').width+50}
+                        height={250}
+                        yAxisLabel="VND "
+                        chartConfig={chartConfig}
+                        showBarTops={true}
+                        withHorizontalLabels={true}
+                        horizontalLabelRotation={-60}
+                    />
+                </ScrollView>
+
             </ScrollView>
             
         </SafeAreaView>
     );
 }
-
   
 export default Chart;
