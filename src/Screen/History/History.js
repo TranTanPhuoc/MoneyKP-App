@@ -1,25 +1,27 @@
-import { ScrollView, View } from 'react-native';
+import { Button, DatePickerAndroid, ScrollView, View } from 'react-native';
 import {  Text, SafeAreaView, Alert, Image,} from 'react-native';
 import styles from "./styles/HistoryStyles";
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
-function History({navigation}){
-   const [History,setHistory] = useState("");
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Modal } from 'react-native';
+// Import FireBase
+import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
+import {initializeApp} from 'firebase/app';
+import { firebaseConfig } from "../../../firebase/ConnectFirebase";
+import { colorJar } from '../../../assets/AppColors/AppColors';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+
+function History({navigation,route}){
+   const {id,name} = route.params;
    const dataTK = ['Tất cả','Theo tháng','Theo năm'];
    const dataJar = ['Tất cả','Thu nhập','Chi tiêu'];
-   const dataHistory = [
-    {id:1,name:'Thiết yếu',price:212222230,color:'#FF9999',type:1},
-    {id:2,name:'Thiết yếu',price:31235,color:'#FF9999',type:-1},
-    {id:3,name:'Thiết yếu',price:212335,color:'#FF9999',type:1},
-    {id:4,name:'Thiết yếu',price:123456,color:'#FF9999',type:-1},
-    {id:5,name:'Thiết yếu',price:6764435,color:'#FF9999',type:1},
-    {id:6,name:'Thiết yếu',price:453123,color:'#FF9999',type:-1},
-    {id:7,name:'Thiết yếu',price:23453,color:'#FF9999',type:1},
-    {id:8,name:'Thiết yếu',price:123567,color:'#FF9999',type:-1},
-    ];
+
+const [dataHistory,setdataHistory] = useState([]);
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
           style: "currency",
@@ -29,8 +31,81 @@ function History({navigation}){
     };
     const [valuesDefaut,setvaluesDefaut] = useState("Tất cả");
     const [selectDefaut,setselectDefaut] = useState("Tất cả");
+    const idReload = useSelector(state => state.reload.idReload);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [showPicker, setShowPicker] = useState(false);
+    const [month,setMonth] = useState(0);
+    const [year,setYear] = useState(2023);
+    const onDateChange = (event, selectedDate) => {
+        if (selectedDate) {
+          const newDate = new Date(selectedDate);
+          setSelectedDate(newDate);
+        }
+      };
+    const hanldChon = ()=>{
+        setShowPicker(false);
+        setMonth(selectedDate.getMonth() + 1);
+        setYear(selectedDate.getFullYear());
+    }
+    // Connect FireBase
+    const app = initializeApp(firebaseConfig);
+    const auth = initializeAuth(app,{
+    });
+    const idUser = auth.currentUser.uid;
+    const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+    useEffect(()=>{
+        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-basketId/${idUser}/${id}`,{
+            headers: { authorization: accessToken },
+        }).then((res)=>{
+            setdataHistory(res.data.map((item,index)=>{
+                var obj = {
+                    basketId: item.basketId,
+                    createDate: item.createDate,
+                    id: item.id,
+                    moneyTransaction: item.moneyTransaction,
+                    note: item.note,
+                    type: item.type,
+                    userId: item.userId,
+                    color: colorJar[0],
+                    name:name
+                };
+                return obj;
+            }));
+        }).catch((err)=>{
+            console.log(err);
+        })
+    },[idReload])
     return(
         <SafeAreaView style={styles.container} >
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={showPicker}
+                onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setModalVisible(!modalVisible);
+                }}>
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <View style={{display:'flex',flexDirection:'row',justifyContent:'center'}}>
+                                <View style={{justifyContent:'flex-start',flex:1,marginLeft:30,height:30}}>
+
+                                </View>
+                                <View style={{justifyContent:'flex-end',flex:1,marginRight:30,}}>
+                                    <TouchableOpacity onPress={hanldChon}>
+                                        <Text style={{fontSize:24,color:'#0099FF',textAlign:'right',fontWeight:'normal'}}>Chọn</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <DateTimePicker
+                                value={selectedDate}
+                                mode="date"
+                                display="spinner"
+                                onChange={onDateChange}
+                            />
+                        </View>
+                    </View>
+            </Modal>
             <View style={styles.containerheader}>
                 <View style={styles.containerheader_icon}>
                     <TouchableOpacity onPress={()=>{
@@ -91,6 +166,17 @@ function History({navigation}){
                     />
                 </View>
                 {
+                    (valuesDefaut == "Theo tháng" || valuesDefaut == "Theo năm" ) &&
+                    <View style={styles.containerItemSelect}>
+                        <TouchableOpacity style={styles.buttom} onPress={() => setShowPicker(true)} >
+                                <Text>
+                                    Chọn tháng
+                                </Text>
+                        </TouchableOpacity>
+                        <Text style={{fontSize:20,fontWeight:'bold',marginTop:10,}}>Tháng: {selectedDate.toLocaleDateString('VN', { month: 'long', year: 'numeric' })}</Text>
+                    </View>
+                }
+                {
                     dataHistory.map((item,index)=>{
                         return(
                             <View key={index} style={styles.containerItem}>
@@ -110,8 +196,8 @@ function History({navigation}){
                                 <View style={{flex:0.35}}>
                                     {
                                         (item.type== 1)? 
-                                        <Text style={{color:'#339900',fontSize:20,fontWeight:'bold'}}>+ {moneyFormat(item.price)}</Text> : 
-                                        <Text style={{color:'#EE0000',fontSize:20,fontWeight:'bold'}}>- {moneyFormat(item.price)}</Text>
+                                        <Text style={{color:'#339900',fontSize:20,fontWeight:'bold'}}>+ {moneyFormat(item.moneyTransaction)}</Text> : 
+                                        <Text style={{color:'#EE0000',fontSize:20,fontWeight:'bold'}}>- {moneyFormat(item.moneyTransaction)}</Text>
                                     }
                                 </View>
                             </View>
