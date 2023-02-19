@@ -8,7 +8,6 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import SelectDropdown  from 'react-native-select-dropdown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import * as Calendar from 'expo-calendar';
 import CalendarPicker from 'react-native-calendar-picker';
 import { Modal } from 'react-native';
 
@@ -28,6 +27,7 @@ function Exchange({navigation}){
     const [money,setMoney] = useState("");
     const [wordsMoney,setWordsMoney] = useState("");
     const [colorSelect,setColorSelect] = useState("#FF9999");
+    const [colorSelectTo,setColorSelectTo] = useState("#FF9999");
     const [modalVisible, setModalVisible] = useState(false);
     const [dateGD, setDate] = useState("");
     const [noteGD,setNoteGD] = useState("");
@@ -53,6 +53,7 @@ function Exchange({navigation}){
         setcolorThuNhap("#E6E6FA");
         setcolorChiTieu("#E6E6FA");
         setcolorChuyenTien("#fedcba");
+        setType(2);
     }
     function convertVNDToWords(amount) {
         const units = ["", "Một ", "Hai ", "Ba ", "Bốn ", "Năm ", "Sáu ", "Bảy ", "Tám ", "Chín "];
@@ -135,9 +136,12 @@ function Exchange({navigation}){
     const auth = initializeAuth(app,{
     });
     const [dataJar,setDataJar] = useState([]);
+    const [dataJarTo,setdataJarTo] = useState([]);
     const [dataJarTemp,setdataJarTemp] = useState([]);
     const [valuesDefaut,setvaluesDefaut] = useState("");
+    const [valuesDefautTo,setvaluesDefautTo] = useState("");
     const [idJar,setisJar] = useState();
+    const [idJarTo,setidJarTo] = useState();
     const [totalIncome,settotalIncome] = useState();
     const [totalSpending,settotalSpending] = useState();
     const [nameJar,setNameJar] = useState("");
@@ -158,6 +162,14 @@ function Exchange({navigation}){
                         settotalSpending(item.totalSpending);
                         setNameJar(item.name)
                         SetprecentJar(item.precent)
+                    }
+                    return obj;
+                }));
+                setdataJarTo(res.data.map((item,index)=>{
+                    var obj = item.name;
+                    if(index == 0){
+                        setvaluesDefautTo(item.name)
+                        setidJarTo(item.id)
                     }
                     return obj;
                 }));
@@ -196,86 +208,117 @@ function Exchange({navigation}){
             Alert.alert("Thông báo",mess);
         }
         if(money != 0 && noteGD != "" && dateGD != ""){
-            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
-            {
-                userId: idUser,
-                basketId:idJar,
-                createDate:dateGD,
-                moneyTransaction:money,
-                type:type,
-                note:noteGD
-            },
-            {
-                headers:{
-                    authorization: accessToken 
+            if(type != 2){
+                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
+                {
+                    userId: idUser,
+                    basketId:idJar,
+                    createDate:dateGD,
+                    moneyTransaction:money,
+                    type:type,
+                    note:noteGD
+                },
+                {
+                    headers:{
+                        authorization: accessToken 
+                    }
                 }
+                ).then((res)=>{
+                    if(res.status == 200){
+                        if(type == 1){
+                            const income = parseInt(totalIncome) + parseInt(money);
+                            axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
+                            {
+                                id: idJar,
+                                userId:idUser,
+                                name:nameJar,
+                                precent:precentJar,
+                                availableBalances:0,
+                                totalSpending:totalSpending,
+                                totalIncome:income,
+                                type:1,
+                            },
+                            {
+                                headers:{
+                                    authorization: accessToken 
+                                }
+                            }).then((res)=>{
+                                // (res.status == 200)? console.log('Lưu thu nhập thành công') : null;
+                                setidIU(idReload+1);
+                                const item = idReload+1;
+                                dispatch(reload_IU(item));
+                            }).catch((err)=>{
+                                console.log(err);
+                            })
+                        }
+                        else if(type == -1){
+                            const spending = parseInt(totalSpending) + parseInt(money);
+                            axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
+                            {
+                                id: idJar,
+                                userId:idUser,
+                                name:nameJar,
+                                precent:precentJar,
+                                availableBalances:0,
+                                totalSpending:spending,
+                                totalIncome:totalIncome,
+                                type:1,
+                            },
+                            {
+                                headers:{
+                                    authorization: accessToken 
+                                }
+                            }).then((res)=>{
+                                (res.status == 200)? console.log('Lưu chi tiêu thành công') : null;
+                                setidIU(idReload+1);
+                                const item = idReload+1;
+                                dispatch(reload_IU(item));
+                                setColorSelect("#FF9999");
+                            }).catch((err)=>{
+                                console.log(err);
+                            })
+                        }
+                        Alert.alert("Thông báo","Lưu thành công")
+                        clearField();
+                        navigation.navigate('Exchange');
+                    }
+                    
+                }).catch((err)=>{
+                    Alert.alert("Thông báo", "Lưu giao dịch lỗi")
+                    console.log(err)
+                })
             }
-            ).then((res)=>{
-                if(res.status == 200){
-                    if(type == 1){
-                        const income = parseInt(totalIncome) + parseInt(money);
-                        axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
-                        {
-                            id: idJar,
-                            userId:idUser,
-                            name:nameJar,
-                            precent:precentJar,
-                            availableBalances:0,
-                            totalSpending:totalSpending,
-                            totalIncome:income,
-                            type:1,
-                        },
-                        {
-                            headers:{
-                                authorization: accessToken 
-                            }
-                        }).then((res)=>{
-                            // (res.status == 200)? console.log('Lưu thu nhập thành công') : null;
-                            setidIU(idReload+1);
-                            const item = idReload+1;
-                            dispatch(reload_IU(item));
-                        }).catch((err)=>{
-                            console.log(err);
-                        })
+            else if(type == 2){
+                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/transfer-money',
+                {
+                    userId: idUser,
+                    sentBasketId:idJar,
+                    receiveBasketId:idJarTo,
+                    money:money,
+                    createdDate:dateGD,
+                    note:noteGD
+                },
+                {
+                    headers:{
+                        authorization: accessToken 
                     }
-                    else if(type == -1){
-                        const spending = parseInt(totalSpending) + parseInt(money);
-                        axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
-                        {
-                            id: idJar,
-                            userId:idUser,
-                            name:nameJar,
-                            precent:precentJar,
-                            availableBalances:0,
-                            totalSpending:spending,
-                            totalIncome:totalIncome,
-                            type:1,
-                        },
-                        {
-                            headers:{
-                                authorization: accessToken 
-                            }
-                        }).then((res)=>{
-                            (res.status == 200)? console.log('Lưu chi tiêu thành công') : null;
-                            setidIU(idReload+1);
-                            const item = idReload+1;
-                            dispatch(reload_IU(item));
-                            setColorSelect("#FF9999");
-                        }).catch((err)=>{
-                            console.log(err);
-                        })
-                    }
-                    Alert.alert("Thông báo","Lưu thành công")
-                    clearField();
-                    navigation.navigate('Exchange');
-                }
-                
-            }).catch((err)=>{
-                Alert.alert("Thông báo", "Lưu giao dịch lỗi")
-                console.log(err)
-            })
+                }).then((res)=>{
+                    (res.status == 200)? console.log('Lưu chi tiêu thành công') : null;
+                    setidIU(idReload+1);
+                    const item = idReload+1;
+                    dispatch(reload_IU(item));
+                    setColorSelect("#FF9999");
+                    setColorSelectTo("#FF9999");
+                }).catch((err)=>{
+                    console.log(err);
+                })
+                Alert.alert("Thông báo","Lưu thành công")
+                clearField();
+                navigation.navigate('Exchange');
+            }
         }
     }
+
     return(
         <SafeAreaView style={styles.container} >
             <Modal
@@ -325,6 +368,9 @@ function Exchange({navigation}){
                             <Text style={{fontSize:20,fontStyle:'italic',textAlign:'center'}}>{wordsMoney}</Text>
                     </View>
                 }
+                {
+                    (type == 2) && <Text style={{fontSize:24,marginLeft:20,}}>Lọ gởi :</Text>
+                }
                 <View style={styles.containerJar}>
                     <SelectDropdown 
                         data={dataJar} 
@@ -366,6 +412,49 @@ function Exchange({navigation}){
                         buttonStyle = {styles.containerSelectDropDown}
                         />
                 </View>
+                {
+                    (type == 2) && 
+                    <View>
+                        <Text style={{fontSize:24,marginLeft:20,marginTop:15,}}>Lọ nhận :</Text>
+                        <View style={styles.containerJar}>
+                            <SelectDropdown 
+                                data={dataJarTo} 
+                                defaultButtonText={valuesDefautTo} 
+                                buttonTextStyle = {{fontSize:16,}}
+                                onSelect={(selectedItem, index) => { 
+                                    setvaluesDefautTo(selectedItem);
+                                    (index == 0) ?  setColorSelectTo("#FF9999") : (index == 1)? setColorSelectTo("#6699FF") : 
+                                    (index == 2)? setColorSelectTo("#FF6600") : (index == 3) ? setColorSelectTo("#00EE00") :
+                                    (index == 4) ? setColorSelectTo("#8DEEEE") : setColorSelectTo("#F4A460")
+                                    dataJarTemp.map((item,index)=>{
+                                        if(selectedItem == item.name){
+                                            setidJarTo(item.id)
+                                        }
+                                    })
+                                }} 
+                                renderDropdownIcon={isOpened => {
+                                return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={18} />;
+                                }}
+                                renderCustomizedButtonChild= {value =>{
+                                    return (
+                                        <View style={{ flexDirection: 'row', marginRight: 8,alignItems:'center',flex:1}}>
+                                            <View style={{flex:0.3,height:"100%",justifyContent:'center',alignItems:'center'}}>
+                                                <View style={[styles.containercustomSelectDropDown,{backgroundColor:colorSelectTo}]}>
+                                                    <Image source={require('../../../assets/icons/jar.png')} />
+                                                </View>
+                                            </View>
+                                            <View>
+                                                <Text style={{fontSize:26,marginLeft:20}}>{valuesDefautTo}</Text>
+                                                <Text style={{fontSize:18,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
+                                            </View>
+                                        </View>
+                                    );
+                                }}
+                                buttonStyle = {styles.containerSelectDropDown}
+                                />
+                        </View>
+                    </View>
+                }
                 <View style={styles.containerNote}>
                         <TouchableOpacity onPress={() => setModalVisible(true)}  style={{flex:0.3,display:'flex',flexDirection:'row',borderRadius:20,}}>
                             <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
