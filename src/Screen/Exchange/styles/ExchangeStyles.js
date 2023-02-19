@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
       marginRight:15,
       marginLeft:15,
       justifyContent:'center',
-      alignItems:'center'
+      alignItems:'center',
+      marginTop:15,
      },
      containerSelectDropDown:{
       width:"100%", 
