@@ -72,10 +72,6 @@ const styles = StyleSheet.create({
         flex:1,
     },
     containerListJars:{
-        marginTop:20,
-        height:400,
-        backgroundColor:"#E6E6FA",
-        borderRadius:40,
         justifyContent:'center',
         alignItems:'center'
     }

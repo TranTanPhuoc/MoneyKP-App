@@ -7,7 +7,7 @@ import 'intl/locale-data/jsonp/en';
 import { AntDesign } from '@expo/vector-icons';
 import { PieChart, BarChart } from "react-native-chart-kit";
 // Import FireBase
-import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
+import{initializeAuth} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import { useEffect,  useState } from 'react';
@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { colorJar } from '../../../assets/AppColors/AppColors';
 import { reload_IU } from '../../redux/action/ActionRedux';
 function Home({navigation}){
-    const { height, width } = Dimensions.get('window');
+    const { width } = Dimensions.get('window');
     const idReload = useSelector(state => state.reload.idReload);
     const [idIU,setIdIU] = useState(idReload);
     const [dataIncomeAndSpending,setdataIncomeAndSpending] = useState([]);
@@ -26,24 +26,35 @@ function Home({navigation}){
     const [name,setName] = useState("");
     const [dataListJar,setdataListJar] = useState([]);
     const dispatch = useDispatch();
-    // Data biểu đồ tròn
-    const [dataPieChart,setdataPieChart] = useState([]);
-    // Data biểu đồ cột
-    const dataLineChart = {
-        labels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4','Tuần 5'],
+    // Ngày hiện tại
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    // Tháng hiện tại
+    const [month,setMonth] = useState(selectedDate.getMonth()+1);
+    // Năm hiện tại
+    const [year,setYear] = useState(selectedDate.getFullYear());
+    const [labels,setlabels] = useState([]);
+    // Data biểu đồ cột của thu nhập
+    const [datasets,setdatasets] = useState([]);
+    const [data,setdata] = useState({
+        labels: [],
         datasets: [
-            {
-              data: [20, 45, 28, 80, 99],
-              color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-              strokeWidth: 2 // optional
-            },
-            {
-              data: [30, 55, 38, 90, 109],
-              color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
-              strokeWidth: 2 // optional
-            }
-          ]
-      };
+          {
+            data: [],
+          },
+        ],
+      });
+    // Data biểu đồ cột của chi tiêu
+    const [datasets2,setdatasets2] = useState([]);
+    const [data2,setdata2] = useState({
+        labels: [],
+        datasets: [
+          {
+            data: [],
+          },
+        ],
+      });
+    // Data biểu đồ tròn % các lọ
+    const [dataPieChart,setdataPieChart] = useState([]);
     // Định dạng tiền tệ VNĐ
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
@@ -63,29 +74,13 @@ function Home({navigation}){
         useShadowColorFromDataset: false ,
         borderWidth:0.5,
       };
-      // Biểu đồ cột
-      const chartConfigBarChart = {
-        backgroundGradientFrom: '#9E9E9E',
-        backgroundGradientTo: '#B8B8C8',
-        decimalPlaces: 2, // optional, defaults to 2dp
-        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-        labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-        style: {
-            borderRadius: 16
-        },
-        propsForDots: {
-            r: '6',
-            strokeWidth: '2',
-            stroke: '#ffa726'
-        }
-      };
-    // const [widthTotalIncome,setWidthIcome] = useState(0);
      // Connect FireBase
      const app = initializeApp(firebaseConfig);
      const auth = initializeAuth(app,{
      });
      const idUser = auth.currentUser.uid;
      const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+     // Data tổng chi tiêu và thu nhập
      useEffect(()=>{
         setdataIncomeAndSpending(
             [
@@ -93,9 +88,9 @@ function Home({navigation}){
                 {id:2,name:'Chi tiêu',price:totalSpending,color:'#fc3030',icon:require('../../../assets/icons/minus.png')},
             ]
         )
-     },[totalIncome,totalSpending])
+     },[totalIncome,totalSpending]);
+     
     useEffect(()=>{
-        
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/1`,{
             headers: { authorization: accessToken },
         })
@@ -119,7 +114,7 @@ function Home({navigation}){
         }).catch((err)=>{
             console.log(err);
         })
-    },[idReload])
+    },[idReload]);
     useEffect(()=>{
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user/${idUser}`,{
             headers: { authorization: accessToken },
@@ -132,6 +127,82 @@ function Home({navigation}){
                 console.log(err);
             })
         },[idIU])
+    useEffect(()=>{
+        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+        {
+            type:1,
+            userId:idUser,
+            year:year,
+            month:month,
+            typeBasket:1
+        },
+        {
+            headers:{
+                authorization: accessToken 
+            }
+        }).then((res)=>{
+            setlabels(
+                res.data.map((item,index)=>{
+                    return index+1;
+                })
+            );
+            setdatasets(
+                res.data.map((item)=>{
+                    return item;
+                })
+            )
+        }).catch((err)=>{
+            console.log(err);
+        })
+        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+        {
+            type:-1,
+            userId:idUser,
+            year:year,
+            month:month,
+            typeBasket:1
+        },
+        {
+            headers:{
+                authorization: accessToken 
+            }
+        }).then((res)=>{
+            setdatasets2(
+                res.data.map((item)=>{
+                    return item;
+                })
+            )
+        }).catch((err)=>{
+            console.log(err);
+        })
+    },[idReload]);
+    useEffect(()=>{
+        setdata({
+            labels: labels,
+            datasets: [
+                {
+                    data: datasets,
+                },
+            ],
+        })
+        setdata2({
+            labels: labels,
+            datasets: [
+                {
+                    data: datasets2,
+                },
+            ],
+        })
+    },[datasets]);
+    const chartConfig = {
+        barPercentage: 0.5,
+        categoryPercentage: 0.8,
+        backgroundGradientFrom: "#fff",
+        backgroundGradientTo: "#fff",
+        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        
+        
+    };
      return(
         <SafeAreaView style={styles.container} >
             <ScrollView   style={styles.scrollview}>
@@ -217,20 +288,39 @@ function Home({navigation}){
                     </View>
                 </View>
                 <View style={styles.containerListJar}>
-                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Báo cáo thu chi</Text>
+                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Báo cáo thu nhập của tháng {month}</Text>
                     <View style={styles.containerListJars}>
-                    <BarChart
-                        data={dataLineChart}
-                        width={width-40}
-                        height={200}
-                        chartConfig={chartConfigBarChart}
-                        withInnerLines={false}
-                        withOuterLines={false}
-                        withDots={false}
-                        withShadow={false}
-                        fromZero={true}
-                        bezier
-                    />
+                        <ScrollView horizontal={true} style={{marginTop:20,marginBottom:20}}>
+                            <BarChart
+                                data={data}
+                                width={Dimensions.get('window').width+200}
+                                height={250}
+                                yAxisLabel="VND "
+                                chartConfig={chartConfig}
+                                showBarTops={true}
+                                withHorizontalLabels={true}
+                                horizontalLabelRotation={-60}
+                                style={{marginLeft:10,marginRight:10,borderRadius:20,}}
+                            />
+                        </ScrollView>
+                    </View>
+                </View>
+                <View style={styles.containerListJar}>
+                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Báo cáo chi tiêu của tháng {month}</Text>
+                    <View style={styles.containerListJars}>
+                        <ScrollView horizontal={true} style={{marginTop:20,marginBottom:20}}>
+                            <BarChart
+                                data={data2}
+                                width={Dimensions.get('window').width+200 }
+                                height={250}
+                                yAxisLabel="VND "
+                                chartConfig={chartConfig}
+                                showBarTops={true}
+                                withHorizontalLabels={true}
+                                horizontalLabelRotation={-60}
+                                style={{marginLeft:10,marginRight:10,borderRadius:20,}}
+                            />
+                        </ScrollView>
                     </View>
                 </View>
                 <View style={styles.containerListJar}>

@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native';
 import { useState } from 'react';
 // Import FireBase
-import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
+import{initializeAuth,} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import axios from 'axios';

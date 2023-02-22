@@ -8,7 +8,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Modal } from 'react-native';
 // Import FireBase
-import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
+import{initializeAuth,} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import axios from 'axios';
@@ -61,7 +61,8 @@ function Chart({navigation,route}){
                     userId:idUser,
                     basketId:id,
                     year:year,
-                    month:0
+                    month:0,
+                    typeBasket:1
                 },
                 {
                     headers:{
@@ -87,7 +88,8 @@ function Chart({navigation,route}){
                     userId:idUser,
                     basketId:id,
                     year:year,
-                    month:month
+                    month:month,
+                    typeBasket:1
                 },
                 {
                     headers:{
@@ -104,14 +106,6 @@ function Chart({navigation,route}){
                             return item;
                         })
                     )
-                    // setdata({
-                    //     labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28",""],
-                    //     datasets: [
-                    //     {
-                    //         data: res.data,
-                    //     },
-                    //     ],
-                    // })
                 }).catch((err)=>{
                     console.log(err);
             })
@@ -127,7 +121,8 @@ function Chart({navigation,route}){
                     userId:idUser,
                     basketId:id,
                     year:year,
-                    month:0
+                    month:0,
+                    typeBasket:1
                 },
                 {
                     headers:{
@@ -153,22 +148,14 @@ function Chart({navigation,route}){
                     userId:idUser,
                     basketId:id,
                     year:year,
-                    month:month
+                    month:month,
+                    typeBasket:1
                 },
                 {
                     headers:{
                         authorization: accessToken 
                     }
                 }).then((res)=>{
-                    // 
-                    // setdata({
-                    //     labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28",""],
-                    //     datasets: [
-                    //     {
-                    //         data: res.data,
-                    //     },
-                    //     ],
-                    // })
                     setlabels(
                         res.data.map((item,index)=>{
                             return index+1;
@@ -194,7 +181,8 @@ function Chart({navigation,route}){
                     userId:idUser,
                     basketId:id,
                     year:year,
-                    month:0
+                    month:0,
+                    typeBasket:1
                 },
                 {
                     headers:{
@@ -220,22 +208,15 @@ function Chart({navigation,route}){
                     userId:idUser,
                     basketId:id,
                     year:year,
-                    month:month
+                    month:month,
+                    typeBasket:1
                 },
                 {
                     headers:{
                         authorization: accessToken 
                     }
                 }).then((res)=>{
-                    // 
-                    // setdata({
-                    //     labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28",""],
-                    //     datasets: [
-                    //     {
-                    //         data: res.data,
-                    //     },
-                    //     ],
-                    // })
+                   
                     setlabels(
                         res.data.map((item,index)=>{
                             return index+1;
@@ -261,7 +242,8 @@ function Chart({navigation,route}){
                     userId:idUser,
                     basketId:id,
                     year:year,
-                    month:0
+                    month:0,
+                    typeBasket:1
                 },
                 {
                     headers:{
@@ -287,7 +269,8 @@ function Chart({navigation,route}){
                     userId:idUser,
                     basketId:id,
                     year:year,
-                    month:month
+                    month:month,
+                    typeBasket:1
                 },
                 {
                     headers:{
