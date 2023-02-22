@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
      },
      containerNote:{
       marginTop:20,
-      height:180,
       backgroundColor:'#fff',
       marginRight:15,
       marginLeft:15,

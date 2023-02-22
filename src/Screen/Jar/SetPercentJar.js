@@ -10,7 +10,7 @@ import { Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 // Import FireBase
-import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
+import{initializeAuth} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import { colorJar } from '../../../assets/AppColors/AppColors';

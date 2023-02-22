@@ -1,5 +1,5 @@
-import { ScrollView, View } from 'react-native';
-import {  Text, SafeAreaView, Alert, Image,} from 'react-native';
+import {  View } from 'react-native';
+import {  Text, SafeAreaView} from 'react-native';
 import styles from "./styles/DetailJarStyles";
 import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';

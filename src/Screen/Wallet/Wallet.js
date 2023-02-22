@@ -15,7 +15,6 @@ import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { colorJar } from '../../../assets/AppColors/AppColors';
-import { reload_IU } from '../../redux/action/ActionRedux';
 import { useState } from 'react';
 import { useEffect } from 'react';
 function Wallet(){

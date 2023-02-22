@@ -12,7 +12,7 @@ import CalendarPicker from 'react-native-calendar-picker';
 import { Modal } from 'react-native';
 
 // Import FireBase
-import{initializeAuth,signInWithEmailAndPassword,} from 'firebase/auth';
+import{initializeAuth,} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import axios from 'axios';
@@ -147,6 +147,8 @@ function Exchange({navigation}){
     const [nameJar,setNameJar] = useState("");
     const [precentJar,SetprecentJar] = useState();
     const idUser = auth.currentUser.uid;
+    // Nhận biết hủ hay nợ hay giấc mơ hay tài sản
+    const [typeBasket,settypeBasket] =useState(1);
     useEffect(()=>{
         const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/1`,{
@@ -208,113 +210,116 @@ function Exchange({navigation}){
             Alert.alert("Thông báo",mess);
         }
         if(money != 0 && noteGD != "" && dateGD != ""){
-            if(type != 2){
-                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
-                {
-                    userId: idUser,
-                    basketId:idJar,
-                    createDate:dateGD,
-                    moneyTransaction:money,
-                    type:type,
-                    note:noteGD
-                },
-                {
-                    headers:{
-                        authorization: accessToken 
+            if(typeBasket == 1){
+                if(type != 2){
+                    axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
+                    {
+                        userId: idUser,
+                        basketId:idJar,
+                        createDate:dateGD,
+                        moneyTransaction:money,
+                        type:type,
+                        note:noteGD,
+                        typeBasket:typeBasket
+                    },
+                    {
+                        headers:{
+                            authorization: accessToken 
+                        }
                     }
+                    ).then((res)=>{
+                        if(res.status == 200){
+                            if(type == 1){
+                                const income = parseInt(totalIncome) + parseInt(money);
+                                axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
+                                {
+                                    id: idJar,
+                                    userId:idUser,
+                                    name:nameJar,
+                                    precent:precentJar,
+                                    availableBalances:0,
+                                    totalSpending:totalSpending,
+                                    totalIncome:income,
+                                    type:1,
+                                },
+                                {
+                                    headers:{
+                                        authorization: accessToken 
+                                    }
+                                }).then((res)=>{
+                                    // (res.status == 200)? console.log('Lưu thu nhập thành công') : null;
+                                    setidIU(idReload+1);
+                                    const item = idReload+1;
+                                    dispatch(reload_IU(item));
+                                }).catch((err)=>{
+                                    console.log(err);
+                                })
+                            }
+                            else if(type == -1){
+                                const spending = parseInt(totalSpending) + parseInt(money);
+                                axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
+                                {
+                                    id: idJar,
+                                    userId:idUser,
+                                    name:nameJar,
+                                    precent:precentJar,
+                                    availableBalances:0,
+                                    totalSpending:spending,
+                                    totalIncome:totalIncome,
+                                    type:1,
+                                },
+                                {
+                                    headers:{
+                                        authorization: accessToken 
+                                    }
+                                }).then((res)=>{
+                                    (res.status == 200)? console.log('Lưu chi tiêu thành công') : null;
+                                    setidIU(idReload+1);
+                                    const item = idReload+1;
+                                    dispatch(reload_IU(item));
+                                    setColorSelect("#FF9999");
+                                }).catch((err)=>{
+                                    console.log(err);
+                                })
+                            }
+                            Alert.alert("Thông báo","Lưu thành công")
+                            clearField();
+                            navigation.navigate('Exchange');
+                        }
+                        
+                    }).catch((err)=>{
+                        Alert.alert("Thông báo", "Lưu giao dịch lỗi")
+                        console.log(err)
+                    })
                 }
-                ).then((res)=>{
-                    if(res.status == 200){
-                        if(type == 1){
-                            const income = parseInt(totalIncome) + parseInt(money);
-                            axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
-                            {
-                                id: idJar,
-                                userId:idUser,
-                                name:nameJar,
-                                precent:precentJar,
-                                availableBalances:0,
-                                totalSpending:totalSpending,
-                                totalIncome:income,
-                                type:1,
-                            },
-                            {
-                                headers:{
-                                    authorization: accessToken 
-                                }
-                            }).then((res)=>{
-                                // (res.status == 200)? console.log('Lưu thu nhập thành công') : null;
-                                setidIU(idReload+1);
-                                const item = idReload+1;
-                                dispatch(reload_IU(item));
-                            }).catch((err)=>{
-                                console.log(err);
-                            })
+                else if(type == 2){
+                    axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/transfer-money',
+                    {
+                        userId: idUser,
+                        sentBasketId:idJar,
+                        receiveBasketId:idJarTo,
+                        money:money,
+                        createdDate:dateGD,
+                        note:noteGD
+                    },
+                    {
+                        headers:{
+                            authorization: accessToken 
                         }
-                        else if(type == -1){
-                            const spending = parseInt(totalSpending) + parseInt(money);
-                            axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
-                            {
-                                id: idJar,
-                                userId:idUser,
-                                name:nameJar,
-                                precent:precentJar,
-                                availableBalances:0,
-                                totalSpending:spending,
-                                totalIncome:totalIncome,
-                                type:1,
-                            },
-                            {
-                                headers:{
-                                    authorization: accessToken 
-                                }
-                            }).then((res)=>{
-                                (res.status == 200)? console.log('Lưu chi tiêu thành công') : null;
-                                setidIU(idReload+1);
-                                const item = idReload+1;
-                                dispatch(reload_IU(item));
-                                setColorSelect("#FF9999");
-                            }).catch((err)=>{
-                                console.log(err);
-                            })
-                        }
-                        Alert.alert("Thông báo","Lưu thành công")
-                        clearField();
-                        navigation.navigate('Exchange');
-                    }
-                    
-                }).catch((err)=>{
-                    Alert.alert("Thông báo", "Lưu giao dịch lỗi")
-                    console.log(err)
-                })
-            }
-            else if(type == 2){
-                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/transfer-money',
-                {
-                    userId: idUser,
-                    sentBasketId:idJar,
-                    receiveBasketId:idJarTo,
-                    money:money,
-                    createdDate:dateGD,
-                    note:noteGD
-                },
-                {
-                    headers:{
-                        authorization: accessToken 
-                    }
-                }).then((res)=>{
-                    (res.status == 200)? console.log('Lưu chi tiêu thành công') : null;
-                    setidIU(idReload+1);
-                    const item = idReload+1;
-                    dispatch(reload_IU(item));
-                    setColorSelect("#FF9999");
-                    setColorSelectTo("#FF9999");
-                }).catch((err)=>{
-                    console.log(err);
-                })
-                Alert.alert("Thông báo","Lưu thành công")
-                clearField();
-                navigation.navigate('Exchange');
+                    }).then((res)=>{
+                        (res.status == 200)? console.log('Lưu chi tiêu thành công') : null;
+                        setidIU(idReload+1);
+                        const item = idReload+1;
+                        dispatch(reload_IU(item));
+                        setColorSelect("#FF9999");
+                        setColorSelectTo("#FF9999");
+                    }).catch((err)=>{
+                        console.log(err);
+                    })
+                    Alert.alert("Thông báo","Lưu thành công")
+                    clearField();
+                    navigation.navigate('Exchange');
+                }
             }
         }
     }
@@ -336,170 +341,165 @@ function Exchange({navigation}){
                         </View>
                     </View>
             </Modal>
-            <ScrollView  style={styles.scrollview}>
-                <View style={styles.containerTop}>
-                    <TouchableOpacity onPress={hanldThuNhap} style={{flex:0.33333,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorThuNhap}}>
-                        <Text style={{fontSize:16}}>Thu nhập</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={hanldChiTieu} style={{flex:0.33333,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorChiTieu}}>
-                        <Text style={{fontSize:16}}>Chi tiêu</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={hanldChuyenTien} style={{flex:0.33333,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorChuyenTien}}>
-                        <Text style={{fontSize:16}}>Chuyển tiền</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.containerInputMoney}>
-                    <View style={{flex:0.2,justifyContent:'flex-start',alignItems:'center',}}>
-                            <Text style={{fontSize:20}}>Số tiền</Text>
+            {
+                typeBasket == 1 && 
+                <ScrollView  style={styles.scrollview}>
+                    <View style={styles.containerTop}>
+                        <TouchableOpacity onPress={hanldThuNhap} style={{flex:0.33333,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorThuNhap}}>
+                            <Text style={{fontSize:16}}>Thu nhập</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={hanldChiTieu} style={{flex:0.33333,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorChiTieu}}>
+                            <Text style={{fontSize:16}}>Chi tiêu</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={hanldChuyenTien} style={{flex:0.33333,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorChuyenTien}}>
+                            <Text style={{fontSize:16}}>Chuyển tiền</Text>
+                        </TouchableOpacity>
                     </View>
-                    <View style={{flex:0.6,justifyContent:'center',alignItems:'center',}}>
-                        <TextInput keyboardType='number-pad' onChangeText={x=> {
-                            (x>10000000001)? Alert.alert("Lỗi",`Không nhập quá 10 tỷ`) :setMoney(x)
-                        }} value={money} placeholder="0" placeholderTextColor={'#000'} style={{fontSize:35,flex:1,}}/>
+                    <View style={styles.containerInputMoney}>
+                        <View style={{flex:0.2,justifyContent:'flex-start',alignItems:'center',}}>
+                                <Text style={{fontSize:20}}>Số tiền</Text>
+                        </View>
+                        <View style={{flex:0.6,justifyContent:'center',alignItems:'center',}}>
+                            <TextInput keyboardType='number-pad' onChangeText={x=> {
+                                (x>10000000001)? Alert.alert("Lỗi",`Không nhập quá 10 tỷ`) :setMoney(x)
+                            }} value={money} placeholder="0" placeholderTextColor={'#000'} style={{fontSize:35,flex:1,}}/>
+                        </View>
+                        <View style={{flex:0.2,justifyContent:'center',alignItems:'center',}}>
+                                <View style={{width:50,height:30,backgroundColor:'#F0A587',borderRadius:20,justifyContent:'center',alignItems:'center'}}>
+                                        <Text style={{fontSize:18,fontWeight:'700'}}>VNĐ</Text>
+                                </View>
+                        </View>
                     </View>
-                    <View style={{flex:0.2,justifyContent:'center',alignItems:'center',}}>
-                            <View style={{width:50,height:30,backgroundColor:'#F0A587',borderRadius:20,justifyContent:'center',alignItems:'center'}}>
-                                    <Text style={{fontSize:18,fontWeight:'700'}}>VNĐ</Text>
-                            </View>
-                    </View>
-                </View>
-                {money != null && 
-                    <View style={styles.containerMoneyWords}>
-                            <Text style={{fontSize:20,fontStyle:'italic',textAlign:'center'}}>{wordsMoney}</Text>
-                    </View>
-                }
-                {
-                    (type == 2) && <Text style={{fontSize:24,marginLeft:20,}}>Lọ gởi :</Text>
-                }
-                <View style={styles.containerJar}>
-                    <SelectDropdown 
-                        data={dataJar} 
-                        defaultButtonText={valuesDefaut} 
-                        buttonTextStyle = {{fontSize:16,}}
-                        onSelect={(selectedItem, index) => { 
-                            setvaluesDefaut(selectedItem);
-                            (index == 0) ?  setColorSelect("#FF9999") : (index == 1)? setColorSelect("#6699FF") : 
-                            (index == 2)? setColorSelect("#FF6600") : (index == 3) ? setColorSelect("#00EE00") :
-                            (index == 4) ? setColorSelect("#8DEEEE") : setColorSelect("#F4A460")
-                            dataJarTemp.map((item,index)=>{
-                                if(selectedItem == item.name){
-                                    setisJar(item.id)
-                                    settotalIncome(item.totalIncome);
-                                    settotalSpending(item.totalSpending);
-                                    setNameJar(item.name);
-                                    SetprecentJar(item.precent);
-                                }
-                            })
-                        }} 
-                        renderDropdownIcon={isOpened => {
-                        return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={18} />;
-                        }}
-                        renderCustomizedButtonChild= {value =>{
-                            return (
-                                <View style={{ flexDirection: 'row', marginRight: 8,alignItems:'center',flex:1}}>
-                                    <View style={{flex:0.3,height:"100%",justifyContent:'center',alignItems:'center'}}>
-                                        <View style={[styles.containercustomSelectDropDown,{backgroundColor:colorSelect}]}>
-                                            <Image source={require('../../../assets/icons/jar.png')} />
+                    {money != null && 
+                        <View style={styles.containerMoneyWords}>
+                                <Text style={{fontSize:20,fontStyle:'italic',textAlign:'center'}}>{wordsMoney}</Text>
+                        </View>
+                    }
+                    {
+                        (type == 2) && <Text style={{fontSize:24,marginLeft:20,}}>Lọ gởi :</Text>
+                    }
+                    <View style={styles.containerJar}>
+                        <SelectDropdown 
+                            data={dataJar} 
+                            defaultButtonText={valuesDefaut} 
+                            buttonTextStyle = {{fontSize:16,}}
+                            onSelect={(selectedItem, index) => { 
+                                setvaluesDefaut(selectedItem);
+                                (index == 0) ?  setColorSelect("#FF9999") : (index == 1)? setColorSelect("#6699FF") : 
+                                (index == 2)? setColorSelect("#FF6600") : (index == 3) ? setColorSelect("#00EE00") :
+                                (index == 4) ? setColorSelect("#8DEEEE") : setColorSelect("#F4A460")
+                                dataJarTemp.map((item,index)=>{
+                                    if(selectedItem == item.name){
+                                        setisJar(item.id)
+                                        settotalIncome(item.totalIncome);
+                                        settotalSpending(item.totalSpending);
+                                        setNameJar(item.name);
+                                        SetprecentJar(item.precent);
+                                    }
+                                })
+                            }} 
+                            renderDropdownIcon={isOpened => {
+                            return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={18} />;
+                            }}
+                            renderCustomizedButtonChild= {value =>{
+                                return (
+                                    <View style={{ flexDirection: 'row', marginRight: 8,alignItems:'center',flex:1}}>
+                                        <View style={{flex:0.3,height:"100%",justifyContent:'center',alignItems:'center'}}>
+                                            <View style={[styles.containercustomSelectDropDown,{backgroundColor:colorSelect}]}>
+                                                <Image source={require('../../../assets/icons/jar.png')} />
+                                            </View>
+                                        </View>
+                                        <View>
+                                            <Text style={{fontSize:26,marginLeft:20}}>{valuesDefaut}</Text>
+                                            <Text style={{fontSize:18,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
                                         </View>
                                     </View>
-                                    <View>
-                                        <Text style={{fontSize:26,marginLeft:20}}>{valuesDefaut}</Text>
-                                        <Text style={{fontSize:18,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
-                                    </View>
-                                </View>
-                            );
-                        }}
-                        buttonStyle = {styles.containerSelectDropDown}
-                        />
-                </View>
-                {
-                    (type == 2) && 
-                    <View>
-                        <Text style={{fontSize:24,marginLeft:20,marginTop:15,}}>Lọ nhận :</Text>
-                        <View style={styles.containerJar}>
-                            <SelectDropdown 
-                                data={dataJarTo} 
-                                defaultButtonText={valuesDefautTo} 
-                                buttonTextStyle = {{fontSize:16,}}
-                                onSelect={(selectedItem, index) => { 
-                                    setvaluesDefautTo(selectedItem);
-                                    (index == 0) ?  setColorSelectTo("#FF9999") : (index == 1)? setColorSelectTo("#6699FF") : 
-                                    (index == 2)? setColorSelectTo("#FF6600") : (index == 3) ? setColorSelectTo("#00EE00") :
-                                    (index == 4) ? setColorSelectTo("#8DEEEE") : setColorSelectTo("#F4A460")
-                                    dataJarTemp.map((item,index)=>{
-                                        if(selectedItem == item.name){
-                                            setidJarTo(item.id)
-                                        }
-                                    })
-                                }} 
-                                renderDropdownIcon={isOpened => {
-                                return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={18} />;
-                                }}
-                                renderCustomizedButtonChild= {value =>{
-                                    return (
-                                        <View style={{ flexDirection: 'row', marginRight: 8,alignItems:'center',flex:1}}>
-                                            <View style={{flex:0.3,height:"100%",justifyContent:'center',alignItems:'center'}}>
-                                                <View style={[styles.containercustomSelectDropDown,{backgroundColor:colorSelectTo}]}>
-                                                    <Image source={require('../../../assets/icons/jar.png')} />
+                                );
+                            }}
+                            buttonStyle = {styles.containerSelectDropDown}
+                            />
+                    </View>
+                    {
+                        (type == 2) && 
+                        <View>
+                            <Text style={{fontSize:24,marginLeft:20,marginTop:15,}}>Lọ nhận :</Text>
+                            <View style={styles.containerJar}>
+                                <SelectDropdown 
+                                    data={dataJarTo} 
+                                    defaultButtonText={valuesDefautTo} 
+                                    buttonTextStyle = {{fontSize:16,}}
+                                    onSelect={(selectedItem, index) => { 
+                                        setvaluesDefautTo(selectedItem);
+                                        (index == 0) ?  setColorSelectTo("#FF9999") : (index == 1)? setColorSelectTo("#6699FF") : 
+                                        (index == 2)? setColorSelectTo("#FF6600") : (index == 3) ? setColorSelectTo("#00EE00") :
+                                        (index == 4) ? setColorSelectTo("#8DEEEE") : setColorSelectTo("#F4A460")
+                                        dataJarTemp.map((item,index)=>{
+                                            if(selectedItem == item.name){
+                                                setidJarTo(item.id)
+                                            }
+                                        })
+                                    }} 
+                                    renderDropdownIcon={isOpened => {
+                                    return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={18} />;
+                                    }}
+                                    renderCustomizedButtonChild= {value =>{
+                                        return (
+                                            <View style={{ flexDirection: 'row', marginRight: 8,alignItems:'center',flex:1}}>
+                                                <View style={{flex:0.3,height:"100%",justifyContent:'center',alignItems:'center'}}>
+                                                    <View style={[styles.containercustomSelectDropDown,{backgroundColor:colorSelectTo}]}>
+                                                        <Image source={require('../../../assets/icons/jar.png')} />
+                                                    </View>
+                                                </View>
+                                                <View>
+                                                    <Text style={{fontSize:26,marginLeft:20}}>{valuesDefautTo}</Text>
+                                                    <Text style={{fontSize:18,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
                                                 </View>
                                             </View>
-                                            <View>
-                                                <Text style={{fontSize:26,marginLeft:20}}>{valuesDefautTo}</Text>
-                                                <Text style={{fontSize:18,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
-                                            </View>
-                                        </View>
-                                    );
-                                }}
-                                buttonStyle = {styles.containerSelectDropDown}
-                                />
-                        </View>
-                    </View>
-                }
-                <View style={styles.containerNote}>
-                        <TouchableOpacity onPress={() => setModalVisible(true)}  style={{flex:0.3,display:'flex',flexDirection:'row',borderRadius:20,}}>
-                            <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
-                                    <Image source={require('../../../assets/icons/calendar.png')}/>
+                                        );
+                                    }}
+                                    buttonStyle = {styles.containerSelectDropDown}
+                                    />
                             </View>
-                            <View  style={{flex:0.8,justifyContent:'center',alignItems:'center',borderBottomWidth:1,display:'flex',flexDirection:'row',width:"100%",}}>
-                                <View style={{flex:0.8,width:"100%"}}>
-                                    <Text style={{fontSize:16,}}>{dateGD.toString()}</Text>
-                                </View>
+                        </View>
+                    }
+                    <View style={styles.containerNote}>
+                            <TouchableOpacity onPress={() => setModalVisible(true)}  style={{height:60,display:'flex',flexDirection:'row',borderRadius:20,}}>
                                 <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
-                                    <Image source={require('../../../assets/icons/reset.png')}/>
+                                        <Image source={require('../../../assets/icons/calendar.png')}/>
+                                </View>
+                                <View  style={{flex:0.8,justifyContent:'center',alignItems:'center',borderBottomWidth:1,display:'flex',flexDirection:'row',width:"100%",}}>
+                                    <View style={{flex:0.8,width:"100%"}}>
+                                        <Text style={{fontSize:16,}}>{dateGD.toString()}</Text>
+                                    </View>
+                                    <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
+                                        <Image source={require('../../../assets/icons/reset.png')}/>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                            <View style={{height:50,display:'flex',flexDirection:'row'}}>
+                                <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
+                                        <Image source={require('../../../assets/icons/note.png')}/>
+                                </View>
+                                <View  style={{flex:0.8,justifyContent:'center',borderBottomWidth:1}}>
+                                    <TextInput value={noteGD} onChangeText={x=>setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{fontSize:16,marginLeft:10,marginRight:20,}}/>
                                 </View>
                             </View>
-                        </TouchableOpacity>
-                        <View style={{flex:0.3,display:'flex',flexDirection:'row'}}>
-                            <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
-                                    <Image source={require('../../../assets/icons/note.png')}/>
-                            </View>
-                            <View  style={{flex:0.8,justifyContent:'center',borderBottomWidth:1}}>
-                                 <TextInput value={noteGD} onChangeText={x=>setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{fontSize:16,marginLeft:10,marginRight:20,}}/>
-                            </View>
-                        </View>
-                        <View style={{flex:0.25,display:'flex',flexDirection:'row'}}>
-                            <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
-                                    <Image source={require('../../../assets/icons/tag.png')}/>
-                            </View>
-                            <View  style={{flex:0.8,justifyContent:'center',borderBottomWidth:1}}>
-                                <TextInput value={tagGD} onChangeText={x=>setTagGD(x)} placeholder='Nhập hashTag giao dịch' style={{fontSize:16,marginLeft:10,marginRight:20,}}/>
-                            </View>
-                        </View>
-                        <View style={{flex:0.15,display:'flex',flexDirection:'row',borderRadius:20,}}>
+                            <View style={{marginBottom:20}}>
 
-                        </View>
-                </View>
-                <View style={styles.containerButton}>
-                    <TouchableOpacity onPress={()=>{
-                         navigation.goBack();
-                    }} style={styles.buttonStyle}>
-                        <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Hủy</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={onHanldSave} style={styles.buttonStyle}>
-                        <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Lưu</Text>
-                    </TouchableOpacity>
-                </View>
+                            </View>
+                    </View>
+                    <View style={styles.containerButton}>
+                        <TouchableOpacity onPress={()=>{
+                            navigation.goBack();
+                        }} style={styles.buttonStyle}>
+                            <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Hủy</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onHanldSave} style={styles.buttonStyle}>
+                            <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Lưu</Text>
+                        </TouchableOpacity>
+                    </View>
             </ScrollView>
+            }
         </SafeAreaView>
     );
 }

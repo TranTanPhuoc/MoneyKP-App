@@ -1,7 +1,5 @@
 import {  Text, SafeAreaView, ScrollView, View, TouchableOpacity,} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import styles from "./styles/InfoStyles";
-import axios from 'axios';
 function Info(){
     
     return(
