@@ -74,7 +74,25 @@ const styles = StyleSheet.create({
     containerListJars:{
         justifyContent:'center',
         alignItems:'center'
-    }
+    },
+    buttonStyle:{
+        backgroundColor: '#f5866e',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        borderRadius:20,
+        justifyContent:'center',
+        alignItems:'center',
+        paddingLeft:20,
+        paddingRight:20,
+        paddingTop:10,
+        paddingBottom:10,
+      },
 });
 
 export default styles;
