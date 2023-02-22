@@ -251,7 +251,7 @@ function Home({navigation}){
                     
                 </ScrollView>
                 <View style={styles.containerListJar}>
-                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Danh sách hũ</Text>
+                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Danh sách lọ</Text>
                     <View style={styles.containerListJarItem}>
                             {
                                 dataListJar.map((item,index)=>{
@@ -335,7 +335,15 @@ function Home({navigation}){
                             paddingLeft='10'
                             />
                     </View>
+                    <View style={{justifyContent:'center',alignItems:'center'}}>
+                       <TouchableOpacity onPress={()=>{
+                            navigation.navigate("SetPercentJar");
+                        }} style={styles.buttonStyle}>
+                                <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Chỉnh sửa tỉ lệ, thêm lọ</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
+                <View style={{marginTop:20,}}></View>
             </ScrollView>
         </SafeAreaView>
     );
