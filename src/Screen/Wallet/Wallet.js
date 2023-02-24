@@ -113,8 +113,17 @@ function Wallet(){
     },[idReload])
     useEffect(()=>{
         const totalMoney = totalIncome + totalSpending;
-        const precentIncome = totalIncome/totalMoney *100;
-        const precentSpeeding = totalSpending/totalMoney *100;
+        var precentIncome = 100;
+        var precentSpeeding = 0;
+        if(totalIncome == 0 && totalSpending == 0){
+            precentIncome = 100;
+            precentSpeeding = 0;
+        }
+        else{
+            precentIncome = totalIncome/totalMoney *100;
+            precentSpeeding = totalSpending/totalMoney *100;
+        }
+        
         setdataPieChart([
             {id:1,name:"Thu nhập",population:precentIncome,color:colorJar[0],legendFontColor: '#000',legendFontSize: 15},
             {id:2,name:"Chi tiêu",population:precentSpeeding,color:colorJar[1],legendFontColor: '#000',legendFontSize: 15},

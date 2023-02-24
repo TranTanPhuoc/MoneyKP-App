@@ -75,7 +75,7 @@ function User({navigation}){
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
                 <View style={styles.containerheader_icon}>
-                    <TouchableOpacity onPress={()=>{
+                    <TouchableOpacity style={{backgroundColor:'red'}} onPress={()=>{
                                         navigation.goBack();
                                     }}>
                                         <AntDesign name="arrowleft" size={24} color="black" />

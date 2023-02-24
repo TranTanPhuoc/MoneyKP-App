@@ -17,6 +17,7 @@ import SetPercentJar from './src/Screen/Jar/SetPercentJar';
 import {store} from './src/redux/store'
 import Chart from './src/Screen/Chart/Chart';
 import DetailOther from './src/Screen/DetailOther/DetailOther';
+import ExchangeOther from './src/Screen/Exchange/ExchangeOther';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
                 <Stack.Screen name='User' component={User}/>
                 <Stack.Screen name='Chart' component={Chart}/>
                 <Stack.Screen name='DetailOther' component={DetailOther}/>
+                <Stack.Screen name='ExchangeOther' component={ExchangeOther}/>
             </Stack.Navigator>
         </NavigationContainer>
       </Provider>

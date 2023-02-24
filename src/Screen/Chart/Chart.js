@@ -1,4 +1,4 @@
-import { Button, DatePickerAndroid, ScrollView, View } from 'react-native';
+import { Button, DatePickerAndroid, Platform, ScrollView, View } from 'react-native';
 import {  Text, SafeAreaView, Alert, Image,} from 'react-native';
 import styles from "./styles/ChartStyles";
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
@@ -32,6 +32,7 @@ function Chart({navigation,route}){
         if (selectedDate) {
           const newDate = new Date(selectedDate);
           setSelectedDate(newDate);
+          Platform.OS === 'android' ? setShowPicker(false) : setShowPicker(true);
         }
       };
     const hanldChon = ()=>{
@@ -333,9 +334,12 @@ function Chart({navigation,route}){
 
                                 </View>
                                 <View style={{justifyContent:'flex-end',flex:1,marginRight:30,}}>
-                                    <TouchableOpacity onPress={hanldChon}>
-                                        <Text style={{fontSize:24,color:'#0099FF',textAlign:'right',fontWeight:'normal'}}>Chọn</Text>
-                                    </TouchableOpacity>
+                                    {
+                                        Platform.OS === 'ios' && 
+                                        <TouchableOpacity onPress={hanldChon}>
+                                            <Text style={{fontSize:24,color:'#0099FF',textAlign:'right',fontWeight:'normal'}}>Chọn</Text>
+                                        </TouchableOpacity>
+                                    }
                                 </View>
                             </View>
                             <DateTimePicker
