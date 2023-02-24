@@ -68,16 +68,16 @@ function Jar({navigation}){
                 </View>
             </View>
             <View style={styles.viewBody}>
-                <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
+                <View style={{flex:0.15,justifyContent:'center',alignItems:'center'}}>
                     <Image source={require('../../../assets/icons/jar.png')} />
                 </View>
-                <View style={{flex:0.8,justifyContent:'center',}}>
-                     <TextInput value={jar} onChangeText={x=>setJar(x)} style={{height:50,borderRadius:20,borderWidth:0.5,paddingLeft:15,fontSize:18,}} placeholder='Nhập tên lọ cần thêm'/>
+                <View style={{flex:0.85,justifyContent:'center',marginLeft:10,marginRight:10}}>
+                     <TextInput value={jar} onChangeText={x=>setJar(x)} style={{height:50,borderRadius:20,borderWidth:0.5,paddingLeft:15,fontSize:16,}} placeholder='Nhập tên lọ cần thêm'/>
                 </View>
             </View>
             <View style={styles.containerButton}>
                     <TouchableOpacity onPress={hanldhanldAddJar} style={styles.buttonStyle}>
-                        <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Thêm</Text>
+                        <Text style={{fontSize:20,color:'#fff',fontWeight:'bold'}}>Thêm</Text>
                     </TouchableOpacity>
             </View>
         </SafeAreaView>

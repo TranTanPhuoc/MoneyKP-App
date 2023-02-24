@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
       alignItems:'center',
     },
     button:{
-      height:60,
       backgroundColor: '#fff',
       borderRadius: 20,
       shadowColor: '#000',
@@ -104,7 +103,11 @@ const styles = StyleSheet.create({
       elevation: 5,
       margin:5,
       justifyContent:'center',
-      alignItems:'center'
+      alignItems:'center',
+      marginRight:20,
+      marginLeft:20,
+      paddingTop:15,
+      paddingBottom:15,
     }
 });
 

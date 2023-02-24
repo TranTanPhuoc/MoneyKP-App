@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
       backgroundColor:'#E6E6FA',
       borderWidth:0.5,
       borderColor:'black',
-      height:80,
+      height:70,
      },
      containercustomSelectDropDown:{
       height:60,
@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
     },
     buttonStyle:{
       backgroundColor: '#f5866e',
-      height:50,
-      width:"40%",
+      // height:50,
+      // width:"40%",
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
@@ -119,6 +119,10 @@ const styles = StyleSheet.create({
       alignItems:'center',
       marginRight:20,
       marginLeft:20,
+      paddingLeft:50,
+      paddingRight:50,
+      paddingTop:15,
+      paddingBottom:15,
     },
     modalViewNofi: {
       backgroundColor: 'white',

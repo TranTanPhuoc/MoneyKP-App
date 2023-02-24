@@ -71,34 +71,34 @@ function ForgotPassword(){
                 <View style={styles.containerBody}>
                     <View style={styles.containerInput}>
                         <View style={{flex:0.15,alignItems:'center'}}>
-                            <Feather name="mail" size={26} color="black" />
+                            <Feather name="mail" size={22} color="black" />
                         </View>
-                        <TextInput onChangeText={x=>setEmail(x)} value={email} placeholder="Vui lòng nhập Email" style={{marginRight:15,height:50,fontSize:22,flex:0.85}}/>
+                        <TextInput onChangeText={x=>setEmail(x)} value={email} placeholder="Vui lòng nhập Email" style={{marginRight:15,height:50,fontSize:16,flex:0.85}}/>
                     </View>
                     <View style={styles.containerBottom}>
                         <TouchableOpacity onPress={hanldPressSendEmail} style={styles.bottom} >
-                            <Text style={{fontSize:22, color:'#fff',fontWeight:'bold'}}> Lấy mật khẩu </Text>
+                            <Text style={{fontSize:20, color:'#fff',fontWeight:'bold'}}> Lấy mật khẩu </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
                 <View style={styles.containerFooter}>
                     <View style={{justifyContent:'center',alignItems:'center',display:'flex',flexDirection:'row',}}>
-                        <TouchableOpacity  style={{height:50,width:50,justifyContent:'center',alignItems:'center',borderRadius:20,backgroundColor:"#DCDCDC"}} >
+                        <TouchableOpacity  style={{height:40,width:40,justifyContent:'center',alignItems:'center',borderRadius:20,backgroundColor:"#DCDCDC"}} >
                                 <Image source={require('../../../assets/icons/google.png')}/>
                         </TouchableOpacity>
                         <View style={{marginRight:20,}}></View>
-                        <TouchableOpacity  style={{height:50,width:50,justifyContent:'center',alignItems:'center',borderRadius:20,backgroundColor:"#DCDCDC"}} >
+                        <TouchableOpacity  style={{height:40,width:40,justifyContent:'center',alignItems:'center',borderRadius:20,backgroundColor:"#DCDCDC"}} >
                                 <Image source={require('../../../assets/icons/facebook.png')}/>
                         </TouchableOpacity>
                         <View style={{marginRight:20,}}></View>
-                        <TouchableOpacity  style={{height:50,width:50,justifyContent:'center',alignItems:'center',borderRadius:20,backgroundColor:"#DCDCDC"}} >
+                        <TouchableOpacity  style={{height:40,width:40,justifyContent:'center',alignItems:'center',borderRadius:20,backgroundColor:"#DCDCDC"}} >
                                 <Image source={require('../../../assets/icons/twitter.png')}/>
                         </TouchableOpacity>
                     </View>
                     <View style={{justifyContent:'center',alignItems:'center',display:'flex',flexDirection:'row',marginTop:20,}}>
-                            <Text style={{fontSize:20,marginRight:10,}}>Chưa có tài khoản?</Text>
+                            <Text style={{fontSize:16,marginRight:10,}}>Chưa có tài khoản?</Text>
                             <TouchableOpacity onPress={hanldPressRegister}>
-                                <Text style={{fontSize:22,color:'#F4A460',fontWeight:'bold'}}>Đăng ký</Text>
+                                <Text style={{fontSize:20,color:'#F4A460',fontWeight:'bold'}}>Đăng ký</Text>
                             </TouchableOpacity>
                     </View>
                 </View>

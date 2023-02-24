@@ -168,7 +168,7 @@ const width = Dimensions.get('window').width;
                 <View style={styles.viewBody}>
                     <PieChart
                         data={dataPieChart}
-                        height={220}
+                        height={200}
                         width={width}
                         chartConfig={chartConfigPie}
                         accessor="population"
@@ -176,7 +176,7 @@ const width = Dimensions.get('window').width;
                 </View>
                 <View style={styles.containerButton}>
                         <TouchableOpacity onPress={hanldhanldAddJar} style={styles.buttonStyle}>
-                            <Text style={{fontSize:18,color:'#fff',fontWeight:'bold'}}>Thêm hủ mới</Text>
+                            <Text style={{fontSize:20,color:'#fff',fontWeight:'bold'}}>Thêm hủ mới</Text>
                         </TouchableOpacity>
                 </View>
             </View>
@@ -190,14 +190,14 @@ const width = Dimensions.get('window').width;
                                 <TextInput onChangeText={x => updateItemName(item, x)} style={{fontSize:20,fontWeight:'500'}}>{item.name}</TextInput>
                             </View>
                             <View style={{flex:0.3,justifyContent:'center',height:"100%",alignItems:'center',display:'flex',flexDirection:'row'}}>
-                                <View style={{flex:0.8,}}>
+                                <View style={{flex:0.75,borderWidth:0.3,marginRight:20,paddingTop:5,paddingBottom:5,justifyContent:'center',alignItems:'center'}}>
                                     <TextInput keyboardType='number-pad'  onChangeText={x => updateItemPopulation(item, x)}  style={{fontSize:20,fontWeight:'500'}}>
                                         {item.population}
                                     </TextInput>
                                 </View>
                                 {
                                     (index == 0)? <View style={{flex:0.2,alignItems:'center'}}/> :  
-                                <TouchableOpacity onPress={()=>deleteItem(item)} style={{flex:0.2,alignItems:'center'}}>
+                                <TouchableOpacity onPress={()=>deleteItem(item)} style={{flex:0.25,alignItems:'center'}}>
                                     <Feather name="x" size={24} color="red" />
                                 </TouchableOpacity>
                                 }
@@ -206,14 +206,14 @@ const width = Dimensions.get('window').width;
                         </View>
                     );
                 })}
-                <View style={{borderWidth:0.5}}>
+                <View style={{borderWidth:0.5,marginLeft:10,marginRight:10,}}>
                    
                 </View>
                 <View style={{display:'flex',flexDirection:'row',margin:20,marginBottom:20,alignItems:'center',justifyContent:'space-between'}}>
-                   <View style={{flex:0.7}}>
+                   <View style={{flex:0.75}}>
                    <Text style={{fontSize:20,fontWeight:'500'}}>Tổng cộng: </Text>
                    </View>
-                   <View style={{flex:0.3}}>
+                   <View style={{flex:0.25}}>
                    <Text style={{fontSize:20,fontWeight:'500'}}>{tong}</Text>
                    </View>
                    
