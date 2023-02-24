@@ -40,8 +40,6 @@ const styles = StyleSheet.create({
   },
   buttonStyle:{
     backgroundColor: '#f5866e',
-    height:50,
-    width:"70%",
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -52,7 +50,11 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius:20,
     justifyContent:'center',
-    alignItems:'center'
+    alignItems:'center',
+    paddingLeft:100,
+    paddingRight:100,
+    paddingTop:15,
+    paddingBottom:15
   }
 });
 

@@ -39,10 +39,10 @@ function Account({navigation}){
                     </View>
                     <View style={styles.containerTopName}>
                         <View style={{flex:0.8,justifyContent:'center'}}>
-                            <Text style={{color:'#000',fontSize:24,fontWeight:'bold'}}>Trần Tấn Phước </Text>
+                            <Text style={{color:'#000',fontSize:22,fontWeight:'bold'}}>Trần Tấn Phước </Text>
                         </View>
                         <View style={{flex:0.2,justifyContent:'flex-end'}}>
-                            <Text style={{color:'#000',fontSize:18,}}>Tài khoản thường</Text>
+                            <Text style={{color:'#000',fontSize:16,}}>Tài khoản thường</Text>
                         </View>
                         
                     </View>
@@ -52,21 +52,21 @@ function Account({navigation}){
                 </View>
                 <View style={{borderWidth:0.5,marginTop:10,borderColor:"grey",borderRadius:10,}}></View>
                 <TouchableOpacity onPress={hanldPressUpdateInfo} style={styles.containerEditInfo}>
-                    <Text style={{fontSize:20,}}>Sửa thông tin cá nhân</Text>
+                    <Text style={{fontSize:16,}}>Sửa thông tin cá nhân</Text>
                     <AntDesign name="right" size={15} color="#000" />
                 </TouchableOpacity>
                 <View style={{borderWidth:0.5,marginTop:10,borderColor:"grey",borderRadius:10,}}></View>
                 <View style={styles.containerPrInfo}>
                     <TouchableOpacity style={styles.containerPrInfoItem}>
                         <View style={{flex:0.2,height:"100%",justifyContent:'center',alignItems:'center',}}>
-                            <View style={{height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
-                                <Image source={require('../../../assets/icons/usericon.png')} style={{tintColor:'#000'}}/>
+                            <View style={{height:40,width:40,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
+                                <Image source={require('../../../assets/icons/usericon.png')} style={{tintColor:'#000',height:30,width:30}}/>
                             </View>
                         </View>
                         <View style={{flex:0.7,height:"100%",}}>
                             <View style={{justifyContent:'space-between',alignItems:'center',display:'flex',flexDirection:'row',flex:1}}>
-                                <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>Mã của bạn</Text>
-                                <Text style={{fontSize:20,fontWeight:'bold',color:'#000'}}>VK3XRC</Text>
+                                <Text style={{color:'#000',fontSize:16,fontWeight:'bold'}}>Mã của bạn</Text>
+                                <Text style={{fontSize:16,fontWeight:'bold',color:'#000'}}>VK3XRC</Text>
                             </View>
                         </View>
                         <View style={{flex:0.1,height:"100%",justifyContent:'center',alignItems:'center'}}>
@@ -75,13 +75,13 @@ function Account({navigation}){
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.containerPrInfoItem}>
                         <View style={{flex:0.2,height:"100%",justifyContent:'center',alignItems:'center'}}>
-                            <View style={{height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
-                                <Image source={require('../../../assets/icons/share.png')} style={{tintColor:'#000',height:28,width:28}}/>
+                            <View style={{height:40,width:40,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
+                                <Image source={require('../../../assets/icons/share.png')} style={{tintColor:'#000',height:25,width:25}}/>
                             </View>
                         </View>
                         <View style={{flex:0.7,height:"100%",}}>
                             <View style={{justifyContent:'space-between',alignItems:'center',display:'flex',flexDirection:'row',flex:1}}>
-                                <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>Nhập mã giới thiệu</Text>
+                                <Text style={{color:'#000',fontSize:16,fontWeight:'bold'}}>Nhập mã giới thiệu</Text>
                             </View>
                         </View>
                         <View style={{flex:0.1,height:"100%",justifyContent:'center',alignItems:'center'}}>
@@ -92,13 +92,13 @@ function Account({navigation}){
                 <View style={styles.containerPrInfo1}>
                     <TouchableOpacity style={styles.containerPrInfoItem}>
                         <View style={{flex:0.2,height:"100%",justifyContent:'center',alignItems:'center',}}>
-                            <View style={{height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
-                                <Image source={require('../../../assets/icons/grid_view.png')} style={{tintColor:'#000',height:28,width:28}}/>
+                            <View style={{height:40,width:40,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
+                                <Image source={require('../../../assets/icons/grid_view.png')} style={{tintColor:'#000',height:25,width:25}}/>
                             </View>
                         </View>
                         <View style={{flex:0.7,height:"100%",}}>
                             <View style={{justifyContent:'space-between',alignItems:'center',display:'flex',flexDirection:'row',flex:1}}>
-                                <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>Cài đặt chung</Text>
+                                <Text style={{color:'#000',fontSize:16,fontWeight:'bold'}}>Cài đặt chung</Text>
                             </View>
                         </View>
                         <View style={{flex:0.1,height:"100%",justifyContent:'center',alignItems:'center'}}>
@@ -107,13 +107,13 @@ function Account({navigation}){
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.containerPrInfoItem}>
                         <View style={{flex:0.2,height:"100%",justifyContent:'center',alignItems:'center',}}>
-                            <View style={{height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
-                                <Image source={require('../../../assets/icons/currency.png')} style={{tintColor:'#000',height:28,width:28}}/>
+                            <View style={{height:40,width:40,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
+                                <Image source={require('../../../assets/icons/currency.png')} style={{tintColor:'#000',height:25,width:25}}/>
                             </View>
                         </View>
                         <View style={{flex:0.7,height:"100%",}}>
                             <View style={{justifyContent:'space-between',alignItems:'center',display:'flex',flexDirection:'row',flex:1}}>
-                                <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>Giao dịch định kỳ</Text>
+                                <Text style={{color:'#000',fontSize:16,fontWeight:'bold'}}>Giao dịch định kỳ</Text>
                             </View>
                         </View>
                         <View style={{flex:0.1,height:"100%",justifyContent:'center',alignItems:'center'}}>
@@ -122,13 +122,13 @@ function Account({navigation}){
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handSetPercentJar} style={styles.containerPrInfoItem}>
                         <View style={{flex:0.2,height:"100%",justifyContent:'center',alignItems:'center',}}>
-                            <View style={{height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
-                                <Image source={require('../../../assets/icons/settingsicon.png')} style={{tintColor:'#000',height:28,width:28}}/>
+                            <View style={{height:40,width:40,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
+                                <Image source={require('../../../assets/icons/settingsicon.png')} style={{tintColor:'#000',height:25,width:25}}/>
                             </View>
                         </View>
                         <View style={{flex:0.7,height:"100%",}}>
                             <View style={{justifyContent:'space-between',alignItems:'center',display:'flex',flexDirection:'row',flex:1}}>
-                                <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>Thiết lập các hủ</Text>
+                                <Text style={{color:'#000',fontSize:16,fontWeight:'bold'}}>Thiết lập các hủ</Text>
                             </View>
                         </View>
                         <View style={{flex:0.1,height:"100%",justifyContent:'center',alignItems:'center'}}>
@@ -139,13 +139,13 @@ function Account({navigation}){
                 <View style={styles.containerPrInfo2}>
                     <TouchableOpacity  onPress={hanldInfo}  style={styles.containerPrInfoItem}>
                         <View style={{flex:0.2,height:"100%",justifyContent:'center',alignItems:'center',}}>
-                            <View style={{height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
-                                <Image source={require('../../../assets/icons/info.png')} style={{tintColor:'#000',height:28,width:28}}/>
+                            <View style={{height:40,width:40,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
+                                <Image source={require('../../../assets/icons/info.png')} style={{tintColor:'#000',height:25,width:25}}/>
                             </View>
                         </View>
                         <View style={{flex:0.7,height:"100%",}}>
                             <View style={{justifyContent:'space-between',alignItems:'center',display:'flex',flexDirection:'row',flex:1}}>
-                                <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>Thông tin</Text>
+                                <Text style={{color:'#000',fontSize:16,fontWeight:'bold'}}>Thông tin</Text>
                             </View>
                         </View>
                         <View style={{flex:0.1,height:"100%",justifyContent:'center',alignItems:'center'}}>

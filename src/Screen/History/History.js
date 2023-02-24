@@ -92,8 +92,8 @@ function History({navigation,route}){
                                 <View style={{flex:0.35}}>
                                     {
                                         (item.type== 1)? 
-                                        <Text style={{color:'#339900',fontSize:20,fontWeight:'bold'}}>+ {moneyFormat(item.moneyTransaction)}</Text> : 
-                                        <Text style={{color:'#EE0000',fontSize:20,fontWeight:'bold'}}>- {moneyFormat(item.moneyTransaction)}</Text>
+                                        <Text style={{color:'#339900',fontSize:18,fontWeight:'bold'}}>+ {moneyFormat(item.moneyTransaction)}</Text> : 
+                                        <Text style={{color:'#EE0000',fontSize:18,fontWeight:'bold'}}>- {moneyFormat(item.moneyTransaction)}</Text>
                                     }
                                 </View>
                             </View>

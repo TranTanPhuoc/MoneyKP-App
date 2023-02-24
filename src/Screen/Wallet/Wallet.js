@@ -136,8 +136,8 @@ function Wallet(){
                                 />
                     </View>
                     <View style={styles.containerHeaderBottom}>
-                            <Text style={{color:"#fff",fontSize:24,}}>Tài sản</Text>
-                            <Text style={{color:"#fff",fontSize:24,}}>{moneyFormat(total)}</Text>
+                            <Text style={{color:"#fff",fontSize:20,}}>Tài sản</Text>
+                            <Text style={{color:"#fff",fontSize:20,}}>{moneyFormat(total)}</Text>
                     </View>
                 </LinearGradient>
                 <ScrollView scrollEnabled={false} contentContainerStyle={{flexDirection:'row',flexWrap:'wrap'}} style={styles.containerInfoWallet}>
@@ -148,18 +148,18 @@ function Wallet(){
                                     <View style={styles.containerItemTop}>
                                         <View style={{display:'flex',flexDirection:'row'}}>
                                             <Image source={require('../../../assets/icons/wallet.png')} style={{height:20,width:20,tintColor:item.color}}/>
-                                            <Text style={{color:'#000',fontSize:18,marginLeft:10,}}>{item.name}</Text>
+                                            <Text style={{color:'#000',fontSize:20,marginLeft:10,}}>{item.name}</Text>
                                         </View>
                                         <Image source={item.icon} style={{height:20,width:20,tintColor:'#000',}}/>
                                     </View>
-                                    <Text style={{color:'#000',fontSize:18,marginTop:10,marginLeft:10, marginRight:10,}}>{moneyFormat(item.price)}</Text>
+                                    <Text style={{color:'#000',fontSize:20,marginTop:10,marginLeft:10, marginRight:10,}}>{moneyFormat(item.price)}</Text>
                                 </View>
                             );
                         })
                     }
                 </ScrollView>
                 <View style={styles.containerListJar}>
-                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Thống kê tài sản</Text>
+                    <Text style={{color:'#000',fontSize:22,marginLeft:10, marginRight:10,}}>Thống kê tài sản</Text>
                     <View style={styles.containerListJars}>
                     <LineChart
                         data={dataLineChart}
@@ -177,7 +177,7 @@ function Wallet(){
                     </View>
                 </View>
                 <View style={styles.containerListJar}>
-                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Thống kê tài sản nợ</Text>
+                    <Text style={{color:'#000',fontSize:22,marginLeft:10, marginRight:10,}}>Thống kê tài sản nợ</Text>
                     <View style={styles.containerListJars}>
                     <LineChart
                         data={dataLineChart}

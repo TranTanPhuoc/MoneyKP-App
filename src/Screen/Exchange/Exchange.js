@@ -386,7 +386,7 @@ function Exchange({navigation}){
             {
                 typeBasket == 1 && 
                 <ScrollView  style={styles.scrollview}>
-                    <View style={styles.containerTop}>
+                    {/* <View style={styles.containerTop}>
                         <TouchableOpacity onPress={hanldLo} style={{flex:0.25,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorLo}}>
                             <Text style={{fontSize:16}}>Lọ</Text>
                         </TouchableOpacity>
@@ -399,7 +399,7 @@ function Exchange({navigation}){
                         <TouchableOpacity onPress={hanldMoUoc} style={{flex:0.25,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorMoUoc}}>
                             <Text style={{fontSize:16}}>Mơ ước</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
                     <View style={styles.containerTop}>
                         <TouchableOpacity onPress={hanldThuNhap} style={{flex:0.33333,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorThuNhap}}>
                             <Text style={{fontSize:16}}>Thu nhập</Text>
@@ -413,26 +413,26 @@ function Exchange({navigation}){
                     </View>
                     <View style={styles.containerInputMoney}>
                         <View style={{flex:0.2,justifyContent:'flex-start',alignItems:'center',}}>
-                                <Text style={{fontSize:20}}>Số tiền</Text>
+                                <Text style={{fontSize:16}}>Số tiền</Text>
                         </View>
                         <View style={{flex:0.6,justifyContent:'center',alignItems:'center',}}>
                             <TextInput keyboardType='number-pad' onChangeText={x=> {
                                 (x>10000000001)? Alert.alert("Lỗi",`Không nhập quá 10 tỷ`) :setMoney(x)
-                            }} value={money} placeholder="0" placeholderTextColor={'#000'} style={{fontSize:35,flex:1,}}/>
+                            }} value={money} placeholder="0" placeholderTextColor={'#000'} style={{fontSize:30,flex:1,}}/>
                         </View>
                         <View style={{flex:0.2,justifyContent:'center',alignItems:'center',}}>
                                 <View style={{width:50,height:30,backgroundColor:'#F0A587',borderRadius:20,justifyContent:'center',alignItems:'center'}}>
-                                        <Text style={{fontSize:18,fontWeight:'700'}}>VNĐ</Text>
+                                        <Text style={{fontSize:16,fontWeight:'700'}}>VNĐ</Text>
                                 </View>
                         </View>
                     </View>
                     {money != null && 
                         <View style={styles.containerMoneyWords}>
-                                <Text style={{fontSize:20,fontStyle:'italic',textAlign:'center'}}>{wordsMoney}</Text>
+                                <Text style={{fontSize:16,fontStyle:'italic',textAlign:'center'}}>{wordsMoney}</Text>
                         </View>
                     }
                     {
-                        (type == 2) && <Text style={{fontSize:24,marginLeft:20,}}>Lọ gởi :</Text>
+                        (type == 2) && <Text style={{fontSize:20,marginLeft:20,}}>Lọ gởi :</Text>
                     }
                     <View style={styles.containerJar}>
                         <SelectDropdown 
@@ -466,8 +466,8 @@ function Exchange({navigation}){
                                             </View>
                                         </View>
                                         <View>
-                                            <Text style={{fontSize:26,marginLeft:20}}>{valuesDefaut}</Text>
-                                            <Text style={{fontSize:18,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
+                                            <Text style={{fontSize:22,marginLeft:20}}>{valuesDefaut}</Text>
+                                            <Text style={{fontSize:16,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
                                         </View>
                                     </View>
                                 );
@@ -478,7 +478,7 @@ function Exchange({navigation}){
                     {
                         (type == 2) && 
                         <View>
-                            <Text style={{fontSize:24,marginLeft:20,marginTop:15,}}>Lọ nhận :</Text>
+                            <Text style={{fontSize:20,marginLeft:20,marginTop:15,}}>Lọ nhận :</Text>
                             <View style={styles.containerJar}>
                                 <SelectDropdown 
                                     data={dataJarTo} 
@@ -507,8 +507,8 @@ function Exchange({navigation}){
                                                     </View>
                                                 </View>
                                                 <View>
-                                                    <Text style={{fontSize:26,marginLeft:20}}>{valuesDefautTo}</Text>
-                                                    <Text style={{fontSize:18,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
+                                                    <Text style={{fontSize:22,marginLeft:20}}>{valuesDefautTo}</Text>
+                                                    <Text style={{fontSize:16,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
                                                 </View>
                                             </View>
                                         );
@@ -548,15 +548,15 @@ function Exchange({navigation}){
                         <TouchableOpacity onPress={()=>{
                             navigation.goBack();
                         }} style={styles.buttonStyle}>
-                            <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Hủy</Text>
+                            <Text style={{fontSize:20,color:'#fff',fontWeight:'bold'}}>Hủy</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onHanldSave} style={styles.buttonStyle}>
-                            <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Lưu</Text>
+                            <Text style={{fontSize:20,color:'#fff',fontWeight:'bold'}}>Lưu</Text>
                         </TouchableOpacity>
                     </View>
             </ScrollView>
             }
-            {
+            {/* {
                 typeBasket != 1 && 
                 <ScrollView  style={styles.scrollview}>
                     <View style={styles.containerTop}>
@@ -641,7 +641,7 @@ function Exchange({navigation}){
                         </TouchableOpacity>
                     </View>
             </ScrollView>
-            }
+            } */}
         </SafeAreaView>
     );
 }

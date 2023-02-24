@@ -212,19 +212,19 @@ function Home({navigation}){
                     </View>
                     <View style={styles.containerTopName}>
                         <View style={{flex:0.2,justifyContent:'flex-end'}}>
-                            <Text style={{color:'#000',fontSize:18,}}>Chào buổi chiều !</Text>
+                            <Text style={{color:'#000',fontSize:16,}}>Chào buổi chiều !</Text>
                         </View>
                         <View style={{flex:0.8,justifyContent:'center'}}>
-                            <Text style={{color:'#000',fontSize:24,fontWeight:'bold'}}>{name}</Text>
+                            <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>{name}</Text>
                         </View>
                     </View>
                     <View style={styles.containerTopIcon}>
                         <View style={{margin:10,}}>
                             <Image style={{tintColor:'#000',height:24,width:24}} source={require('../../../assets/icons/support.png')} />
                         </View>
-                        <View style={{margin:10,}}>
-                        <Image style={{tintColor:'#000',height:24,width:24}} source={require('../../../assets/icons/bell.png')} />
-                        </View>
+                        {/* <View style={{margin:10,}}>
+                            <Image style={{tintColor:'#000',height:24,width:24}} source={require('../../../assets/icons/bell.png')} />
+                        </View> */}
                     </View>
                 </View>
                 <ScrollView scrollEnabled={false} contentContainerStyle={{flexDirection:'row',flexWrap:'wrap'}} style={styles.containerInfoWallet}>
@@ -235,12 +235,12 @@ function Home({navigation}){
                                     <View style={styles.containerItemTop}>
                                         <View style={{display:'flex',flexDirection:'row'}}>
                                             <Image source={require('../../../assets/icons/wallet.png')} style={{height:20,width:20,tintColor:item.color}}/>
-                                            <Text style={{color:'#000',fontSize:18,marginLeft:10,}}>{item.name}</Text>
+                                            <Text style={{color:'#000',fontSize:20,marginLeft:10,}}>{item.name}</Text>
                                         </View>
                                         <Image source={item.icon} style={{height:20,width:20,tintColor:'#000',}}/>
                                     </View>
                                     <View>
-                                        <Text style={{color:'#000',fontSize:18,marginTop:10,marginLeft:10, marginRight:10,}}>{moneyFormat(item.price)}</Text>
+                                        <Text style={{color:'#000',fontSize:20,marginTop:10,marginLeft:10, marginRight:10,}}>{moneyFormat(item.price)}</Text>
                                     </View>
                                 </View>
                             );
@@ -251,7 +251,7 @@ function Home({navigation}){
                     
                 </ScrollView>
                 <View style={styles.containerListJar}>
-                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Danh sách lọ</Text>
+                    <Text style={{color:'#000',fontSize:22,marginLeft:10, marginRight:10,}}>Danh sách lọ</Text>
                     <View style={styles.containerListJarItem}>
                             {
                                 dataListJar.map((item,index)=>{
@@ -270,11 +270,11 @@ function Home({navigation}){
                                                         <Text style={{color:'#FF4040',fontSize:16,}}>{moneyFormat(item.totalIncome)}</Text>
                                                     </View>
                                                     <View style={{flex:0.2,justifyContent:'space-between',alignItems:'center',display:'flex',flexDirection:'row'}}>
-                                                        <Text style={{color:'#000',fontSize:18,}}>Khả dụng</Text>
+                                                        <Text style={{color:'#000',fontSize:16,}}>Khả dụng</Text>
                                                         <Text style={{color:'#000',fontSize:16,}}>{(item.totalIncome == 0 && item.totalSpending == 0)? 0 : ((item.totalIncome-item.totalSpending)/item.totalIncome * 100).toFixed(2)} %</Text>
                                                     </View>
                                                     <View style={{flex:0.3,alignItems:'center',display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
-                                                        <Text style={{color:'#000',fontSize:18,}}>Tiền khả dụng: </Text>
+                                                        <Text style={{color:'#000',fontSize:16,}}>Tiền khả dụng: </Text>
                                                         <Text style={{color:'red',fontSize:16,}}>{moneyFormat(item.totalIncome-item.totalSpending)}</Text>
                                                     </View>
                                                 </View>
@@ -288,7 +288,7 @@ function Home({navigation}){
                     </View>
                 </View>
                 <View style={styles.containerListJar}>
-                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Báo cáo thu nhập của tháng {month}</Text>
+                    <Text style={{color:'#000',fontSize:22,marginLeft:10, marginRight:10,}}>Báo cáo thu nhập của tháng {month}</Text>
                     <View style={styles.containerListJars}>
                         <ScrollView horizontal={true} style={{marginTop:20,marginBottom:20}}>
                             <BarChart
@@ -306,7 +306,7 @@ function Home({navigation}){
                     </View>
                 </View>
                 <View style={styles.containerListJar}>
-                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Báo cáo chi tiêu của tháng {month}</Text>
+                    <Text style={{color:'#000',fontSize:22,marginLeft:10, marginRight:10,}}>Báo cáo chi tiêu của tháng {month}</Text>
                     <View style={styles.containerListJars}>
                         <ScrollView horizontal={true} style={{marginTop:20,marginBottom:20}}>
                             <BarChart
@@ -324,7 +324,7 @@ function Home({navigation}){
                     </View>
                 </View>
                 <View style={styles.containerListJar}>
-                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Cơ cấu các hủ</Text>
+                    <Text style={{color:'#000',fontSize:22,marginLeft:10, marginRight:10,}}>Cơ cấu các hủ</Text>
                     <View style={styles.containerListJars}>
                         <PieChart
                             data={dataPieChart}
@@ -339,7 +339,7 @@ function Home({navigation}){
                        <TouchableOpacity onPress={()=>{
                             navigation.navigate("SetPercentJar");
                         }} style={styles.buttonStyle}>
-                                <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Chỉnh sửa tỉ lệ, thêm lọ</Text>
+                                <Text style={{fontSize:20,color:'#fff',fontWeight:'bold'}}>Chỉnh sửa tỉ lệ, thêm lọ</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

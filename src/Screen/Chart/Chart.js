@@ -46,7 +46,7 @@ function Chart({navigation,route}){
     const idUser = auth.currentUser.uid;
     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const [data,setdata] = useState({
-        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31",""],
+        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","16","21","22","23","24","25","26","27","28","29","30","31",""],
         datasets: [
           {
             data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -311,6 +311,8 @@ function Chart({navigation,route}){
         backgroundGradientFrom: "#fff",
         backgroundGradientTo: "#fff",
         color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        barPercentage: 0.5,         
+        categoryPercentage: 0.8,
         
     };
       
@@ -355,7 +357,7 @@ function Chart({navigation,route}){
                 </View>
                 <View style={styles.containerheader_title}>
                     <Text style={styles.fontTitle}>
-                        Xem lịch sử
+                        Xem biểu đồ thống kê
                     </Text>
                 </View>
                 <View style={styles.containerheader_icon}>
@@ -372,12 +374,12 @@ function Chart({navigation,route}){
                                 setvaluesDefaut(selectedItem);
                             }} 
                             renderDropdownIcon={isOpened => {
-                            return <AntDesign name={isOpened ? 'filter' : 'filter'} color={'black'} size={20} />;
+                            return <AntDesign name={isOpened ? 'filter' : 'filter'} color={'black'} size={16} />;
                             }}
                             renderCustomizedButtonChild= {value =>{
                                 return (
                                     <View style={{ flexDirection: 'row',alignItems:'center',display:'flex',justifyContent:"center"}}>
-                                            <Text style={{fontSize:20}}>{valuesDefaut}</Text>
+                                            <Text style={{fontSize:16}}>{valuesDefaut}</Text>
                                     </View>
                                 );
                             }}
@@ -398,7 +400,7 @@ function Chart({navigation,route}){
                         renderCustomizedButtonChild= {value =>{
                             return (
                                 <View style={{ flexDirection: 'row',alignItems:'center',display:'flex',justifyContent:"center"}}>
-                                        <Text style={{fontSize:20}}>{selectDefaut}</Text>
+                                        <Text style={{fontSize:16}}>{selectDefaut}</Text>
                                 </View>
                             );
                         }}
@@ -413,13 +415,13 @@ function Chart({navigation,route}){
                                     Chọn tháng
                                 </Text>
                         </TouchableOpacity>
-                        <Text style={{fontSize:20,fontWeight:'bold',marginTop:10,}}>Tháng: {selectedDate.toLocaleDateString('VN', { month: 'long', year: 'numeric' })}</Text>
+                        <Text style={{fontSize:16,fontWeight:'bold',marginTop:10,}}>Tháng: {selectedDate.toLocaleDateString('VN', { month: 'long', year: 'numeric' })}</Text>
                     </View>
                 }
                 <ScrollView horizontal={true}>
                     <BarChart
                         data={data}
-                        width={(valuesDefaut == "Theo tháng")? Dimensions.get('window').width+1000 : Dimensions.get('window').width+50}
+                        width={(valuesDefaut == "Theo tháng")? Dimensions.get('window').width+160 : Dimensions.get('window').width+50}
                         height={250}
                         yAxisLabel="VND "
                         chartConfig={chartConfig}

@@ -88,10 +88,10 @@ const styles = StyleSheet.create({
         borderRadius:20,
         justifyContent:'center',
         alignItems:'center',
-        paddingLeft:20,
-        paddingRight:20,
-        paddingTop:10,
-        paddingBottom:10,
+        paddingLeft:25,
+        paddingRight:25,
+        paddingTop:15,
+        paddingBottom:15,
       },
 });
 
