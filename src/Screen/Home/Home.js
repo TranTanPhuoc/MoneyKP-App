@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { colorJar } from '../../../assets/AppColors/AppColors';
 import { reload_IU } from '../../redux/action/ActionRedux';
 import { Linking } from 'react-native';
+import moment from 'moment-timezone';
 function Home({navigation}){
     const { width } = Dimensions.get('window');
     const idReload = useSelector(state => state.reload.idReload);
@@ -207,6 +208,20 @@ function Home({navigation}){
     const hanldMyContract = ()=>{
         Linking.openURL('https://www.facebook.com/kiritokun.1125');
     }
+    const [session,setsession] = useState("");
+    const vietnamTime = moment().tz('Asia/Ho_Chi_Minh');
+    useEffect(()=>{
+        const hour = vietnamTime.hour();
+        if (hour >= 6 && hour < 12) {
+            setsession('Chào buổi sáng !');
+        } else if (hour >= 12 && hour < 18) {
+            setsession('Chào buổi chiều!');
+        } else if (hour >= 18 && hour < 24) {
+            setsession('Chào buổi tối!');
+        } else {
+            setsession('Chào buổi khuya!');
+        }
+    },[vietnamTime.hour()])
      return(
         <SafeAreaView style={styles.container} >
             <ScrollView   style={styles.scrollview}>
@@ -216,16 +231,16 @@ function Home({navigation}){
                     </View>
                     <View style={styles.containerTopName}>
                         <View style={{flex:0.2,justifyContent:'flex-end'}}>
-                            <Text style={{color:'#000',fontSize:16,}}>Chào buổi chiều !</Text>
+                            <Text style={{color:'#000',fontSize:16,}}>{session}</Text>
                         </View>
                         <View style={{flex:0.8,justifyContent:'center'}}>
                             <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>{name}</Text>
                         </View>
                     </View>
                     <View style={styles.containerTopIcon}>
-                        <View style={{margin:10,}}>
+                        <TouchableOpacity onPress={hanldMyContract} style={{margin:10,}}>
                             <Image style={{tintColor:'#000',height:24,width:24}} source={require('../../../assets/icons/support.png')} />
-                        </View>
+                        </TouchableOpacity>
                         {/* <View style={{margin:10,}}>
                             <Image style={{tintColor:'#000',height:24,width:24}} source={require('../../../assets/icons/bell.png')} />
                         </View> */}
