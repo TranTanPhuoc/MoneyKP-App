@@ -15,6 +15,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { colorJar } from '../../../assets/AppColors/AppColors';
 import { reload_IU } from '../../redux/action/ActionRedux';
+import { Linking } from 'react-native';
 function Home({navigation}){
     const { width } = Dimensions.get('window');
     const idReload = useSelector(state => state.reload.idReload);
@@ -203,6 +204,9 @@ function Home({navigation}){
         
         
     };
+    const hanldMyContract = ()=>{
+        Linking.openURL('https://www.facebook.com/kiritokun.1125');
+    }
      return(
         <SafeAreaView style={styles.container} >
             <ScrollView   style={styles.scrollview}>

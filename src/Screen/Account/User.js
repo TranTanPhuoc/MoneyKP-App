@@ -28,7 +28,6 @@ function User({navigation}){
     const idReload = useSelector(state => state.reload.idReload);
     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const dispatch = useDispatch();
-
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -66,7 +65,7 @@ function User({navigation}){
                 setMail(res.data.email);
                 setName(res.data.name);
                 setavtPic(res.data.urlPic);
-                dispatch(reload_IU(idReload+1));
+                // dispatch(reload_IU(idReload+1));
             }).catch((err)=>{
                 console.log(err);
             })
@@ -75,10 +74,10 @@ function User({navigation}){
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
                 <View style={styles.containerheader_icon}>
-                    <TouchableOpacity style={{backgroundColor:'red'}} onPress={()=>{
+                    <TouchableOpacity style={{height:"100%",justifyContent:'center'}} onPress={()=>{
                                         navigation.goBack();
                                     }}>
-                                        <AntDesign name="arrowleft" size={24} color="black" />
+                                        <AntDesign style={{marginLeft:20}} name="arrowleft" size={24} color="black" />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.containerheader_title}>

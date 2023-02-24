@@ -8,6 +8,7 @@ import Info from '../Screen/Info/Info';
 import Wallet from '../Screen/Wallet/Wallet';
 import { AntDesign } from '@expo/vector-icons';
 import { Text } from 'react-native';
+import ExchangeOther from '../Screen/Exchange/ExchangeOther';
 const Tab = createBottomTabNavigator();
 const Tabs = ({navigation}) =>{
     return (
@@ -42,8 +43,8 @@ const Tabs = ({navigation}) =>{
                     // ),
                     title:"Thêm giao dịch",
                     }}/>
-            <Tab.Screen name='Info' component={Info}  options={{tabBarIcon:({focused})=>(
-                    <Image source={require('../../assets/icons/info.png')} resizeMode="contain" style={{width:22,height:22,tintColor:focused? '#000': '#748c94'}}/>
+            <Tab.Screen name='ExchangeOther' component={ExchangeOther}  options={{tabBarIcon:({focused})=>(
+                    <Image source={require('../../assets/icons/transaction.png')} resizeMode="contain" style={{width:22,height:22,tintColor:focused? '#000': '#748c94'}}/>
             ),headerTitle:"Thông tin"}}/>
             <Tab.Screen name='Settings' component={Account}   options={{tabBarIcon:({focused})=>(
                     <Image source={require('../../assets/icons/user.png')} resizeMode="contain" style={{width:22,height:22,tintColor:focused? '#000': '#748c94'}}/>

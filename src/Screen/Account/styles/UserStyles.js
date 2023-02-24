@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     containerheader_icon:{
       flex:0.2,
       justifyContent:'center',
-      marginLeft:20,
     },
     containerheader_title:{
       flex:0.6,

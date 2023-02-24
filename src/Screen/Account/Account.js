@@ -7,8 +7,12 @@ import{signOut,initializeAuth} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import { Platform } from 'react-native';
+import axios from 'axios';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 function Account({navigation}){
-    
+    const [name,setName] = useState("");
     const hanldPressUpdateInfo = ()=>{
         navigation.navigate("User");
     }
@@ -16,11 +20,12 @@ function Account({navigation}){
         var mess = `Phần mềm: KPMoney \nPhiên bản : 1.0.0 \n${Platform.OS === "android" ? 'Thiết bị : Android \n':'Thiết bị : Iphone \n'}Phiên bản điện thoại: ${Platform.Version}`;
         Alert.alert("Thông tin",mess);
     }
+    const app = initializeApp(firebaseConfig);
+        const auth = initializeAuth(app,{
+    });
     const hanldPressExit = () =>{
         // Connect FireBase
-        const app = initializeApp(firebaseConfig);
-        const auth = initializeAuth(app,{
-        });
+        
         signOut(auth).then(()=>{
             navigation.navigate("Login");
         }).catch((err)=>{
@@ -30,6 +35,19 @@ function Account({navigation}){
     const handSetPercentJar = () =>{
         navigation.navigate("SetPercentJar");
     }
+    const idUser = auth.currentUser.uid;
+    const idReload = useSelector(state => state.reload.idReload);
+    const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+    useEffect(()=>{
+        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user/${idUser}`,{
+            headers: { authorization: accessToken },
+        })
+        .then((res)=>{
+            setName(res.data.name);
+        }).catch((err)=>{
+                console.log(err);
+            })
+        },[idReload])
     return(
         <SafeAreaView style={styles.container} >
             <ScrollView  style={styles.scrollview}>
@@ -39,7 +57,7 @@ function Account({navigation}){
                     </View>
                     <View style={styles.containerTopName}>
                         <View style={{flex:0.8,justifyContent:'center'}}>
-                            <Text style={{color:'#000',fontSize:22,fontWeight:'bold'}}>Trần Tấn Phước </Text>
+                            <Text style={{color:'#000',fontSize:22,fontWeight:'bold'}}>{name}</Text>
                         </View>
                         <View style={{flex:0.2,justifyContent:'flex-end'}}>
                             <Text style={{color:'#000',fontSize:16,}}>Tài khoản thường</Text>
