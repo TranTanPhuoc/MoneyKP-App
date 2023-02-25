@@ -37,12 +37,6 @@ function Exchange({navigation}){
     const idReload = useSelector(state => state.reload.idReload);
     const dispatch = useDispatch();
     const [idIU,setidIU] = useState(idReload);
-    const [colorLo,setcolorLo] = useState(colorJar[0]);
-    const [colorTS,setcolorTS] = useState("");
-    const [colorNo,setcolorNo] = useState("");
-    const [colorNoThem,setcolorNoThem] = useState(colorJar[5]);
-    const [colorNoGiam,setcolorNoGiam] = useState("");
-    const [colorMoUoc,setcolorMoUoc] = useState("");
     const hanldThuNhap = () =>{
         setcolorThuNhap("#F9B79C");
         setcolorChiTieu("#E6E6FA");
@@ -61,42 +55,7 @@ function Exchange({navigation}){
         setcolorChuyenTien("#fedcba");
         setType(2);
     }
-    const hanldTaiSan = () =>{
-        setcolorLo("#E6E6FA");
-        setcolorTS(colorJar[1]);
-        setcolorNo("#E6E6FA");
-        setcolorMoUoc("#E6E6FA");
-        settypeBasket(4);
-    }
-    const hanldLo = () =>{
-        setcolorTS("#E6E6FA");
-        setcolorLo(colorJar[0]);
-        setcolorNo("#E6E6FA");
-        setcolorMoUoc("#E6E6FA");
-        settypeBasket(1);
-    }
-    const hanldMoUoc = () =>{
-        setcolorTS("#E6E6FA");
-        setcolorMoUoc(colorJar[2]);
-        setcolorNo("#E6E6FA");
-        setcolorLo("#E6E6FA");
-        settypeBasket(3);
-    }
-    const hanldNo = () =>{
-        setcolorTS("#E6E6FA");
-        setcolorNo(colorJar[3]);
-        setcolorLo("#E6E6FA");
-        setcolorMoUoc("#E6E6FA");
-        settypeBasket(2);
-    }
-    const hanldNoThem = () =>{
-        setcolorNoThem(colorJar[5]);
-        setcolorNoGiam("#E6E6FA");
-    }
-    const hanldNoGiam = () =>{
-        setcolorNoGiam(colorJar[6]);
-        setcolorNoThem("#E6E6FA");
-    }
+    
     function convertVNDToWords(amount) {
         const units = ["", "Một ", "Hai ", "Ba ", "Bốn ", "Năm ", "Sáu ", "Bảy ", "Tám ", "Chín "];
         const teens = ["", "Mười một ", "Mười hai ", "Mười ba ", "Mười bốn ", "Mười lăm ", "Mười sáu ", "Mười bảy ", "Mười tám ", "Mười chín "];
@@ -191,6 +150,7 @@ function Exchange({navigation}){
     const idUser = auth.currentUser.uid;
     // Nhận biết hủ hay nợ hay giấc mơ hay tài sản
     const [typeBasket,settypeBasket] =useState(1);
+    const [availableBalancesI,setavailableBalancesI] = useState(0);
     useEffect(()=>{
         const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/1`,{
@@ -204,8 +164,9 @@ function Exchange({navigation}){
                         setisJar(item.id)
                         settotalIncome(item.totalIncome);
                         settotalSpending(item.totalSpending);
-                        setNameJar(item.name)
-                        SetprecentJar(item.precent)
+                        setNameJar(item.name);
+                        SetprecentJar(item.precent);
+                        setavailableBalancesI(item.availableBalances);
                     }
                     return obj;
                 }));
@@ -218,7 +179,7 @@ function Exchange({navigation}){
                     return obj;
                 }));
                 setdataJarTemp(res.data.map((item)=>{
-                    var objtemp = {id:item.id,name:item.name,population:item.precent,userId:item.userId,precent:item.precent,totalIncome:item.totalIncome,totalSpending:item.totalSpending};
+                    var objtemp = {id:item.id,name:item.name,population:item.precent,userId:item.userId,precent:item.precent,totalIncome:item.totalIncome,totalSpending:item.totalSpending,availableBalances:item.availableBalances};
                     return objtemp;
                 }));
             
@@ -252,7 +213,6 @@ function Exchange({navigation}){
             Alert.alert("Thông báo",mess);
         }
         if(money != 0 && noteGD != "" && dateGD != ""){
-            if(typeBasket == 1){
                 if(type != 2){
                     axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
                     {
@@ -279,7 +239,7 @@ function Exchange({navigation}){
                                     userId:idUser,
                                     name:nameJar,
                                     precent:precentJar,
-                                    availableBalances:0,
+                                    availableBalances:availableBalancesI+income,
                                     totalSpending:totalSpending,
                                     totalIncome:income,
                                     type:1,
@@ -305,7 +265,7 @@ function Exchange({navigation}){
                                     userId:idUser,
                                     name:nameJar,
                                     precent:precentJar,
-                                    availableBalances:0,
+                                    availableBalances:availableBalancesI-spending,
                                     totalSpending:spending,
                                     totalIncome:totalIncome,
                                     type:1,
@@ -363,7 +323,6 @@ function Exchange({navigation}){
                     navigation.navigate('Exchange');
                 }
             }
-        }
     }
 
     return(
@@ -383,23 +342,7 @@ function Exchange({navigation}){
                         </View>
                     </View>
             </Modal>
-            {
-                typeBasket == 1 && 
                 <ScrollView  style={styles.scrollview}>
-                    {/* <View style={styles.containerTop}>
-                        <TouchableOpacity onPress={hanldLo} style={{flex:0.25,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorLo}}>
-                            <Text style={{fontSize:16}}>Lọ</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={hanldTaiSan} style={{flex:0.25,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorTS}}>
-                            <Text style={{fontSize:16}}>Tài sản</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={hanldNo} style={{flex:0.25,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorNo}}>
-                            <Text style={{fontSize:16}}>Nợ</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={hanldMoUoc} style={{flex:0.25,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorMoUoc}}>
-                            <Text style={{fontSize:16}}>Mơ ước</Text>
-                        </TouchableOpacity>
-                    </View> */}
                     <View style={styles.containerTop}>
                         <TouchableOpacity onPress={hanldThuNhap} style={{flex:0.33333,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorThuNhap}}>
                             <Text style={{fontSize:16}}>Thu nhập</Text>
@@ -451,6 +394,7 @@ function Exchange({navigation}){
                                         settotalSpending(item.totalSpending);
                                         setNameJar(item.name);
                                         SetprecentJar(item.precent);
+                                        setavailableBalancesI(item.availableBalances);
                                     }
                                 })
                             }} 
@@ -555,93 +499,6 @@ function Exchange({navigation}){
                         </TouchableOpacity>
                     </View>
             </ScrollView>
-            }
-            {/* {
-                typeBasket != 1 && 
-                <ScrollView  style={styles.scrollview}>
-                    <View style={styles.containerTop}>
-                        <TouchableOpacity onPress={hanldLo} style={{flex:0.25,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorLo}}>
-                            <Text style={{fontSize:16}}>Lọ</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={hanldTaiSan} style={{flex:0.25,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorTS}}>
-                            <Text style={{fontSize:16}}>Tài sản</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={hanldNo} style={{flex:0.25,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorNo}}>
-                            <Text style={{fontSize:16}}>Nợ</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={hanldMoUoc} style={{flex:0.25,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorMoUoc}}>
-                            <Text style={{fontSize:16}}>Mơ ước</Text>
-                        </TouchableOpacity>
-                    </View>
-                    {
-                        typeBasket == 2 &&
-                        <View style={styles.containerTop}>
-                            <TouchableOpacity onPress={hanldNoThem} style={{flex:0.5,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorNoThem}}>
-                                <Text style={{fontSize:16}}>Thêm nợ</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={hanldNoGiam} style={{flex:0.5,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorNoGiam}}>
-                                <Text style={{fontSize:16}}>Giảm nợ</Text>
-                            </TouchableOpacity>
-                        </View>
-                    }
-                    <View style={styles.containerInputMoney}>
-                        <View style={{flex:0.2,justifyContent:'flex-start',alignItems:'center',}}>
-                                <Text style={{fontSize:20}}>Số tiền</Text>
-                        </View>
-                        <View style={{flex:0.6,justifyContent:'center',alignItems:'center',}}>
-                            <TextInput keyboardType='number-pad' onChangeText={x=> {
-                                (x>10000000001)? Alert.alert("Lỗi",`Không nhập quá 10 tỷ`) :setMoney(x)
-                            }} value={money} placeholder="0" placeholderTextColor={'#000'} style={{fontSize:35,flex:1,}}/>
-                        </View>
-                        <View style={{flex:0.2,justifyContent:'center',alignItems:'center',}}>
-                                <View style={{width:50,height:30,backgroundColor:'#F0A587',borderRadius:20,justifyContent:'center',alignItems:'center'}}>
-                                        <Text style={{fontSize:18,fontWeight:'700'}}>VNĐ</Text>
-                                </View>
-                        </View>
-                    </View>
-                    {money != null && 
-                        <View style={styles.containerMoneyWords}>
-                                <Text style={{fontSize:20,fontStyle:'italic',textAlign:'center'}}>{wordsMoney}</Text>
-                        </View>
-                    }
-                    <View style={styles.containerNote}>
-                            <TouchableOpacity onPress={() => setModalVisible(true)}  style={{height:60,display:'flex',flexDirection:'row',borderRadius:20,}}>
-                                <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
-                                        <Image source={require('../../../assets/icons/calendar.png')}/>
-                                </View>
-                                <View  style={{flex:0.8,justifyContent:'center',alignItems:'center',borderBottomWidth:1,display:'flex',flexDirection:'row',width:"100%",}}>
-                                    <View style={{flex:0.8,width:"100%"}}>
-                                        <Text style={{fontSize:16,}}>{dateGD.toString()}</Text>
-                                    </View>
-                                    <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
-                                        <Image source={require('../../../assets/icons/reset.png')}/>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
-                            <View style={{height:50,display:'flex',flexDirection:'row'}}>
-                                <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
-                                        <Image source={require('../../../assets/icons/note.png')}/>
-                                </View>
-                                <View  style={{flex:0.8,justifyContent:'center',borderBottomWidth:1}}>
-                                    <TextInput value={noteGD} onChangeText={x=>setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{fontSize:16,marginLeft:10,marginRight:20,}}/>
-                                </View>
-                            </View>
-                            <View style={{marginBottom:20}}>
-
-                            </View>
-                    </View>
-                    <View style={styles.containerButton}>
-                        <TouchableOpacity onPress={()=>{
-                            navigation.goBack();
-                        }} style={styles.buttonStyle}>
-                            <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Hủy</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={onHanldSave} style={styles.buttonStyle}>
-                            <Text style={{fontSize:22,color:'#fff',fontWeight:'bold'}}>Lưu</Text>
-                        </TouchableOpacity>
-                    </View>
-            </ScrollView>
-            } */}
         </SafeAreaView>
     );
 }

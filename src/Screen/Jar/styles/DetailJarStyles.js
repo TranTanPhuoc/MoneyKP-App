@@ -30,24 +30,83 @@ const styles = StyleSheet.create({
       marginRight:10,
       marginTop:20,
    },
-   button:
-   {
+  containerMoney:{
+    marginTop:10,
+    marginLeft:10,
+    marginRight:10,
+    backgroundColor:'#fff',
+    borderRadius:20,
+    shadowOffset:{
+        width:0,
+        height:1,
+    },
+    shadowColor:'#999999',
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    justifyContent:'center'
+  },
+  containerBody:{
+    backgroundColor:'#fff',
+    shadowOffset:{
+        width:0,
+        height:1,
+    },
+    shadowColor:'#999999',
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+  },
+  containerItem:{
+    flex:0.5,
+    backgroundColor:'#E6E6FA',
+    height:80,
+    margin:5,
+    borderRadius:10,
+    justifyContent:'center',
+  },
+  containerItemTop:{
+    marginLeft:10,
+    marginRight:10,
     display:'flex',
     flexDirection:'row',
-    height:60,
-    backgroundColor: '#fff',
+    justifyContent:'space-between',
+    alignItems:'center'
+  },
+  containerItemR:{
+    height:70,
+    margin:5,
+    borderRadius:10,
+    alignItems:'center',
+    display:'flex',
+    flexDirection:'row',
+    flex:1,
+    justifyContent:'space-between',
+   },
+   containerBottom:{
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'center',
+    paddingRight:10,
+    marginTop:40,
+  },
+  bottom:{
+    flex:1,
+    backgroundColor:'#FF8247',
+    borderRadius:100,
+    justifyContent:'center',
+    alignItems:'center',
+    marginRight:20,
+    marginLeft:20,
     shadowColor: '#000',
     shadowOffset: {
-      width: 0,
-      height: 2,
+        width: 0,
+        height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    borderRadius:20,
-    alignItems:'center',
-    marginBottom:20,
-    },
+    paddingTop:15,
+    paddingBottom:15,
+  },
 });
 
 export default styles;
