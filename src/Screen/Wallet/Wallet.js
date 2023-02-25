@@ -17,7 +17,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { colorJar } from '../../../assets/AppColors/AppColors';
 import { useState } from 'react';
 import { useEffect } from 'react';
-function Wallet(){
+import { TouchableOpacity } from 'react-native';
+function Wallet({navigation}){
     const width = Dimensions.get('window').width;
     // Connect FireBase
     const app = initializeApp(firebaseConfig);
@@ -30,6 +31,12 @@ function Wallet(){
     const [dataIncomeAndSpending,setdataIncomeAndSpending] = useState([]);
     const [totalIncome,settotalIncome] = useState(10);
     const [totalSpending,settotalSpending] = useState(5);
+    const [dataDS,setdataDS] = useState([
+        {id:4,name:"Tài sản",money:0},
+        {id:3,name:"Mơ ước",money:0},
+        {id:1,name:"6 Lọ",money:0},
+        {id:2,name:"Nợ",money:0},
+    ]);
     // Data biểu đồ tròn
     const [total,settotal] = useState(0);
     const [dataPieChart,setdataPieChart] = useState([
@@ -90,9 +97,8 @@ function Wallet(){
                 {id:2,name:'Chi tiêu',price:totalSpending,color:'#fc3030',icon:require('../../../assets/icons/minus.png')},
             ]
         )
-     },[totalIncome,totalSpending])
+     },[totalIncome,totalSpending]);
     useEffect(()=>{
-        
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/1`,{
             headers: { authorization: accessToken },
         })
@@ -109,7 +115,25 @@ function Wallet(){
                 settotalSpending(totalSpendingItem);
         }).catch((err)=>{
             console.log(err);
+        });
+        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-asset-by-userId/${idUser}`,{
+            headers: { authorization: accessToken },
         })
+        .then((res)=>{
+                const listdata = res.data.map((item)=>{
+                    return item;
+                })
+                setdataDS(
+                    [
+                        {id:4,name:"Tài sản",money:listdata[0]},
+                        {id:3,name:"Mơ ước",money:listdata[1]},
+                        {id:1,name:"6 Lọ",money:listdata[2]},
+                        {id:2,name:"Nợ",money:listdata[3]},
+                    ]
+                )
+        }).catch((err)=>{
+            console.log(err);
+        });
     },[idReload])
     useEffect(()=>{
         const totalMoney = totalIncome + totalSpending;
@@ -167,6 +191,39 @@ function Wallet(){
                         })
                     }
                 </ScrollView>
+                <View style={styles.containerListJar}>
+                    <Text style={{color:'#000',fontSize:22,marginLeft:10, marginRight:10,}}>Danh sách lọ</Text>
+                    <View style={styles.containerListJarItem}>
+                            {
+                                dataDS.map((item,index)=>{
+                                    return (
+                                        <TouchableOpacity onPress={()=>{
+                                            (index == 2) ?
+                                                navigation.goBack()
+                                                :
+                                                navigation.navigate("DetailOther",{name: item.name, id : item.id, money: item.money});
+                                            
+                                        }} key={item.id} style={styles.containerListJarItem_Item}>
+                                                <View style={{flex:0.2,height:"100%",justifyContent:'center',marginLeft:10,}}>
+                                                    <View style={{backgroundColor:colorJar[index],height:50,width:50,borderRadius:15,justifyContent:'center',alignItems:'center'}}>
+                                                            <Image source={require('../../../assets/icons/jar.png')} style={{tintColor:'#000'}}/>
+                                                    </View>
+                                                </View>
+                                                <View style={{flex:0.7,height:"100%",}}>
+                                                    <View style={{flex:1,justifyContent:'space-between',alignItems:'center',display:'flex',flexDirection:'row'}}>
+                                                        <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>{item.name}</Text>
+                                                        <Text style={{color:'#FF4040',fontSize:16,}}>{moneyFormat(item.money)}</Text>
+                                                    </View>
+                                                </View>
+                                                <View style={{flex:0.1,height:"100%",justifyContent:'center',alignItems:'center'}}>
+                                                    <AntDesign name="right" size={14} color="#000" />
+                                                </View>
+                                        </TouchableOpacity>
+                                    );
+                                })
+                            }
+                    </View>
+                </View>
                 <View style={styles.containerListJar}>
                     <Text style={{color:'#000',fontSize:22,marginLeft:10, marginRight:10,}}>Thống kê tài sản</Text>
                     <View style={styles.containerListJars}>

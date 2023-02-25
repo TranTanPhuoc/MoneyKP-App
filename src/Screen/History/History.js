@@ -64,7 +64,7 @@ function History({navigation,route}){
                 </View>
                 <View style={styles.containerheader_title}>
                     <Text style={styles.fontTitle}>
-                        Xem lịch sử
+                        Xem lịch sử lọ {name}
                     </Text>
                 </View>
                 <View style={styles.containerheader_icon}>
@@ -83,7 +83,7 @@ function History({navigation,route}){
                                 </View>
                                 <View style={{flex:0.45,}}>
                                     <View style={{marginBottom:10,}}>
-                                        <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>{item.name}</Text>
+                                        <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}}>{item.note}</Text>
                                     </View>
                                     {
                                         (item.type== 1)? <Text>Thu nhập</Text> : <Text>Chi tiền</Text>
