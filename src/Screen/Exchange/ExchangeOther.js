@@ -156,9 +156,9 @@ function ExchangeOther({navigation}){
         
     },[money])
     // Connect FireBase
-    // const app = initializeApp(firebaseConfig);
-    // const auth = initializeAuth(app,{
-    // });
+    const app = initializeApp(firebaseConfig);
+    const auth = initializeAuth(app,{
+    });
     const [dataJar,setDataJar] = useState([]);
     const [dataJarTemp,setdataJarTemp] = useState([]);
     const [valuesDefaut,setvaluesDefaut] = useState("");
@@ -189,7 +189,54 @@ function ExchangeOther({navigation}){
         if(money != 0 && noteGD != "" && dateGD != ""){
         }
     }
-
+    const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+    const idUser = auth.currentUser.uid;
+    const [idJar,setisJar] = useState();
+    const [totalIncome,settotalIncome] = useState();
+    const [totalSpending,settotalSpending] = useState();
+    const [nameJar,setNameJar] = useState("");
+    const [precentJar,SetprecentJar] = useState();
+    const [availableBalancesI,setavailableBalancesI] = useState(0);
+    useEffect(()=>{
+        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/${typeBasket}`,{
+            headers: { authorization: accessToken },
+        })
+        .then((res)=>{
+                if(res.data.length != 0){
+                    setDataJar(res.data.map((item,index)=>{
+                        var obj = item.name;
+                        if(index == 0){
+                            setvaluesDefaut(item.name)
+                            setisJar(item.id)
+                            settotalIncome(item.totalIncome);
+                            settotalSpending(item.totalSpending);
+                            setNameJar(item.name);
+                            SetprecentJar(item.precent);
+                            setavailableBalancesI(item.availableBalances);
+                        }
+                        return obj;
+                    }));
+                    setdataJarTemp(res.data.map((item)=>{
+                        var objtemp = {id:item.id,name:item.name,population:item.precent,userId:item.userId,precent:item.precent,totalIncome:item.totalIncome,totalSpending:item.totalSpending,availableBalances:item.availableBalances};
+                        return objtemp;
+                    }));
+                }
+                else{
+                    setDataJar([]);
+                    setdataJarTemp([]);
+                    setvaluesDefaut("");
+                    setisJar()
+                    settotalIncome();
+                    settotalSpending();
+                    setNameJar();
+                    SetprecentJar();
+                    setavailableBalancesI();
+                }
+            
+        }).catch((err)=>{
+            console.log(err);
+        })
+    },[idIU,typeBasket]);
     return(
         <SafeAreaView style={styles.container} >
             <Modal

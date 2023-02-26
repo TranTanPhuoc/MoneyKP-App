@@ -54,7 +54,48 @@ const styles = StyleSheet.create({
     shadowColor:'#999999',
     shadowOpacity: 0.5,
     shadowRadius: 2,
-  }
+  },
+  containerBottom:{
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'center',
+    paddingRight:10,
+    marginTop:40,
+  },
+  bottom:{
+    flex:1,
+    backgroundColor:'#FF8247',
+    borderRadius:100,
+    justifyContent:'center',
+    alignItems:'center',
+    marginRight:20,
+    marginLeft:20,
+    shadowColor: '#000',
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    paddingTop:15,
+    paddingBottom:15,
+  },
+  containerListJars:{
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  containerListJar:{
+    marginTop:20,
+    backgroundColor:'#fff',
+    shadowOffset:{
+        width:0,
+        height:1,
+    },
+    shadowColor:'#999999',
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+},
 });
 
 export default styles;
