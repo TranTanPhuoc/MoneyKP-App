@@ -14,8 +14,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { reload_IU } from '../../redux/action/ActionRedux';
 
 function JarOther({navigation,route}){
-   const {id,name,money} = route.params;
+   const {id,name} = route.params;
    const [JarOther,setJarOther] = useState("");
+   const [money,setMoney] = useState("");
    const idReload = useSelector(state => state.reload.idReload);
     // Connect FireBase
     const app = initializeApp(firebaseConfig);
@@ -30,7 +31,7 @@ function JarOther({navigation,route}){
                 userId: idUser,
                 name:JarOther,
                 precent:0,
-                availableBalances:0,
+                availableBalances:money,
                 totalSpending:0,
                 totalIncome:0,
                 type:id
@@ -40,7 +41,7 @@ function JarOther({navigation,route}){
                     authorization: accessToken 
                 }
             }).then((res)=>{
-                dispatch(reload_IU(reload_IU+1));
+                dispatch(reload_IU(idReload+1));
                 Alert.alert("Thông báo","Thêm thành công");
                 navigation.goBack();
 
@@ -74,6 +75,14 @@ function JarOther({navigation,route}){
                 </View>
                 <View style={{flex:0.85,justifyContent:'center',marginLeft:10,marginRight:10}}>
                      <TextInput value={JarOther} onChangeText={x=>setJarOther(x)} style={{height:50,borderRadius:20,borderWidth:0.5,paddingLeft:15,fontSize:16,}} placeholder='Nhập tên mục cần thêm'/>
+                </View>
+            </View>
+            <View style={styles.viewBody}>
+                <View style={{flex:0.15,justifyContent:'center',alignItems:'center'}}>
+                    <Image source={require('../../../assets/icons/wallet.png')} />
+                </View>
+                <View style={{flex:0.85,justifyContent:'center',marginLeft:10,marginRight:10}}>
+                     <TextInput keyboardType='number-pad' value={money} onChangeText={x=>setMoney(x)} style={{height:50,borderRadius:20,borderWidth:0.5,paddingLeft:15,fontSize:16,}} placeholder='Nhập tiền'/>
                 </View>
             </View>
             <View style={styles.containerButton}>

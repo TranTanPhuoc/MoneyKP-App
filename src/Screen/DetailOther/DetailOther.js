@@ -10,10 +10,13 @@ import{initializeAuth,} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import { useDispatch, useSelector } from 'react-redux';
+import { colorJar } from '../../../assets/AppColors/AppColors';
+import { PieChart } from 'react-native-chart-kit';
+import { Dimensions } from 'react-native';
 function DetailOther({navigation,route}){
     // Định dạng tiền tệ VNĐ
     const {id,name,money} = route.params;
-    const moneyR = parseInt(money);
+    const [moneyR,setmoneyR] = useState(parseInt(money));
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
           style: "currency",
@@ -30,21 +33,52 @@ function DetailOther({navigation,route}){
     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const idReload = useSelector(state => state.reload.idReload);
     const dispatch = useDispatch();
-    const [idIU,setidIU] = useState(idReload);
     const [data,setData] = useState([]);
+    const [dataPieChart,setdataPieChart] = useState([]);
+    const { width } = Dimensions.get('window');
     useEffect(()=>{
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/${id}`,{
             headers: { authorization: accessToken },
         })
         .then((res)=>{
+                var moneyI = 0;
                 setData(res.data.map((item)=>{
                     var objtemp = {id:item.id,name:item.name,population:item.precent,userId:item.userId,precent:item.precent,totalIncome:item.totalIncome,totalSpending:item.totalSpending,availableBalances:item.availableBalances};
+                    moneyI+= item.availableBalances;
                     return objtemp;
                 }));
+                setmoneyR(moneyI);
+            }).catch((err)=>{
+            console.log(err);
+        })
+    },[idReload])
+    useEffect(()=>{
+        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/${id}`,{
+            headers: { authorization: accessToken },
+        })
+        .then((res)=>{
+            if(res.data.length !== 0){
+                setdataPieChart(res.data.map((item,index)=>{
+                    const precent = parseInt(item.availableBalances)/ parseInt(moneyR);
+                    let randomColor = colorJar[index]
+                    var obj = {id:item.id,name:item.name,population:precent,color:randomColor,legendFontColor: '#000',legendFontSize: 15};
+                    return obj;
+                }));
+            }
         }).catch((err)=>{
             console.log(err);
         })
-    },[idIU])
+    },[moneyR]);
+    // Biểu đồ tròn
+    const chartConfigPie = {
+        backgroundColor: '#e26a00',
+        backgroundGradientTo: '#ffa726',
+        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+        strokeWidth: 2, // optional, default 3
+        barPercentage: 0.5,
+        useShadowColorFromDataset: false ,
+        borderWidth:0.5,
+      };
     return(
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
@@ -73,6 +107,13 @@ function DetailOther({navigation,route}){
                         <Text style={{fontSize:35,fontWeight:'700'}}>{moneyFormat(moneyR)}</Text>
                     </View>
                 </View>
+                <View style={styles.containerBottom}>
+                    <TouchableOpacity onPress={()=>{
+                            navigation.navigate("JarOther",{id:id,name:name});
+                        }} style={styles.bottom} >
+                        <Text style={{fontSize:20, color:'#fff',fontWeight:'bold'}}> Thêm lọ mới</Text>
+                    </TouchableOpacity>
+                </View>
                 <View style={{marginTop:20,}}>
                     <View style={styles.containerBody}>
                         <View style={{marginTop:20,marginLeft:20,display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
@@ -85,7 +126,7 @@ function DetailOther({navigation,route}){
                         </View>
                         {
                             !hidden && 
-                            <ScrollView style={{marginTop:20,marginLeft:20,marginRight:20,height:150}}>
+                            <ScrollView style={{marginTop:20,marginLeft:20,marginRight:20,maxHeight:150}}>
                                 {
                                     data.map((item,index)=>{
                                         if(item != null){
@@ -101,10 +142,43 @@ function DetailOther({navigation,route}){
                                 }
                             </ScrollView>
                         }
-                        
+                        <View style={styles.containerBottom}>
+                            <TouchableOpacity onPress={()=>{
+                                navigation.navigate("History",{id:id,name:name});
+                            }} style={styles.bottom} >
+                                <Text style={{fontSize:20, color:'#fff',fontWeight:'bold'}}> Xem tất cả</Text>
+                            </TouchableOpacity>
+                        </View>
                         <View style={{marginTop:20,marginLeft:20,}}>
                         </View>
                     </View>
+                </View>
+                <View style={styles.containerListJar}>
+                    <View style={{marginTop:20,marginLeft:20,justifyContent:'space-between',marginRight:20,}}>
+                            <Text style={{fontSize:20,fontWeight:'600'}}>Cơ cấu các hủ</Text>
+                            {
+                                dataPieChart.length !== 0 &&
+                                <View style={styles.containerListJars}>
+                                    <PieChart
+                                        data={dataPieChart}
+                                        height={250}
+                                        width={width}
+                                        chartConfig={chartConfigPie}
+                                        accessor="population"
+                                        paddingLeft='10'
+                                        />
+                                </View>
+                            }
+                            {
+                                dataPieChart.length === 0 &&
+                                <View style={{height:150,justifyContent:'center',alignItems:'center'}}>
+                                    <Text style={{fontSize:24,color:'#C0C0C0'}}>Không tìm thấy dữ liệu</Text>
+                                </View>
+                            }
+                    </View>
+                </View>
+                <View style={{marginTop:20,}}>
+
                 </View>
             </ScrollView>
            
