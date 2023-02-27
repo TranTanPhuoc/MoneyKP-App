@@ -39,6 +39,8 @@ function ExchangeOther({navigation}){
     const [colorNoThem,setcolorNoThem] = useState(colorJar[5]);
     const [colorNoGiam,setcolorNoGiam] = useState("");
     const [colorMoUoc,setcolorMoUoc] = useState("");
+    const [colorMoUocThem,setcolorMoUocThem] = useState(colorJar[5]);
+    const [colorMoUocChuyen,setcolorMoUocChuyen] = useState("");
     const [typeBasket,settypeBasket] =useState(4);
     const hanldTaiSan = () =>{
         setcolorLo("#E6E6FA");
@@ -62,6 +64,16 @@ function ExchangeOther({navigation}){
         setcolorMoUoc(colorJar[2]);
         setcolorNo("#E6E6FA");
         setcolorLo("#E6E6FA");
+        settypeBasket(3);
+    }
+    const hanldMoUocThem = () =>{
+        setcolorMoUocThem(colorJar[5]);
+        setcolorMoUocChuyen("#E6E6FA");
+        settypeBasket(3);
+    }
+    const hanldMoUocChuyen = () =>{
+        setcolorMoUocChuyen(colorJar[6]);
+        setcolorMoUocThem("#E6E6FA");
         settypeBasket(3);
     }
     const hanldNo = () =>{
@@ -283,6 +295,16 @@ function ExchangeOther({navigation}){
                             </TouchableOpacity>
                             <TouchableOpacity onPress={hanldNoGiam} style={{flex:0.5,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorNoGiam}}>
                                 <Text style={{fontSize:16}}>Giảm</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
+                    {   typeBasket == 3 &&
+                        <View style={[styles.containerTop,{marginLeft:40,marginRight:40}]}>
+                            <TouchableOpacity onPress={hanldMoUocThem} style={{flex:0.5,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorMoUocThem}}>
+                                <Text style={{fontSize:16}}>Thêm</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={hanldMoUocChuyen} style={{flex:0.5,borderRadius:20,justifyContent:'center',alignItems:'center',backgroundColor:colorMoUocChuyen}}>
+                                <Text style={{fontSize:16}}>Chuyển</Text>
                             </TouchableOpacity>
                         </View>
                     }

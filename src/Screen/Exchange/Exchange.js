@@ -186,7 +186,7 @@ function Exchange({navigation}){
         }).catch((err)=>{
             console.log(err);
         })
-    },[idIU]);
+    },[idReload]);
     const onDateChange =(date) => {
        setDate(date);
        setModalVisible(!modalVisible);
