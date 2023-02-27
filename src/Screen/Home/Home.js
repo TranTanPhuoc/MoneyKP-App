@@ -269,7 +269,7 @@ function Home({navigation}){
                 <ScrollView scrollEnabled={false} contentContainerStyle={{flexDirection:'row',flexWrap:'wrap'}} style={styles.containerInfoWallet}>
                     
                 </ScrollView>
-                <Text style={{fontSize:20,fontWeight:'bold',marginTop:10,}}>Ngày : {selectedDate.toLocaleDateString('VN', {day:'2-digit',month: '2-digit', year: '2-digit'})}</Text>
+                <Text style={{fontSize:20,fontWeight:'bold',marginTop:10,}}>Ngày : {selectedDate.toLocaleDateString('VN', {day:'2-digit',month: '2-digit', year: 'numeric'})}</Text>
                 <View style={styles.containerListJar}>
                     <Text style={{color:'#000',fontSize:22,marginLeft:10, marginRight:10,}}>Danh sách lọ</Text>
                     <View style={styles.containerListJarItem}>
@@ -344,7 +344,7 @@ function Home({navigation}){
                     </View>
                 </View>
                 <View style={styles.containerListJar}>
-                    <Text style={{color:'#000',fontSize:22,marginLeft:10, marginRight:10,}}>Cơ cấu các hủ</Text>
+                    <Text style={{color:'#000',fontSize:22,marginLeft:10, marginRight:10,}}>Cơ cấu các lọ</Text>
                     <View style={styles.containerListJars}>
                         <PieChart
                             data={dataPieChart}

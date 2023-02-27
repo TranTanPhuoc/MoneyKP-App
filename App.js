@@ -20,6 +20,8 @@ import DetailOther from './src/Screen/DetailOther/DetailOther';
 import ExchangeOther from './src/Screen/Exchange/ExchangeOther';
 import DetailJarOther from './src/Screen/Jar/DetailJarOther';
 import JarOther from './src/Screen/Jar/JarOther';
+import HistoryOther from './src/Screen/History/HistoryOther';
+import Detail from './src/Screen/DetailOther/Detail';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -42,6 +44,8 @@ export default function App() {
                 <Stack.Screen name='ExchangeOther' component={ExchangeOther}/>
                 <Stack.Screen name='DetailJarOther' component={DetailJarOther}/>
                 <Stack.Screen name='JarOther' component={JarOther}/>
+                <Stack.Screen name='HistoryOther' component={HistoryOther}/>
+                <Stack.Screen name='Detail' component={Detail}/>
             </Stack.Navigator>
         </NavigationContainer>
       </Provider>

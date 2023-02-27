@@ -144,7 +144,7 @@ function DetailOther({navigation,route}){
                         }
                         <View style={styles.containerBottom}>
                             <TouchableOpacity onPress={()=>{
-                                navigation.navigate("History",{id:id,name:name});
+                                navigation.navigate("HistoryOther",{id:id,name:name});
                             }} style={styles.bottom} >
                                 <Text style={{fontSize:20, color:'#fff',fontWeight:'bold'}}> Xem tất cả</Text>
                             </TouchableOpacity>
@@ -155,7 +155,7 @@ function DetailOther({navigation,route}){
                 </View>
                 <View style={styles.containerListJar}>
                     <View style={{marginTop:20,marginLeft:20,justifyContent:'space-between',marginRight:20,}}>
-                            <Text style={{fontSize:20,fontWeight:'600'}}>Cơ cấu các hủ</Text>
+                            <Text style={{fontSize:20,fontWeight:'600'}}>Cơ cấu các mục {name}</Text>
                             {
                                 dataPieChart.length !== 0 &&
                                 <View style={styles.containerListJars}>
