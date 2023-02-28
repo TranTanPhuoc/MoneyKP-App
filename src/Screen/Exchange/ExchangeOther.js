@@ -42,6 +42,7 @@ function ExchangeOther({navigation}){
     const [colorMoUocThem,setcolorMoUocThem] = useState(colorJar[5]);
     const [colorMoUocChuyen,setcolorMoUocChuyen] = useState("");
     const [typeBasket,settypeBasket] =useState(4);
+    const [type,settype] =useState(1);
     const hanldTaiSan = () =>{
         setcolorLo("#E6E6FA");
         setcolorTS(colorJar[1]);
@@ -53,11 +54,13 @@ function ExchangeOther({navigation}){
         setcolorTSNap(colorJar[8]);
         setcolorTSRut("#E6E6FA");
         settypeBasket(4);
+        settype(1);
     }
     const hanldTaiSanRut = () =>{
         setcolorTSRut(colorJar[9]);
         setcolorTSNap("#E6E6FA");
         settypeBasket(4);
+        settype(-1);
     }
     const hanldMoUoc = () =>{
         setcolorTS("#E6E6FA");
@@ -70,11 +73,13 @@ function ExchangeOther({navigation}){
         setcolorMoUocThem(colorJar[5]);
         setcolorMoUocChuyen("#E6E6FA");
         settypeBasket(3);
+        settype(1);
     }
     const hanldMoUocChuyen = () =>{
         setcolorMoUocChuyen(colorJar[6]);
         setcolorMoUocThem("#E6E6FA");
         settypeBasket(3);
+        settype(2);
     }
     const hanldNo = () =>{
         setcolorTS("#E6E6FA");
@@ -86,10 +91,12 @@ function ExchangeOther({navigation}){
     const hanldNoThem = () =>{
         setcolorNoThem(colorJar[5]);
         setcolorNoGiam("#E6E6FA");
+        settype(1);
     }
     const hanldNoGiam = () =>{
         setcolorNoGiam(colorJar[6]);
         setcolorNoThem("#E6E6FA");
+        settype(-1);
     }
     function convertVNDToWords(amount) {
         const units = ["", "Một ", "Hai ", "Ba ", "Bốn ", "Năm ", "Sáu ", "Bảy ", "Tám ", "Chín "];
@@ -199,6 +206,64 @@ function ExchangeOther({navigation}){
             Alert.alert("Thông báo",mess);
         }
         if(money != 0 && noteGD != "" && dateGD != ""){
+            if(type != 2){
+                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
+                {
+                    userId: idUser,
+                    basketId:idJar,
+                    createDate:dateGD,
+                    moneyTransaction:money,
+                    type:type,
+                    note:noteGD,
+                    typeBasket:typeBasket
+                },
+                {
+                    headers:{
+                        authorization: accessToken 
+                    }
+                }
+                ).then((res)=>{
+                    setidIU(idReload+1);
+                    const item = idReload+1;
+                    dispatch(reload_IU(item));
+                    
+                    
+                }).catch((err)=>{
+                    Alert.alert("Thông báo", "Lưu giao dịch lỗi")
+                    console.log(err)
+                })
+                Alert.alert("Thông báo","Lưu thành công")
+                clearField();
+                navigation.navigate('ExchangeOther');
+            }
+            else if(type == 2){
+                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/transfer-money',
+                {
+                    userId: idUser,
+                    sentBasketId:idJar,
+                    receiveBasketId:idJarTo,
+                    money:money,
+                    createdDate:dateGD,
+                    note:noteGD
+                },
+                {
+                    headers:{
+                        authorization: accessToken 
+                    }
+                }).then((res)=>{
+                    (res.status == 200)? console.log('Lưu chi tiêu thành công') : null;
+                    setidIU(idReload+1);
+                    const item = idReload+1;
+                    dispatch(reload_IU(item));
+                    setColorSelect("#FF9999");
+                    // setColorSelectTo("#FF9999");
+                }).catch((err)=>{
+                    console.log(err);
+                })
+                Alert.alert("Thông báo","Lưu thành công")
+                clearField();
+                navigation.navigate('Exchange');
+            }
         }
     }
     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;

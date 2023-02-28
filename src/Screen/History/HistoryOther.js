@@ -54,7 +54,7 @@ function HistoryOther({navigation,route}){
                 </View>
                 <View style={styles.containerheader_title}>
                     <Text style={styles.fontTitle}>
-                        Xem lịch sử lọ {name}
+                        Danh sách mục {name} 
                     </Text>
                 </View>
                 <View style={styles.containerheader_icon}>
@@ -66,13 +66,19 @@ function HistoryOther({navigation,route}){
                     dataHistory.map((item,index)=>{
                         if(item != null){
                             return (
-                                <TouchableOpacity
-                                    onPress={()=>{
-                                        navigation.navigate("Detail",{id:id,name:name,itemName:item.name,money:item.availableBalances});
-                                    }}
-                                key={index} style={{display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'center',height:50,marginLeft:10,marginRight:10}}>
-                                    <Text style={{fontSize:20}}>{index+1}. {item.name}</Text>
-                                    <Text style={{fontSize:20,marginRight:10}}>{moneyFormat(item.availableBalances)}</Text>
+                                <TouchableOpacity key={index} onPress={()=>{
+                                    navigation.navigate("Detail",{id:id,name:name,itemName:item.name,money:item.availableBalances,idJar:item.id});
+                                }} style={{borderBottomWidth:0.3}}>
+                                    <View
+                                     style={{display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'center',height:50,marginLeft:10,marginRight:10}}>
+                                        <View style={{display:'flex',flexDirection:'row',alignItems:'center',marginLeft:10}}>
+                                            <View style={{height:30,width:30,justifyContent:'center',alignItems:'center'}}>
+                                                <Image style={{height:20,width:20}} source={require('../../../assets/icons/money.png')}/>
+                                            </View>
+                                            <Text style={{fontSize:24,marginLeft:15,fontWeight:'bold'}}> {item.name}</Text>
+                                        </View>
+                                        <Text style={{fontSize:20,marginRight:10}}>{moneyFormat(item.availableBalances)}</Text>
+                                    </View>
                                 </TouchableOpacity>
                             );
                         }
