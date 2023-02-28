@@ -29,21 +29,55 @@ const styles = StyleSheet.create({
       marginLeft:10,
       marginRight:10,
       marginTop:20,
-   },
-   viewBody_Top:{
-        display:'flex',
-        flexDirection:'row',
-        marginLeft:10,
-        marginRight:10,
-        height:70,
-        justifyContent:'space-between'
-   },
-   containerMoney:{
-    marginTop:10,
-    marginLeft:10,
-    marginRight:10,
+    },
+    viewBody_Top:{
+          display:'flex',
+          flexDirection:'row',
+          marginLeft:10,
+          marginRight:10,
+          height:70,
+          justifyContent:'space-between'
+    },
+    containerMoney:{
+      marginTop:10,
+      marginLeft:10,
+      marginRight:10,
+      backgroundColor:'#fff',
+      borderRadius:20,
+      shadowOffset:{
+          width:0,
+          height:1,
+      },
+      shadowColor:'#999999',
+      shadowOpacity: 0.5,
+      shadowRadius: 2,
+      justifyContent:'center'
+    },
+    containerItem:{
+      height:70,
+      margin:5,
+      borderRadius:10,
+      alignItems:'center',
+      display:'flex',
+      flexDirection:'row',
+      flex:1,
+      justifyContent:'space-between',
+    },
+    viewBody2:{
+      marginTop:10,
+      flex:1,
+      marginBottom:10,
+      borderRadius:20,
+      backgroundColor:'#fff',
+      shadowOffset:{
+        width:0,
+        height:1,
+      },
+      shadowColor:'#999999',
+      shadowOpacity: 0.5,
+      shadowRadius: 2,
+  },containerBody:{
     backgroundColor:'#fff',
-    borderRadius:20,
     shadowOffset:{
         width:0,
         height:1,
@@ -51,7 +85,32 @@ const styles = StyleSheet.create({
     shadowColor:'#999999',
     shadowOpacity: 0.5,
     shadowRadius: 2,
-    justifyContent:'center'
+  },
+  containerBottom:{
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'center',
+    paddingRight:10,
+    marginTop:40,
+  },
+  bottom:{
+    flex:1,
+    backgroundColor:'#FF8247',
+    borderRadius:100,
+    justifyContent:'center',
+    alignItems:'center',
+    marginRight:20,
+    marginLeft:20,
+    shadowColor: '#000',
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    paddingTop:15,
+    paddingBottom:15,
   },
 });
 export default styles;
