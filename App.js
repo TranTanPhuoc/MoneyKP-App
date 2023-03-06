@@ -22,6 +22,7 @@ import DetailJarOther from './src/Screen/Jar/DetailJarOther';
 import JarOther from './src/Screen/Jar/JarOther';
 import HistoryOther from './src/Screen/History/HistoryOther';
 import Detail from './src/Screen/DetailOther/Detail';
+import CameraExchange from './src/Screen/Exchange/CameraExchange';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -46,6 +47,7 @@ export default function App() {
                 <Stack.Screen name='JarOther' component={JarOther}/>
                 <Stack.Screen name='HistoryOther' component={HistoryOther}/>
                 <Stack.Screen name='Detail' component={Detail}/>
+                <Stack.Screen name='CameraExchange' component={CameraExchange}/>
             </Stack.Navigator>
         </NavigationContainer>
       </Provider>

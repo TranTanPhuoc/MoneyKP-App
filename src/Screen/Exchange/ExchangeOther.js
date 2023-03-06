@@ -26,8 +26,12 @@ function ExchangeOther({navigation}){
     const [wordsMoney,setWordsMoney] = useState("");
     const [colorSelect,setColorSelect] = useState("#FF9999");
     const [modalVisible, setModalVisible] = useState(false);
-    const [dateGD, setDate] = useState("");
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [dateGD, setDate] = useState(selectedDate);
     const [noteGD,setNoteGD] = useState("");
+    const [colorSelectTo,setColorSelectTo] = useState("#FF9999");
+    const [dataJarTo,setdataJarTo] = useState([]);
+    const [valuesDefautTo,setvaluesDefautTo] = useState("");
     const idReload = useSelector(state => state.reload.idReload);
     const dispatch = useDispatch();
     const [idIU,setidIU] = useState(idReload);
@@ -43,6 +47,7 @@ function ExchangeOther({navigation}){
     const [colorMoUocChuyen,setcolorMoUocChuyen] = useState("");
     const [typeBasket,settypeBasket] =useState(4);
     const [type,settype] =useState(1);
+    const [dateNote,setdateNote] = useState(selectedDate.toLocaleDateString('VN', {day:'2-digit',month: '2-digit', year: 'numeric'}));
     const hanldTaiSan = () =>{
         setcolorLo("#E6E6FA");
         setcolorTS(colorJar[1]);
@@ -188,8 +193,8 @@ function ExchangeOther({navigation}){
       }
     const clearField = ()=>{
         setMoney(0);
-        setDate("");
-        setNoteGD("");
+        setDate(selectedDate);
+        setNoteGD(selectedDate);
     }
     const onHanldSave = ()  =>{
         var mess = "";
@@ -223,18 +228,67 @@ function ExchangeOther({navigation}){
                     }
                 }
                 ).then((res)=>{
-                    setidIU(idReload+1);
-                    const item = idReload+1;
-                    dispatch(reload_IU(item));
-                    
-                    
+                    if(res.status == 200){
+                        if(type == 1){
+                            const income = parseInt(totalIncome) + parseInt(money);
+                            axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
+                            {
+                                id: idJar,
+                                userId:idUser,
+                                name:nameJar,
+                                precent:precentJar,
+                                availableBalances:availableBalancesI+income,
+                                totalSpending:totalSpending,
+                                totalIncome:income,
+                                type:1,
+                            },
+                            {
+                                headers:{
+                                    authorization: accessToken 
+                                }
+                            }).then((res)=>{
+                                setidIU(idReload+1);
+                                const item = idReload+1;
+                                dispatch(reload_IU(item));
+                            }).catch((err)=>{
+                                console.log(err);
+                            })
+                        }
+                        else if(type == -1){
+                            const spending = parseInt(totalSpending) + parseInt(money);
+                            axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
+                            {
+                                id: idJar,
+                                userId:idUser,
+                                name:nameJar,
+                                precent:precentJar,
+                                availableBalances:availableBalancesI-spending,
+                                totalSpending:spending,
+                                totalIncome:totalIncome,
+                                type:1,
+                            },
+                            {
+                                headers:{
+                                    authorization: accessToken 
+                                }
+                            }).then((res)=>{
+                                (res.status == 200)? console.log('Lưu chi tiêu thành công') : null;
+                                setidIU(idReload+1);
+                                const item = idReload+1;
+                                dispatch(reload_IU(item));
+                                setColorSelect("#FF9999");
+                            }).catch((err)=>{
+                                console.log(err);
+                            })
+                        }
+                        Alert.alert("Thông báo","Lưu thành công")
+                        clearField();
+                        navigation.navigate('ExchangeOther');
+                    }
                 }).catch((err)=>{
                     Alert.alert("Thông báo", "Lưu giao dịch lỗi")
                     console.log(err)
                 })
-                Alert.alert("Thông báo","Lưu thành công")
-                clearField();
-                navigation.navigate('ExchangeOther');
             }
             else if(type == 2){
                 axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/transfer-money',
@@ -256,19 +310,19 @@ function ExchangeOther({navigation}){
                     const item = idReload+1;
                     dispatch(reload_IU(item));
                     setColorSelect("#FF9999");
-                    // setColorSelectTo("#FF9999");
                 }).catch((err)=>{
                     console.log(err);
                 })
                 Alert.alert("Thông báo","Lưu thành công")
                 clearField();
-                navigation.navigate('Exchange');
+                navigation.navigate('ExchangeOther');
             }
         }
     }
     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const idUser = auth.currentUser.uid;
     const [idJar,setisJar] = useState();
+    const [idJarTo,setidJarTo] = useState();
     const [totalIncome,settotalIncome] = useState();
     const [totalSpending,settotalSpending] = useState();
     const [nameJar,setNameJar] = useState("");
@@ -297,6 +351,14 @@ function ExchangeOther({navigation}){
                         var objtemp = {id:item.id,name:item.name,population:item.precent,userId:item.userId,precent:item.precent,totalIncome:item.totalIncome,totalSpending:item.totalSpending,availableBalances:item.availableBalances};
                         return objtemp;
                     }));
+                    setdataJarTo(res.data.map((item,index)=>{
+                        var obj = item.name;
+                        if(index == 0){
+                            setvaluesDefautTo(item.name)
+                            setidJarTo(item.id)
+                        }
+                        return obj;
+                    }));
                 }
                 else{
                     setDataJar([]);
@@ -313,7 +375,21 @@ function ExchangeOther({navigation}){
         }).catch((err)=>{
             console.log(err);
         })
-    },[idIU,typeBasket]);
+    },[idReload,typeBasket]);
+    useEffect(()=>{
+        if(type != 2){
+            setNoteGD("")
+        }
+        else{
+             setNoteGD( `Chuyển tiền từ lọ ${valuesDefaut} sang ${valuesDefautTo}`);
+        }
+    },[type,valuesDefaut,valuesDefautTo]);
+    useEffect(()=>{
+        if(dateGD != ""){
+            const newDate = new Date(dateGD);
+            setdateNote(newDate.toLocaleDateString('VN', {day:'2-digit',month: '2-digit', year: 'numeric'}));
+        }
+    },[dateGD])
     return(
         <SafeAreaView style={styles.container} >
             <Modal
@@ -393,6 +469,10 @@ function ExchangeOther({navigation}){
                                 <Text style={{fontSize:16,fontStyle:'italic',textAlign:'center'}}>{wordsMoney}</Text>
                         </View>
                     }
+                    {
+                        (type == 2 ) && 
+                        <Text style={{fontSize:20,marginLeft:20,marginTop:15,}}>Mục mơ ước gởi :</Text>
+                    }
                     <View style={styles.containerJar}>
                         <SelectDropdown 
                             data={dataJar} 
@@ -434,6 +514,50 @@ function ExchangeOther({navigation}){
                             buttonStyle = {styles.containerSelectDropDown}
                             />
                     </View>
+                    {
+                        (type == 2) && 
+                        <View>
+                            <Text style={{fontSize:20,marginLeft:20,marginTop:15,}}>Mục mơ ước nhận :</Text>
+                            <View style={styles.containerJar}>
+                                <SelectDropdown 
+                                    data={dataJarTo} 
+                                    defaultButtonText={valuesDefautTo} 
+                                    buttonTextStyle = {{fontSize:16,}}
+                                    onSelect={(selectedItem, index) => { 
+                                        setvaluesDefautTo(selectedItem);
+                                        (index == 0) ?  setColorSelectTo("#FF9999") : (index == 1)? setColorSelectTo("#6699FF") : 
+                                        (index == 2)? setColorSelectTo("#FF6600") : (index == 3) ? setColorSelectTo("#00EE00") :
+                                        (index == 4) ? setColorSelectTo("#8DEEEE") : setColorSelectTo("#F4A460")
+                                        dataJarTemp.map((item,index)=>{
+                                            if(selectedItem == item.name){
+                                                setidJarTo(item.id)
+                                            }
+                                        })
+                                    }} 
+                                    renderDropdownIcon={isOpened => {
+                                    return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={18} />;
+                                    }}
+                                    renderCustomizedButtonChild= {value =>{
+                                        return (
+                                            <View style={{ flexDirection: 'row', marginRight: 8,alignItems:'center',flex:1}}>
+                                                <View style={{flex:0.3,height:"100%",justifyContent:'center',alignItems:'center'}}>
+                                                    <View style={[styles.containercustomSelectDropDown,{backgroundColor:colorSelectTo}]}>
+                                                        <Image source={require('../../../assets/icons/jar.png')} />
+                                                    </View>
+                                                </View>
+                                                <View>
+                                                    <Text style={{fontSize:22,marginLeft:20}}>{valuesDefautTo}</Text>
+                                                    <Text style={{fontSize:16,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
+                                                </View>
+                                            </View>
+                                        );
+                                    }}
+                                    buttonStyle = {styles.containerSelectDropDown}
+                                    />
+                            </View>
+                        </View>
+                    }
+
                     <View style={styles.containerNote}>
                             <TouchableOpacity onPress={() => setModalVisible(true)}  style={{height:60,display:'flex',flexDirection:'row',borderRadius:20,}}>
                                 <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
@@ -441,7 +565,7 @@ function ExchangeOther({navigation}){
                                 </View>
                                 <View  style={{flex:0.8,justifyContent:'center',alignItems:'center',borderBottomWidth:1,display:'flex',flexDirection:'row',width:"100%",}}>
                                     <View style={{flex:0.8,width:"100%"}}>
-                                        <Text style={{fontSize:16,}}>{dateGD.toString()}</Text>
+                                        <Text style={{fontSize:16,}}>{dateNote}</Text>
                                     </View>
                                     <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
                                         <Image source={require('../../../assets/icons/reset.png')}/>
@@ -453,7 +577,8 @@ function ExchangeOther({navigation}){
                                         <Image source={require('../../../assets/icons/note.png')}/>
                                 </View>
                                 <View  style={{flex:0.8,justifyContent:'center',borderBottomWidth:1}}>
-                                    <TextInput value={noteGD} onChangeText={x=>setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{fontSize:16,marginLeft:10,marginRight:20,}}/>
+                                    
+                                    <TextInput value={noteGD} onChangeText={x=>setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{fontSize:16,marginLeft:10,marginRight:20,}}  />
                                 </View>
                             </View>
                             <View style={{marginBottom:20}}>

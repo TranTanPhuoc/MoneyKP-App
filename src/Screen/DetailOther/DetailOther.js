@@ -36,6 +36,7 @@ function DetailOther({navigation,route}){
     const [data,setData] = useState([]);
     const [dataPieChart,setdataPieChart] = useState([]);
     const { width } = Dimensions.get('window');
+   
     useEffect(()=>{
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/${id}`,{
             headers: { authorization: accessToken },
@@ -50,7 +51,7 @@ function DetailOther({navigation,route}){
                 setmoneyR(moneyI);
             }).catch((err)=>{
             console.log(err);
-        })
+        });
     },[idReload])
     useEffect(()=>{
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/${id}`,{
@@ -111,7 +112,7 @@ function DetailOther({navigation,route}){
                     <TouchableOpacity onPress={()=>{
                             navigation.navigate("JarOther",{id:id,name:name});
                         }} style={styles.bottom} >
-                        <Text style={{fontSize:20, color:'#fff',fontWeight:'bold'}}> Thêm lọ mới</Text>
+                        <Text style={{fontSize:20, color:'#fff',fontWeight:'bold'}}> Thêm mục mới</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{marginTop:20,}}>
