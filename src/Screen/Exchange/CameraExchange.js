@@ -6,7 +6,8 @@ import { TouchableOpacity } from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
 import styles from './styles/CameraExchangeStyles'
-function CameraExchange(){
+import * as ImagePicker  from 'expo-image-picker';
+function CameraExchange({navigation}){
     const [hasPermission, setHasPermission] = useState(null);
     const [cameraRef, setCameraRef] = useState(null);
     const [photo, setPhoto] = useState(null);
@@ -17,12 +18,50 @@ function CameraExchange(){
       })();
     }, []);
     useEffect(()=>{
-        console.log(photo.uri);
-    },[photo])
+      if (photo !== null) {
+        // let localUri = photo.uri;
+        // let formData = new FormData();
+        // let uriParts = localUri.split(".");
+        // const path = localUri.split("/");
+        // let fileType = uriParts[uriParts.length - 1];
+        // let nameFile = path[path.length - 1];
+        // const _image = {
+        // uri: Platform.OS === "android" ? localUri : localUri.replace("file://", ""),
+        // type: `image/${fileType}`,
+        //   name: nameFile,
+        // };
+        // formData.append("file", _image);
+        navigation.navigate("Photo",{
+          photo:photo
+        });
+      }
+    },[photo]);
+
+    const pickImage = async () => {
+      // No permissions request is necessary for launching the image library
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        quality: 1,
+      });
+      if (!result.cancelled) {
+        if(result.assets != null){
+          let localUri = "";
+          result.assets.map((item)=>{
+              localUri = item.uri;
+          })
+          setPhoto(localUri);
+        }
+      }
+      else if(result.cancelled){
+        console.log(result);
+      }
+    };
+
     const takePicture = async () => {
       if (cameraRef) {
         const photo = await cameraRef.takePictureAsync();
-        setPhoto(photo);
+        setPhoto(photo.uri);
       }
     };
   
@@ -43,9 +82,18 @@ function CameraExchange(){
             setCameraRef(ref);
           }}
         />
-        <TouchableOpacity style={styles.button} onPress={takePicture}>
-          <Text style={styles.buttonText}>Take Picture</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={pickImage}>
+            <Image source={require('../../../assets/icons/album.png')} style={{backgroundColor:'#fff'}}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={takePicture}>
+            <View style={styles.viewButton}>
+            </View>
+          </TouchableOpacity>
+          <View style={styles.button}>
+          </View>
+        </View>
+        
       </View>
     );
 }

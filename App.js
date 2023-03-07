@@ -23,12 +23,13 @@ import JarOther from './src/Screen/Jar/JarOther';
 import HistoryOther from './src/Screen/History/HistoryOther';
 import Detail from './src/Screen/DetailOther/Detail';
 import CameraExchange from './src/Screen/Exchange/CameraExchange';
+import Photo from './src/Screen/Exchange/Photo';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
       <Provider store={store}>
           <NavigationContainer>
-            <Stack.Navigator initialRouteName={'Login'} screenOptions={{headerShown:false}}>
+            <Stack.Navigator initialRouteName={'CameraExchange'} screenOptions={{headerShown:false}}>
                 <Stack.Screen name='Login' component={Login}/>
                 <Stack.Screen name='Register' component={Register}/>
                 <Stack.Screen name='Tabs' component={Tabs}/>
@@ -48,6 +49,7 @@ export default function App() {
                 <Stack.Screen name='HistoryOther' component={HistoryOther}/>
                 <Stack.Screen name='Detail' component={Detail}/>
                 <Stack.Screen name='CameraExchange' component={CameraExchange}/>
+                <Stack.Screen name='Photo' component={Photo}/>
             </Stack.Navigator>
         </NavigationContainer>
       </Provider>

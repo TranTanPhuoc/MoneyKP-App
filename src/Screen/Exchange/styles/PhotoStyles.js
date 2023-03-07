@@ -9,15 +9,18 @@ import { StyleSheet} from 'react-native';
     justifyContent: 'center',
   },
   camera: {
-    flex: 1,
-    width: '100%',
+    flex: 0.9,
+    justifyContent:'center',
+    alignItems:'center',
+    width:"100%",
+    backgroundColor:"#1C1C1C",
   },
   button: {
-    backgroundColor: 'white',
     borderRadius:50,
     flex:0.33333,
     justifyContent:'center',
-    alignItems:'center'
+    alignItems:'flex-end',
+    paddingRight:30,
   },
   viewButton:{
     height:50,
@@ -25,15 +28,14 @@ import { StyleSheet} from 'react-native';
     borderWidth:5,
     borderRadius:20,
   },
+  
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     paddingVertical: 20,
     width:"100%",
-    backgroundColor:'#fff',
-    borderTopWidth:0.5,
-    borderColor:'#808080'
+    backgroundColor:'#1C1C1C',
   },
 });
 
