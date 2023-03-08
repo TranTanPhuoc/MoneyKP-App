@@ -41,7 +41,8 @@
     "react-native-svg-transformer": "^1.0.0",
     "react-navigation": "^4.4.4",
     "react-redux": "^8.0.5",
-    "redux": "^4.2.1"
+    "redux": "^4.2.1",
+    "expo-camera": "~13.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

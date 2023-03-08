@@ -1,2 +1,3 @@
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const RELOAD_IU = 'RELOAD_IU';
+export const SEND_PHOTO_SUCCESS = 'SEND_PHOTO_SUCCESS'

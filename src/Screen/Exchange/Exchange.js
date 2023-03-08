@@ -18,25 +18,41 @@ import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import axios from 'axios';
 import { TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { reload_IU } from '../../redux/action/ActionRedux';
+import { reload_IU, send_Photo_Success } from '../../redux/action/ActionRedux';
 import { colorJar } from '../../../assets/AppColors/AppColors';
 
 function Exchange({navigation}){
     const [colorThuNhap,setcolorThuNhap] = useState("#F9B79C");
     const [colorChiTieu,setcolorChiTieu] = useState(""); // "#91D8E5"
     const [colorChuyenTien,setcolorChuyenTien] = useState(""); // "#fedcba"
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [money,setMoney] = useState("");
     const [wordsMoney,setWordsMoney] = useState("");
     const [colorSelect,setColorSelect] = useState("#FF9999");
     const [colorSelectTo,setColorSelectTo] = useState("#FF9999");
     const [modalVisible, setModalVisible] = useState(false);
-    const [dateGD, setDate] = useState("");
+    const [dateGD, setDate] = useState(selectedDate);
     const [noteGD,setNoteGD] = useState("");
     const [tagGD,setTagGD] = useState("");
     const [type,setType] = useState(1);
     const idReload = useSelector(state => state.reload.idReload);
+    const moneyPic = useSelector(state => state.reload.money);
+    const notePic = useSelector(state => state.reload.note);
+    const datePic = useSelector(state => state.reload.date);
+    useEffect(()=>{
+        if(moneyPic != undefined && notePic != undefined && datePic != undefined){
+            hanldChiTieu();
+            setMoney(parseInt(moneyPic));
+            setNoteGD(notePic);
+            setDate(datePic);
+            const newDate = new Date(datePic);
+            setdateNote(newDate.toLocaleDateString('VN', {day:'2-digit',month: '2-digit', year: 'numeric'}));
+            
+        }
+    },[noteGD,moneyPic,datePic]);
     const dispatch = useDispatch();
     const [idIU,setidIU] = useState(idReload);
+    const [dateNote,setdateNote] = useState(selectedDate.toLocaleDateString('VN', {day:'2-digit',month: '2-digit', year: 'numeric'}));
     const hanldThuNhap = () =>{
         setcolorThuNhap("#F9B79C");
         setcolorChiTieu("#E6E6FA");
@@ -55,7 +71,6 @@ function Exchange({navigation}){
         setcolorChuyenTien("#fedcba");
         setType(2);
     }
-    
     function convertVNDToWords(amount) {
         const units = ["", "Một ", "Hai ", "Ba ", "Bốn ", "Năm ", "Sáu ", "Bảy ", "Tám ", "Chín "];
         const teens = ["", "Mười một ", "Mười hai ", "Mười ba ", "Mười bốn ", "Mười lăm ", "Mười sáu ", "Mười bảy ", "Mười tám ", "Mười chín "];
@@ -193,10 +208,21 @@ function Exchange({navigation}){
       }
     const clearField = ()=>{
         setMoney(0);
-        setDate("");
+        setDate(selectedDate);
         setNoteGD("");
         setTagGD("");
     }
+    useEffect(()=>{
+        if(type != 2){
+            setNoteGD("")
+        }
+    },[type]);
+    useEffect(()=>{
+        if(dateGD != ""){
+            const newDate = new Date(dateGD);
+            setdateNote(newDate.toLocaleDateString('VN', {day:'2-digit',month: '2-digit', year: 'numeric'}));
+        }
+    },[dateGD])
     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const onHanldSave = ()  =>{
         var mess = "";
@@ -253,6 +279,7 @@ function Exchange({navigation}){
                                     setidIU(idReload+1);
                                     const item = idReload+1;
                                     dispatch(reload_IU(item));
+                                    clearField();
                                 }).catch((err)=>{
                                     console.log(err);
                                 })
@@ -280,6 +307,8 @@ function Exchange({navigation}){
                                     const item = idReload+1;
                                     dispatch(reload_IU(item));
                                     setColorSelect("#FF9999");
+                                    dispatch(send_Photo_Success(undefined,undefined,undefined));
+                                    clearField();
                                 }).catch((err)=>{
                                     console.log(err);
                                 })
@@ -354,6 +383,18 @@ function Exchange({navigation}){
                             <Text style={{fontSize:16}}>Chuyển tiền</Text>
                         </TouchableOpacity>
                     </View>
+                    {
+                        type !=2 && 
+                    <View style={{marginLeft:20,marginTop:20}}>
+                        <TouchableOpacity onPress={
+                            ()=>{
+                                navigation.navigate('CameraExchange');
+                            }
+                        } style={{width:120,borderWidth:0.5,paddingTop:10,paddingBottom:10,justifyContent:'center',alignItems:'center',borderRadius:20,}}>
+                            <Text style={{fontSize:16}}>Thêm nhanh</Text>
+                        </TouchableOpacity>
+                    </View>
+                    }
                     <View style={styles.containerInputMoney}>
                         <View style={{flex:0.2,justifyContent:'flex-start',alignItems:'center',}}>
                                 <Text style={{fontSize:16}}>Số tiền</Text>
@@ -361,7 +402,7 @@ function Exchange({navigation}){
                         <View style={{flex:0.6,justifyContent:'center',alignItems:'center',}}>
                             <TextInput keyboardType='number-pad' onChangeText={x=> {
                                 (x>10000000001)? Alert.alert("Lỗi",`Không nhập quá 10 tỷ`) :setMoney(x)
-                            }} value={money} placeholder="0" placeholderTextColor={'#000'} style={{fontSize:30,flex:1,}}/>
+                            }} placeholder="0" placeholderTextColor={'#000'} style={{fontSize:30,flex:1,}}>{money}</TextInput>
                         </View>
                         <View style={{flex:0.2,justifyContent:'center',alignItems:'center',}}>
                                 <View style={{width:50,height:30,backgroundColor:'#F0A587',borderRadius:20,justifyContent:'center',alignItems:'center'}}>
@@ -374,6 +415,7 @@ function Exchange({navigation}){
                                 <Text style={{fontSize:16,fontStyle:'italic',textAlign:'center'}}>{wordsMoney}</Text>
                         </View>
                     }
+                    
                     {
                         (type == 2) && <Text style={{fontSize:20,marginLeft:20,}}>Lọ gởi :</Text>
                     }
@@ -469,7 +511,7 @@ function Exchange({navigation}){
                                 </View>
                                 <View  style={{flex:0.8,justifyContent:'center',alignItems:'center',borderBottomWidth:1,display:'flex',flexDirection:'row',width:"100%",}}>
                                     <View style={{flex:0.8,width:"100%"}}>
-                                        <Text style={{fontSize:16,}}>{dateGD.toString()}</Text>
+                                        <Text style={{fontSize:16,}}>{dateNote}</Text>
                                     </View>
                                     <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
                                         <Image source={require('../../../assets/icons/reset.png')}/>
@@ -481,7 +523,7 @@ function Exchange({navigation}){
                                         <Image source={require('../../../assets/icons/note.png')}/>
                                 </View>
                                 <View  style={{flex:0.8,justifyContent:'center',borderBottomWidth:1}}>
-                                    <TextInput value={noteGD} onChangeText={x=>setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{fontSize:16,marginLeft:10,marginRight:20,}}/>
+                                    <TextInput  value={(type == 2)? `Chuyển tiền từ lọ ${valuesDefaut} sang ${valuesDefautTo}` : noteGD} onChangeText={x=>setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{fontSize:16,marginLeft:10,marginRight:20,}}/>
                                 </View>
                             </View>
                             <View style={{marginBottom:20}}>

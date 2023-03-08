@@ -11,6 +11,14 @@ const initialState = {
           isAuthenticated: true,
           idReload: action.payload,
         };
+      case 'SEND_PHOTO_SUCCESS':
+        return{
+          ...state,
+          isAuthenticated: true,
+          money: action.payload.money,
+          note : action.payload.note,
+          date : action.payload.date
+        }
       default:
         return state;
     }

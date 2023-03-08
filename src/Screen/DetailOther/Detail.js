@@ -11,7 +11,7 @@ import {initializeApp} from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import { useDispatch, useSelector } from 'react-redux';
 import { colorJar } from '../../../assets/AppColors/AppColors';
-import { PieChart } from 'react-native-chart-kit';
+import { BarChart, PieChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
 import { Image } from 'react-native';
 function Detail({navigation,route}){
@@ -33,6 +33,20 @@ function Detail({navigation,route}){
     const idUser = auth.currentUser.uid;
     const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const [dataHistory,setdataHistory] = useState([]);
+    const [hidden2,sethidden2] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [month,setMonth] = useState(selectedDate.getMonth()+1);
+    const [year,setYear] = useState(selectedDate.getFullYear());
+    const [labels,setlabels] = useState([]);
+    const [datasets,setdatasets] = useState([]);
+    const [dataChart,setdataChart] = useState({
+        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","16","21","22","23","24","25","26","27","28","29","30","31",""],
+        datasets: [
+          {
+            data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          },
+        ],
+    });
     useEffect(()=>{
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-basketId/${idUser}/${idJar}`,{
             headers: { authorization: accessToken },
@@ -53,9 +67,50 @@ function Detail({navigation,route}){
             }));
         }).catch((err)=>{
             console.log(err);
-        })
+        });
+        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type:1,
+                    userId:idUser,
+                    basketId:idJar,
+                    year:year,
+                    month:month,
+                    typeBasket:1
+                },
+                {
+                    headers:{
+                        authorization: accessToken 
+                    }
+                }).then((res)=>{
+                    setlabels(
+                        res.data.map((item,index)=>{
+                            return index+1;
+                        }),
+                    );
+                    setdatasets(
+                        res.data.map((item)=>{
+                            return item;
+                        })
+                    )
+                }).catch((err)=>{
+                    console.log(err);
+            });
     },[idReload])
-
+    const chartConfig = {
+        backgroundGradientFrom: "#fff",
+        backgroundGradientTo: "#fff",
+        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        barPercentage: 0.5,         
+        categoryPercentage: 0.8,
+        
+    };
+      
+    useEffect(()=>{
+        setdataChart({
+            labels: labels,
+            datasets: [{data: datasets}],
+        })
+    },[datasets]);
     return (
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
@@ -143,6 +198,45 @@ function Detail({navigation,route}){
                                 <Text style={{fontSize:20, color:'#fff',fontWeight:'bold'}}> Xem tất cả</Text>
                             </TouchableOpacity>
                         </View>
+                        
+                </View>
+                <View style={{marginTop:20,}}>
+                        <View style={styles.containerBody}>
+                        <View style={{marginTop:20,marginLeft:20,display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
+                            <Text style={{fontSize:20,fontWeight:'600'}}>Xem biểu đồ giao dịch lọ {itemName}</Text>
+                            <TouchableOpacity onPress={()=> sethidden2(!hidden2)} style={{marginRight:20,}}>
+                                {
+                                    hidden2? <AntDesign name="down" size={24} color="black" /> : <AntDesign name="up" size={24} color="black" />
+                                }
+                            </TouchableOpacity>
+                        </View>
+                        {
+                            !hidden2 && 
+                            <ScrollView horizontal={true}>
+                                <BarChart
+                                    data={dataChart}
+                                    width={Dimensions.get('window').width+160}
+                                    height={250}
+                                    yAxisLabel="VND "
+                                    chartConfig={chartConfig}
+                                    showBarTops={true}
+                                    withHorizontalLabels={true}
+                                    horizontalLabelRotation={-60}
+                                />
+                            </ScrollView>
+                        }
+                        <View style={styles.containerBottom}>
+                            <TouchableOpacity onPress={()=>{
+                                navigation.navigate("Chart",{id:idJar,name:itemName});
+                            }} style={styles.bottom} >
+                                <Text style={{fontSize:20, color:'#fff',fontWeight:'bold'}}> Xem chi tiết</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{marginTop:20,marginLeft:20,}}>
+                        </View>
+                    </View>
+                </View>
+                <View style={{marginTop:20,}}>
                         <View style={{marginTop:20,marginLeft:20,}}>
                         </View>
                     </View>
