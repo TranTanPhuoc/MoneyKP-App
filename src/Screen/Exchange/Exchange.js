@@ -18,7 +18,7 @@ import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import axios from 'axios';
 import { TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { reload_IU } from '../../redux/action/ActionRedux';
+import { reload_IU, send_Photo_Success } from '../../redux/action/ActionRedux';
 import { colorJar } from '../../../assets/AppColors/AppColors';
 
 function Exchange({navigation}){
@@ -36,6 +36,20 @@ function Exchange({navigation}){
     const [tagGD,setTagGD] = useState("");
     const [type,setType] = useState(1);
     const idReload = useSelector(state => state.reload.idReload);
+    const moneyPic = useSelector(state => state.reload.money);
+    const notePic = useSelector(state => state.reload.note);
+    const datePic = useSelector(state => state.reload.date);
+    useEffect(()=>{
+        if(moneyPic != undefined && notePic != undefined && datePic != undefined){
+            hanldChiTieu();
+            setMoney(parseInt(moneyPic));
+            setNoteGD(notePic);
+            setDate(datePic);
+            const newDate = new Date(datePic);
+            setdateNote(newDate.toLocaleDateString('VN', {day:'2-digit',month: '2-digit', year: 'numeric'}));
+            
+        }
+    },[noteGD,moneyPic,datePic]);
     const dispatch = useDispatch();
     const [idIU,setidIU] = useState(idReload);
     const [dateNote,setdateNote] = useState(selectedDate.toLocaleDateString('VN', {day:'2-digit',month: '2-digit', year: 'numeric'}));
@@ -265,6 +279,7 @@ function Exchange({navigation}){
                                     setidIU(idReload+1);
                                     const item = idReload+1;
                                     dispatch(reload_IU(item));
+                                    clearField();
                                 }).catch((err)=>{
                                     console.log(err);
                                 })
@@ -292,6 +307,8 @@ function Exchange({navigation}){
                                     const item = idReload+1;
                                     dispatch(reload_IU(item));
                                     setColorSelect("#FF9999");
+                                    dispatch(send_Photo_Success(undefined,undefined,undefined));
+                                    clearField();
                                 }).catch((err)=>{
                                     console.log(err);
                                 })
@@ -385,7 +402,7 @@ function Exchange({navigation}){
                         <View style={{flex:0.6,justifyContent:'center',alignItems:'center',}}>
                             <TextInput keyboardType='number-pad' onChangeText={x=> {
                                 (x>10000000001)? Alert.alert("Lỗi",`Không nhập quá 10 tỷ`) :setMoney(x)
-                            }} value={money} placeholder="0" placeholderTextColor={'#000'} style={{fontSize:30,flex:1,}}/>
+                            }} placeholder="0" placeholderTextColor={'#000'} style={{fontSize:30,flex:1,}}>{money}</TextInput>
                         </View>
                         <View style={{flex:0.2,justifyContent:'center',alignItems:'center',}}>
                                 <View style={{width:50,height:30,backgroundColor:'#F0A587',borderRadius:20,justifyContent:'center',alignItems:'center'}}>

@@ -19,18 +19,7 @@ function CameraExchange({navigation}){
     }, []);
     useEffect(()=>{
       if (photo !== null) {
-        // let localUri = photo.uri;
-        // let formData = new FormData();
-        // let uriParts = localUri.split(".");
-        // const path = localUri.split("/");
-        // let fileType = uriParts[uriParts.length - 1];
-        // let nameFile = path[path.length - 1];
-        // const _image = {
-        // uri: Platform.OS === "android" ? localUri : localUri.replace("file://", ""),
-        // type: `image/${fileType}`,
-        //   name: nameFile,
-        // };
-        // formData.append("file", _image);
+       
         navigation.navigate("Photo",{
           photo:photo
         });
