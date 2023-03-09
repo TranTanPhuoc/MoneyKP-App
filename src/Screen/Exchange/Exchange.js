@@ -19,7 +19,8 @@ import axios from 'axios';
 import { TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { reload_IU, send_Photo_Success } from '../../redux/action/ActionRedux';
-import { colorJar } from '../../../assets/AppColors/AppColors';
+import { Entypo } from '@expo/vector-icons';
+import  CheckBox  from 'expo-checkbox';
 
 function Exchange({navigation}){
     const [colorThuNhap,setcolorThuNhap] = useState("#F9B79C");
@@ -39,6 +40,7 @@ function Exchange({navigation}){
     const moneyPic = useSelector(state => state.reload.money);
     const notePic = useSelector(state => state.reload.note);
     const datePic = useSelector(state => state.reload.date);
+    const [isSelected, setSelection] = useState(false);
     useEffect(()=>{
         if(moneyPic != undefined && notePic != undefined && datePic != undefined){
             hanldChiTieu();
@@ -64,12 +66,14 @@ function Exchange({navigation}){
         setcolorChiTieu("#91D8E5");
         setcolorChuyenTien("#E6E6FA");
         setType(-1);
+        setSelection(false);
     }
     const hanldChuyenTien = () =>{
         setcolorThuNhap("#E6E6FA");
         setcolorChiTieu("#E6E6FA");
         setcolorChuyenTien("#fedcba");
         setType(2);
+        setSelection(false);
     }
     function convertVNDToWords(amount) {
         const units = ["", "Một ", "Hai ", "Ba ", "Bốn ", "Năm ", "Sáu ", "Bảy ", "Tám ", "Chín "];
@@ -239,7 +243,7 @@ function Exchange({navigation}){
             Alert.alert("Thông báo",mess);
         }
         if(money != 0 && noteGD != "" && dateGD != ""){
-                if(type != 2){
+                if(type != 2 && !isSelected){
                     axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
                     {
                         userId: idUser,
@@ -257,7 +261,7 @@ function Exchange({navigation}){
                     }
                     ).then((res)=>{
                         if(res.status == 200){
-                            if(type == 1){
+                            if(type == 1 ){
                                 const income = parseInt(totalIncome) + parseInt(money);
                                 axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
                                 {
@@ -351,6 +355,33 @@ function Exchange({navigation}){
                     clearField();
                     navigation.navigate('Exchange');
                 }
+                else if (type == 1 && isSelected){
+                    axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/distribute-money',
+                    {
+                        userId: idUser,
+                        money:money,
+                        createdDate:dateGD,
+                        note:noteGD
+                    },
+                    {
+                        headers:{
+                            authorization: accessToken 
+                        }
+                    }).then((res)=>{
+                        (res.status == 200)? console.log('Lưu chi tiêu thành công') : null;
+                        setidIU(idReload+1);
+                        const item = idReload+1;
+                        dispatch(reload_IU(item));
+                        setColorSelect("#FF9999");
+                        setColorSelectTo("#FF9999");
+                        setSelection(false);
+                    }).catch((err)=>{
+                        console.log(err);
+                    })
+                    Alert.alert("Thông báo","Lưu thành công")
+                    clearField();
+                    navigation.navigate('Exchange');
+                }
             }
     }
 
@@ -384,14 +415,15 @@ function Exchange({navigation}){
                         </TouchableOpacity>
                     </View>
                     {
-                        type !=2 && 
+                        type == -1 && 
                     <View style={{marginLeft:20,marginTop:20}}>
                         <TouchableOpacity onPress={
                             ()=>{
                                 navigation.navigate('CameraExchange');
                             }
-                        } style={{width:120,borderWidth:0.5,paddingTop:10,paddingBottom:10,justifyContent:'center',alignItems:'center',borderRadius:20,}}>
-                            <Text style={{fontSize:16}}>Thêm nhanh</Text>
+                        } style={{width:130,borderWidth:0.5,paddingTop:10,paddingBottom:10,justifyContent:'center',alignItems:'center',borderRadius:20,display:'flex',flexDirection:'row'}}>
+                            <Text style={{fontSize:16}}>Thêm nhanh</Text> 
+                            <Entypo name="camera" size={24} color="black" style={{marginLeft:10}}/>
                         </TouchableOpacity>
                     </View>
                     }
@@ -419,48 +451,107 @@ function Exchange({navigation}){
                     {
                         (type == 2) && <Text style={{fontSize:20,marginLeft:20,}}>Lọ gởi :</Text>
                     }
-                    <View style={styles.containerJar}>
-                        <SelectDropdown 
-                            data={dataJar} 
-                            defaultButtonText={valuesDefaut} 
-                            buttonTextStyle = {{fontSize:16,}}
-                            onSelect={(selectedItem, index) => { 
-                                setvaluesDefaut(selectedItem);
-                                (index == 0) ?  setColorSelect("#FF9999") : (index == 1)? setColorSelect("#6699FF") : 
-                                (index == 2)? setColorSelect("#FF6600") : (index == 3) ? setColorSelect("#00EE00") :
-                                (index == 4) ? setColorSelect("#8DEEEE") : setColorSelect("#F4A460")
-                                dataJarTemp.map((item,index)=>{
-                                    if(selectedItem == item.name){
-                                        setisJar(item.id)
-                                        settotalIncome(item.totalIncome);
-                                        settotalSpending(item.totalSpending);
-                                        setNameJar(item.name);
-                                        SetprecentJar(item.precent);
-                                        setavailableBalancesI(item.availableBalances);
-                                    }
-                                })
-                            }} 
-                            renderDropdownIcon={isOpened => {
-                            return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={18} />;
-                            }}
-                            renderCustomizedButtonChild= {value =>{
-                                return (
-                                    <View style={{ flexDirection: 'row', marginRight: 8,alignItems:'center',flex:1}}>
-                                        <View style={{flex:0.3,height:"100%",justifyContent:'center',alignItems:'center'}}>
-                                            <View style={[styles.containercustomSelectDropDown,{backgroundColor:colorSelect}]}>
-                                                <Image source={require('../../../assets/icons/jar.png')} />
+                    {
+                        type == 1 && !isSelected &&
+                        <View style={styles.containerJar}>
+                            <SelectDropdown 
+                                data={dataJar} 
+                                defaultButtonText={valuesDefaut} 
+                                buttonTextStyle = {{fontSize:16,}}
+                                onSelect={(selectedItem, index) => { 
+                                    setvaluesDefaut(selectedItem);
+                                    (index == 0) ?  setColorSelect("#FF9999") : (index == 1)? setColorSelect("#6699FF") : 
+                                    (index == 2)? setColorSelect("#FF6600") : (index == 3) ? setColorSelect("#00EE00") :
+                                    (index == 4) ? setColorSelect("#8DEEEE") : setColorSelect("#F4A460")
+                                    dataJarTemp.map((item,index)=>{
+                                        if(selectedItem == item.name){
+                                            setisJar(item.id)
+                                            settotalIncome(item.totalIncome);
+                                            settotalSpending(item.totalSpending);
+                                            setNameJar(item.name);
+                                            SetprecentJar(item.precent);
+                                            setavailableBalancesI(item.availableBalances);
+                                        }
+                                    })
+                                }} 
+                                renderDropdownIcon={isOpened => {
+                                return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={18} />;
+                                }}
+                                renderCustomizedButtonChild= {value =>{
+                                    return (
+                                        <View style={{ flexDirection: 'row', marginRight: 8,alignItems:'center',flex:1}}>
+                                            <View style={{flex:0.3,height:"100%",justifyContent:'center',alignItems:'center'}}>
+                                                <View style={[styles.containercustomSelectDropDown,{backgroundColor:colorSelect}]}>
+                                                    <Image source={require('../../../assets/icons/jar.png')} />
+                                                </View>
+                                            </View>
+                                            <View>
+                                                <Text style={{fontSize:22,marginLeft:20}}>{valuesDefaut}</Text>
+                                                <Text style={{fontSize:16,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
                                             </View>
                                         </View>
-                                        <View>
-                                            <Text style={{fontSize:22,marginLeft:20}}>{valuesDefaut}</Text>
-                                            <Text style={{fontSize:16,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
+                                    );
+                                }}
+                                buttonStyle = {styles.containerSelectDropDown}
+                                />
+                        </View>
+                    }
+                    {
+                        type != 1 &&
+                        <View style={styles.containerJar}>
+                            <SelectDropdown 
+                                data={dataJar} 
+                                defaultButtonText={valuesDefaut} 
+                                buttonTextStyle = {{fontSize:16,}}
+                                onSelect={(selectedItem, index) => { 
+                                    setvaluesDefaut(selectedItem);
+                                    (index == 0) ?  setColorSelect("#FF9999") : (index == 1)? setColorSelect("#6699FF") : 
+                                    (index == 2)? setColorSelect("#FF6600") : (index == 3) ? setColorSelect("#00EE00") :
+                                    (index == 4) ? setColorSelect("#8DEEEE") : setColorSelect("#F4A460")
+                                    dataJarTemp.map((item,index)=>{
+                                        if(selectedItem == item.name){
+                                            setisJar(item.id)
+                                            settotalIncome(item.totalIncome);
+                                            settotalSpending(item.totalSpending);
+                                            setNameJar(item.name);
+                                            SetprecentJar(item.precent);
+                                            setavailableBalancesI(item.availableBalances);
+                                        }
+                                    })
+                                }} 
+                                renderDropdownIcon={isOpened => {
+                                return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={18} />;
+                                }}
+                                renderCustomizedButtonChild= {value =>{
+                                    return (
+                                        <View style={{ flexDirection: 'row', marginRight: 8,alignItems:'center',flex:1}}>
+                                            <View style={{flex:0.3,height:"100%",justifyContent:'center',alignItems:'center'}}>
+                                                <View style={[styles.containercustomSelectDropDown,{backgroundColor:colorSelect}]}>
+                                                    <Image source={require('../../../assets/icons/jar.png')} />
+                                                </View>
+                                            </View>
+                                            <View>
+                                                <Text style={{fontSize:22,marginLeft:20}}>{valuesDefaut}</Text>
+                                                <Text style={{fontSize:16,marginLeft:20,marginTop:20,}}>Nhấn để thay đổi</Text>
+                                            </View>
                                         </View>
-                                    </View>
-                                );
-                            }}
-                            buttonStyle = {styles.containerSelectDropDown}
+                                    );
+                                }}
+                                buttonStyle = {styles.containerSelectDropDown}
+                                />
+                        </View>
+                    }
+                    {
+                        type == 1 && 
+                        <View style={{display:'flex',flexDirection:'row',fontSize:20,marginLeft:20,marginRight:20,marginTop:15,justifyContent:'flex-end',alignItems:'center'}}>
+                            <CheckBox
+                                value={isSelected}
+                                onValueChange={setSelection}
+                                style={styles.checkbox}
                             />
-                    </View>
+                            <Text style={{fontSize:16,marginLeft:5}}>Phân bổ đều cho tất cả các lọ </Text>
+                        </View>
+                    }
                     {
                         (type == 2) && 
                         <View>
@@ -523,7 +614,12 @@ function Exchange({navigation}){
                                         <Image source={require('../../../assets/icons/note.png')}/>
                                 </View>
                                 <View  style={{flex:0.8,justifyContent:'center',borderBottomWidth:1}}>
-                                    <TextInput  value={(type == 2)? `Chuyển tiền từ lọ ${valuesDefaut} sang ${valuesDefautTo}` : noteGD} onChangeText={x=>setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{fontSize:16,marginLeft:10,marginRight:20,}}/>
+                                    <TextInput  value={
+                                        (type == 2)? 
+                                            `Chuyển tiền từ lọ ${valuesDefaut} sang ${valuesDefautTo}` 
+                                            : (isSelected)? 
+                                                'Tiền phân bố đều cho tất cả các lọ' : noteGD
+                                        } onChangeText={x=>setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{fontSize:16,marginLeft:10,marginRight:20,}}/>
                                 </View>
                             </View>
                             <View style={{marginBottom:20}}>

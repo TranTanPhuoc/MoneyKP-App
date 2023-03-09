@@ -6,10 +6,14 @@ import { TouchableOpacity } from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
 import styles from './styles/CameraExchangeStyles'
+import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker  from 'expo-image-picker';
 function CameraExchange({navigation}){
     const [hasPermission, setHasPermission] = useState(null);
     const [cameraRef, setCameraRef] = useState(null);
+    const hanldPressClose = () =>{
+      navigation.goBack();
+    }
     const [photo, setPhoto] = useState(null);
     useEffect(() => {
       (async () => {
@@ -70,7 +74,13 @@ function CameraExchange({navigation}){
           ref={(ref) => {
             setCameraRef(ref);
           }}
-        />
+        >
+          <View style={{alignItems:'flex-end'}}> 
+              <TouchableOpacity onPress={hanldPressClose}>
+                <AntDesign name="closecircle" size={32} color="white" />
+              </TouchableOpacity>
+          </View>
+        </Camera>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={pickImage}>
             <Image source={require('../../../assets/icons/album.png')} style={{backgroundColor:'#fff'}}/>
