@@ -1,5 +1,5 @@
 import { Button, DatePickerAndroid, Platform, ScrollView, View } from 'react-native';
-import {  Text, SafeAreaView, Alert, Image,} from 'react-native';
+import { Text, SafeAreaView, Alert, Image, } from 'react-native';
 import styles from "./styles/ChartStyles";
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
@@ -8,295 +8,295 @@ import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Modal } from 'react-native';
 // Import FireBase
-import{initializeAuth,} from 'firebase/auth';
-import {initializeApp} from 'firebase/app';
+import { initializeAuth, } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import axios from 'axios';
 import { BarChart } from "react-native-chart-kit";
 import { Dimensions } from 'react-native';
 
-function Chart({navigation,route}){
-    const {id,name} = route.params;
-    const dataTK = ['Theo tháng','Theo năm'];
-    const dataJar = ['Thu nhập','Chi tiêu'];
-    const [typeData,settypeData] = useState(1);
-    const [valuesDefaut,setvaluesDefaut] = useState("Theo tháng");
-    const [selectDefaut,setselectDefaut] = useState("Thu nhập");
+function Chart({ navigation, route }) {
+    const { id, name } = route.params;
+    const dataTK = ['Theo tháng', 'Theo năm'];
+    const dataJar = ['Thu nhập', 'Chi tiêu'];
+    const [typeData, settypeData] = useState(1);
+    const [valuesDefaut, setvaluesDefaut] = useState("Theo tháng");
+    const [selectDefaut, setselectDefaut] = useState("Thu nhập");
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
-    const [month,setMonth] = useState(selectedDate.getMonth()+1);
-    const [year,setYear] = useState(selectedDate.getFullYear());
-    const [labels,setlabels] = useState([]);
-    const [datasets,setdatasets] = useState([]);
+    const [month, setMonth] = useState(selectedDate.getMonth() + 1);
+    const [year, setYear] = useState(selectedDate.getFullYear());
+    const [labels, setlabels] = useState([]);
+    const [datasets, setdatasets] = useState([]);
     const onDateChange = (event, selectedDate) => {
         if (selectedDate) {
-          const newDate = new Date(selectedDate);
-          setSelectedDate(newDate);
-          Platform.OS === 'android' ? setShowPicker(false) : setShowPicker(true);
+            const newDate = new Date(selectedDate);
+            setSelectedDate(newDate);
+            Platform.OS === 'android' ? setShowPicker(false) : setShowPicker(true);
         }
-      };
-    const hanldChon = ()=>{
+    };
+    const hanldChon = () => {
         setShowPicker(false);
         setMonth(selectedDate.getMonth() + 1);
         setYear(selectedDate.getFullYear());
     }
     // Connect FireBase
     const app = initializeApp(firebaseConfig);
-    const auth = initializeAuth(app,{
+    const auth = initializeAuth(app, {
     });
     const idUser = auth.currentUser.uid;
-    const accessToken =`Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
-    const [data,setdata] = useState({
-        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","16","21","22","23","24","25","26","27","28","29","30","31",""],
+    const accessToken = `Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+    const [data, setdata] = useState({
+        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "16", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", ""],
         datasets: [
-          {
-            data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          },
+            {
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            },
         ],
-      });
-    useEffect(()=>{
-        if(valuesDefaut == "Theo năm"){
+    });
+    useEffect(() => {
+        if (valuesDefaut == "Theo năm") {
             axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
                 {
-                    type:typeData,
-                    userId:idUser,
-                    basketId:id,
-                    year:year,
-                    month:0,
-                    typeBasket:1
+                    type: typeData,
+                    userId: idUser,
+                    basketId: id,
+                    year: year,
+                    month: 0,
+                    typeBasket: 1
                 },
                 {
-                    headers:{
-                        authorization: accessToken 
+                    headers: {
+                        authorization: accessToken
                     }
-                }).then((res)=>{
-                    
-                    setdata({
-                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""],
-                        datasets: [
-                        {
-                            data: res.data,
-                        },
-                        ],
-                    })
-                }).catch((err)=>{
-                    console.log(err);
-            })
-        }else if(valuesDefaut == "Theo tháng"){
-            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
-                {
-                    type:typeData,
-                    userId:idUser,
-                    basketId:id,
-                    year:year,
-                    month:month,
-                    typeBasket:1
-                },
-                {
-                    headers:{
-                        authorization: accessToken 
-                    }
-                }).then((res)=>{
-                    setlabels(
-                        res.data.map((item,index)=>{
-                            return index+1;
-                        })
-                    );
-                    setdatasets(
-                        res.data.map((item)=>{
-                            return item;
-                        })
-                    )
-                }).catch((err)=>{
-                    console.log(err);
-            })
-        }
-        
-    },[month]);
+                }).then((res) => {
 
-    useEffect(()=>{
-        if(valuesDefaut == "Theo năm"){
-            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
-                {
-                    type:typeData,
-                    userId:idUser,
-                    basketId:id,
-                    year:year,
-                    month:0,
-                    typeBasket:1
-                },
-                {
-                    headers:{
-                        authorization: accessToken 
-                    }
-                }).then((res)=>{
-                    
                     setdata({
                         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""],
                         datasets: [
-                        {
-                            data: res.data,
-                        },
+                            {
+                                data: res.data,
+                            },
                         ],
                     })
-                }).catch((err)=>{
+                }).catch((err) => {
                     console.log(err);
-            })
-        }else if(valuesDefaut == "Theo tháng"){
+                })
+        } else if (valuesDefaut == "Theo tháng") {
             axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
                 {
-                    type:typeData,
-                    userId:idUser,
-                    basketId:id,
-                    year:year,
-                    month:month,
-                    typeBasket:1
+                    type: typeData,
+                    userId: idUser,
+                    basketId: id,
+                    year: year,
+                    month: month,
+                    typeBasket: 1
                 },
                 {
-                    headers:{
-                        authorization: accessToken 
+                    headers: {
+                        authorization: accessToken
                     }
-                }).then((res)=>{
+                }).then((res) => {
                     setlabels(
-                        res.data.map((item,index)=>{
-                            return index+1;
+                        res.data.map((item, index) => {
+                            return index + 1;
                         })
                     );
                     setdatasets(
-                        res.data.map((item)=>{
+                        res.data.map((item) => {
                             return item;
                         })
                     )
-                }).catch((err)=>{
+                }).catch((err) => {
                     console.log(err);
-            })
+                })
         }
-        
-    },[year]);
-    
-    useEffect(()=>{
-        if(valuesDefaut == "Theo năm"){
-            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
-                {
-                    type:typeData,
-                    userId:idUser,
-                    basketId:id,
-                    year:year,
-                    month:0,
-                    typeBasket:1
-                },
-                {
-                    headers:{
-                        authorization: accessToken 
-                    }
-                }).then((res)=>{
-                    
-                    setdata({
-                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""],
-                        datasets: [
-                        {
-                            data: res.data,
-                        },
-                        ],
-                    })
-                }).catch((err)=>{
-                    console.log(err);
-            })
-        }else if(valuesDefaut == "Theo tháng"){
-            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
-                {
-                    type:typeData,
-                    userId:idUser,
-                    basketId:id,
-                    year:year,
-                    month:month,
-                    typeBasket:1
-                },
-                {
-                    headers:{
-                        authorization: accessToken 
-                    }
-                }).then((res)=>{
-                   
-                    setlabels(
-                        res.data.map((item,index)=>{
-                            return index+1;
-                        })
-                    );
-                    setdatasets(
-                        res.data.map((item)=>{
-                            return item;
-                        })
-                    )
-                }).catch((err)=>{
-                    console.log(err);
-            })
-        }
-        
-    },[valuesDefaut]);
-      
-    useEffect(()=>{
-        if(valuesDefaut == "Theo năm"){
-            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
-                {
-                    type:typeData,
-                    userId:idUser,
-                    basketId:id,
-                    year:year,
-                    month:0,
-                    typeBasket:1
-                },
-                {
-                    headers:{
-                        authorization: accessToken 
-                    }
-                }).then((res)=>{
-                    
-                    setdata({
-                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""],
-                        datasets: [
-                        {
-                            data: res.data,
-                        },
-                        ],
-                    })
-                }).catch((err)=>{
-                    console.log(err);
-            })
-        }else if(valuesDefaut == "Theo tháng"){
-            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
-                {
-                    type:typeData,
-                    userId:idUser,
-                    basketId:id,
-                    year:year,
-                    month:month,
-                    typeBasket:1
-                },
-                {
-                    headers:{
-                        authorization: accessToken 
-                    }
-                }).then((res)=>{
-                    setlabels(
-                        res.data.map((item,index)=>{
-                            return index+1;
-                        })
-                    );
-                    setdatasets(
-                        res.data.map((item)=>{
-                            return item;
-                        })
-                    )
-                }).catch((err)=>{
-                    console.log(err);
-            })
-        }
-        
-    },[selectDefaut]);
 
-    useEffect(()=>{
-        if(valuesDefaut == "Theo tháng"){
+    }, [month]);
+
+    useEffect(() => {
+        if (valuesDefaut == "Theo năm") {
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type: typeData,
+                    userId: idUser,
+                    basketId: id,
+                    year: year,
+                    month: 0,
+                    typeBasket: 1
+                },
+                {
+                    headers: {
+                        authorization: accessToken
+                    }
+                }).then((res) => {
+
+                    setdata({
+                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""],
+                        datasets: [
+                            {
+                                data: res.data,
+                            },
+                        ],
+                    })
+                }).catch((err) => {
+                    console.log(err);
+                })
+        } else if (valuesDefaut == "Theo tháng") {
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type: typeData,
+                    userId: idUser,
+                    basketId: id,
+                    year: year,
+                    month: month,
+                    typeBasket: 1
+                },
+                {
+                    headers: {
+                        authorization: accessToken
+                    }
+                }).then((res) => {
+                    setlabels(
+                        res.data.map((item, index) => {
+                            return index + 1;
+                        })
+                    );
+                    setdatasets(
+                        res.data.map((item) => {
+                            return item;
+                        })
+                    )
+                }).catch((err) => {
+                    console.log(err);
+                })
+        }
+
+    }, [year]);
+
+    useEffect(() => {
+        if (valuesDefaut == "Theo năm") {
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type: typeData,
+                    userId: idUser,
+                    basketId: id,
+                    year: year,
+                    month: 0,
+                    typeBasket: 1
+                },
+                {
+                    headers: {
+                        authorization: accessToken
+                    }
+                }).then((res) => {
+
+                    setdata({
+                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""],
+                        datasets: [
+                            {
+                                data: res.data,
+                            },
+                        ],
+                    })
+                }).catch((err) => {
+                    console.log(err);
+                })
+        } else if (valuesDefaut == "Theo tháng") {
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type: typeData,
+                    userId: idUser,
+                    basketId: id,
+                    year: year,
+                    month: month,
+                    typeBasket: 1
+                },
+                {
+                    headers: {
+                        authorization: accessToken
+                    }
+                }).then((res) => {
+
+                    setlabels(
+                        res.data.map((item, index) => {
+                            return index + 1;
+                        })
+                    );
+                    setdatasets(
+                        res.data.map((item) => {
+                            return item;
+                        })
+                    )
+                }).catch((err) => {
+                    console.log(err);
+                })
+        }
+
+    }, [valuesDefaut]);
+
+    useEffect(() => {
+        if (valuesDefaut == "Theo năm") {
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type: typeData,
+                    userId: idUser,
+                    basketId: id,
+                    year: year,
+                    month: 0,
+                    typeBasket: 1
+                },
+                {
+                    headers: {
+                        authorization: accessToken
+                    }
+                }).then((res) => {
+
+                    setdata({
+                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""],
+                        datasets: [
+                            {
+                                data: res.data,
+                            },
+                        ],
+                    })
+                }).catch((err) => {
+                    console.log(err);
+                })
+        } else if (valuesDefaut == "Theo tháng") {
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+                {
+                    type: typeData,
+                    userId: idUser,
+                    basketId: id,
+                    year: year,
+                    month: month,
+                    typeBasket: 1
+                },
+                {
+                    headers: {
+                        authorization: accessToken
+                    }
+                }).then((res) => {
+                    setlabels(
+                        res.data.map((item, index) => {
+                            return index + 1;
+                        })
+                    );
+                    setdatasets(
+                        res.data.map((item) => {
+                            return item;
+                        })
+                    )
+                }).catch((err) => {
+                    console.log(err);
+                })
+        }
+
+    }, [selectDefaut]);
+
+    useEffect(() => {
+        if (valuesDefaut == "Theo tháng") {
             setdata({
                 labels: labels,
                 datasets: [
@@ -306,57 +306,57 @@ function Chart({navigation,route}){
                 ],
             })
         }
-    },[datasets])
+    }, [datasets])
 
     const chartConfig = {
         backgroundGradientFrom: "#fff",
         backgroundGradientTo: "#fff",
         color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-        barPercentage: 0.5,         
+        barPercentage: 0.5,
         categoryPercentage: 0.8,
-        
+
     };
-      
-    return(
+
+    return (
         <SafeAreaView style={styles.container} >
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={showPicker}
                 onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
-                setModalVisible(!modalVisible);
+                    Alert.alert('Modal has been closed.');
+                    setModalVisible(!modalVisible);
                 }}>
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <View style={{display:'flex',flexDirection:'row',justifyContent:'center'}}>
-                                <View style={{justifyContent:'flex-start',flex:1,marginLeft:30,height:30}}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                            <View style={{ justifyContent: 'flex-start', flex: 1, marginLeft: 30, height: 30 }}>
 
-                                </View>
-                                <View style={{justifyContent:'flex-end',flex:1,marginRight:30,}}>
-                                    {
-                                        Platform.OS === 'ios' && 
-                                        <TouchableOpacity onPress={hanldChon}>
-                                            <Text style={{fontSize:24,color:'#0099FF',textAlign:'right',fontWeight:'normal'}}>Chọn</Text>
-                                        </TouchableOpacity>
-                                    }
-                                </View>
                             </View>
-                            <DateTimePicker
-                                value={selectedDate}
-                                mode="date"
-                                display="spinner"
-                                onChange={onDateChange}
-                            />
+                            <View style={{ justifyContent: 'flex-end', flex: 1, marginRight: 30, }}>
+                                {
+                                    Platform.OS === 'ios' &&
+                                    <TouchableOpacity onPress={hanldChon}>
+                                        <Text style={{ fontSize: 24, color: '#0099FF', textAlign: 'right', fontWeight: 'normal' }}>Chọn</Text>
+                                    </TouchableOpacity>
+                                }
+                            </View>
                         </View>
+                        <DateTimePicker
+                            value={selectedDate}
+                            mode="date"
+                            display="spinner"
+                            onChange={onDateChange}
+                        />
                     </View>
+                </View>
             </Modal>
             <View style={styles.containerheader}>
                 <View style={styles.containerheader_icon}>
-                    <TouchableOpacity onPress={()=>{
-                                        navigation.goBack();
-                                    }}>
-                                        <AntDesign name="arrowleft" size={24} color="black" />
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack();
+                    }}>
+                        <AntDesign name="arrowleft" size={24} color="black" />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.containerheader_title}>
@@ -370,62 +370,62 @@ function Chart({navigation,route}){
             </View>
             <ScrollView style={styles.viewBody}>
                 <View style={styles.containerItem}>
-                        <SelectDropdown 
-                            data={dataTK} 
-                            defaultButtonText={valuesDefaut} 
-                            buttonTextStyle = {{fontSize:16,}}
-                            onSelect={(selectedItem, index) => { 
-                                setvaluesDefaut(selectedItem);
-                            }} 
-                            renderDropdownIcon={isOpened => {
-                            return <AntDesign name={isOpened ? 'filter' : 'filter'} color={'black'} size={16} />;
-                            }}
-                            renderCustomizedButtonChild= {value =>{
-                                return (
-                                    <View style={{ flexDirection: 'row',alignItems:'center',display:'flex',justifyContent:"center"}}>
-                                            <Text style={{fontSize:16}}>{valuesDefaut}</Text>
-                                    </View>
-                                );
-                            }}
-                            buttonStyle = {styles.containerSelectDropDown}
-                        />
-
-                        <SelectDropdown 
-                        data={dataJar} 
-                        defaultButtonText={selectDefaut} 
-                        buttonTextStyle = {{fontSize:16,}}
-                        onSelect={(selectedItem, index) => { 
-                            setselectDefaut(selectedItem);
-                            (selectedItem == 'Thu nhập')? settypeData(1) : settypeData(-1);
-                        }} 
-                        renderDropdownIcon={isOpened => {
-                        return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={16} />;
+                    <SelectDropdown
+                        data={dataTK}
+                        defaultButtonText={valuesDefaut}
+                        buttonTextStyle={{ fontSize: 16, }}
+                        onSelect={(selectedItem, index) => {
+                            setvaluesDefaut(selectedItem);
                         }}
-                        renderCustomizedButtonChild= {value =>{
+                        renderDropdownIcon={isOpened => {
+                            return <AntDesign name={isOpened ? 'filter' : 'filter'} color={'black'} size={16} />;
+                        }}
+                        renderCustomizedButtonChild={value => {
                             return (
-                                <View style={{ flexDirection: 'row',alignItems:'center',display:'flex',justifyContent:"center"}}>
-                                        <Text style={{fontSize:16}}>{selectDefaut}</Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
+                                    <Text style={{ fontSize: 16 }}>{valuesDefaut}</Text>
                                 </View>
                             );
                         }}
-                        buttonStyle = {styles.containerSelectDropDown}
+                        buttonStyle={styles.containerSelectDropDown}
+                    />
+
+                    <SelectDropdown
+                        data={dataJar}
+                        defaultButtonText={selectDefaut}
+                        buttonTextStyle={{ fontSize: 16, }}
+                        onSelect={(selectedItem, index) => {
+                            setselectDefaut(selectedItem);
+                            (selectedItem == 'Thu nhập') ? settypeData(1) : settypeData(-1);
+                        }}
+                        renderDropdownIcon={isOpened => {
+                            return <FontAwesome name={isOpened ? 'chevron-down' : 'chevron-right'} color={'black'} size={16} />;
+                        }}
+                        renderCustomizedButtonChild={value => {
+                            return (
+                                <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
+                                    <Text style={{ fontSize: 16 }}>{selectDefaut}</Text>
+                                </View>
+                            );
+                        }}
+                        buttonStyle={styles.containerSelectDropDown}
                     />
                 </View>
                 {
-                    (valuesDefaut == "Theo tháng" || valuesDefaut == "Theo năm" ) &&
+                    (valuesDefaut == "Theo tháng" || valuesDefaut == "Theo năm") &&
                     <View style={styles.containerItemSelect}>
                         <TouchableOpacity style={styles.buttom} onPress={() => setShowPicker(true)} >
-                                <Text>
-                                    Chọn tháng
-                                </Text>
+                            <Text>
+                                Chọn tháng
+                            </Text>
                         </TouchableOpacity>
-                        <Text style={{fontSize:16,fontWeight:'bold',marginTop:10,}}>Tháng: {selectedDate.toLocaleDateString('VN', { month: 'long', year: 'numeric' })}</Text>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, }}>Tháng: {selectedDate.toLocaleDateString('VN', { month: 'long', year: 'numeric' })}</Text>
                     </View>
                 }
                 <ScrollView horizontal={true}>
                     <BarChart
                         data={data}
-                        width={(valuesDefaut == "Theo tháng")? Dimensions.get('window').width+160 : Dimensions.get('window').width+50}
+                        width={(valuesDefaut == "Theo tháng") ? Dimensions.get('window').width + 160 : Dimensions.get('window').width + 50}
                         height={250}
                         yAxisLabel="VND "
                         chartConfig={chartConfig}
@@ -436,9 +436,9 @@ function Chart({navigation,route}){
                 </ScrollView>
 
             </ScrollView>
-            
+
         </SafeAreaView>
     );
 }
-  
+
 export default Chart;
