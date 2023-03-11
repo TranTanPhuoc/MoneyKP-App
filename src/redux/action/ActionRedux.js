@@ -6,14 +6,14 @@ export const loginSuccess = (user) => ({
 });
 
 export const reload_IU = (idIU) => ({
-  type:RELOAD_IU,
-  payload:idIU,
+  type: RELOAD_IU,
+  payload: idIU,
 });
-export const send_Photo_Success = (money,note,date) => ({
-  type:SEND_PHOTO_SUCCESS,
-  payload:{
-    money:money,
-    note:note,
-    date:date
+export const send_Photo_Success = (money, note, date) => ({
+  type: SEND_PHOTO_SUCCESS,
+  payload: {
+    money: money,
+    note: note,
+    date: date
   },
 });

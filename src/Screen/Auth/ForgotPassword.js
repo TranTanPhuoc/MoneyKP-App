@@ -1,19 +1,19 @@
-import {  Text, SafeAreaView, TouchableOpacity, TextInput,View, ActivityIndicator} from 'react-native';
+import { Text, SafeAreaView, TouchableOpacity, TextInput, View, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from "./styles/FotgotPasswordStyles";
-import { AntDesign, Entypo, Feather, FontAwesome5} from '@expo/vector-icons';
+import { AntDesign, Entypo, Feather, FontAwesome5 } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Image } from 'react-native';
 // Import FireBase
-import{initializeAuth,sendPasswordResetEmail,} from 'firebase/auth';
-import {initializeApp} from 'firebase/app';
+import { initializeAuth, sendPasswordResetEmail, } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import { Alert } from 'react-native';
 
-function ForgotPassword(){
+function ForgotPassword() {
     const navigation = useNavigation();
-    const [email,setEmail] = useState("");
-    const [loading,setisLoading] = useState(false);
+    const [email, setEmail] = useState("");
+    const [loading, setisLoading] = useState(false);
     const hanldPressRegister = () => {
         navigation.navigate("Register");
     };
@@ -23,90 +23,90 @@ function ForgotPassword(){
 
     // Connect FireBase
     const app = initializeApp(firebaseConfig);
-    const auth = initializeAuth(app,{
+    const auth = initializeAuth(app, {
     });
     const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    const hanldPressSendEmail = ()=>{
+    const hanldPressSendEmail = () => {
         setisLoading(true);
-        if(email == ""){
+        if (email == "") {
             setisLoading(false);
-            Alert.alert("Thông báo","Email không được rỗng");
+            Alert.alert("Thông báo", "Email không được rỗng");
         }
-        else if(regexEmail.test(email)){
-            sendPasswordResetEmail(auth,email).then(()=>{
+        else if (regexEmail.test(email)) {
+            sendPasswordResetEmail(auth, email).then(() => {
                 setisLoading(false);
-                Alert.alert("Thông báo","Link reset đã gởi về email của bạn");
+                Alert.alert("Thông báo", "Link reset đã gởi về email của bạn");
                 navigation.navigate("Login");
-            }).catch((err)=>{
+            }).catch((err) => {
                 console.log(err);
                 setisLoading(false);
-                Alert.alert("Thông báo","Xảy ra lỗi");
+                Alert.alert("Thông báo", "Xảy ra lỗi");
             });
         }
-        else{
+        else {
             setisLoading(false);
-            Alert.alert("Thông báo","Email của bạn không hợp lệ")
+            Alert.alert("Thông báo", "Email của bạn không hợp lệ")
         }
-       
+
     }
-    return(
+    return (
         <>
-        {loading && 
-            <SafeAreaView style={{justifyContent:'center',alignItems:'center',flex:1}}>
+            {loading &&
+                <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
                     <ActivityIndicator color='#16C0E5' size='large' />
-            </SafeAreaView>
-        }
-        {(loading==false) &&
-            <SafeAreaView style={styles.container} >
-                <View style={styles.containerTop}>
-                    <TouchableOpacity onPress={hanldPressLogin} style={{flex:0.2,justifyContent:'center',}}>
-                        <AntDesign name="arrowleft" size={24} color="black" />
-                    </TouchableOpacity>
-                    <View style={{flex:0.6,justifyContent:'center',alignItems:'center'}}>
-                            <Text style={{fontSize:24,}}>Quên mật khẩu</Text>
-                    </View>
-                    <View style={{flex:0.2,justifyContent:'center',alignItems:'center'}}>
-                    </View>
-                </View>
-                <View style={styles.containerBody}>
-                    <View style={styles.containerInput}>
-                        <View style={{flex:0.15,alignItems:'center'}}>
-                            <Feather name="mail" size={22} color="black" />
+                </SafeAreaView>
+            }
+            {(loading == false) &&
+                <SafeAreaView style={styles.container} >
+                    <View style={styles.containerTop}>
+                        <TouchableOpacity onPress={hanldPressLogin} style={{ flex: 0.2, justifyContent: 'center', }}>
+                            <AntDesign name="arrowleft" size={24} color="black" />
+                        </TouchableOpacity>
+                        <View style={{ flex: 0.6, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ fontSize: 24, }}>Quên mật khẩu</Text>
                         </View>
-                        <TextInput onChangeText={x=>setEmail(x)} value={email} placeholder="Vui lòng nhập Email" style={{marginRight:15,height:50,fontSize:16,flex:0.85}}/>
+                        <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center' }}>
+                        </View>
                     </View>
-                    <View style={styles.containerBottom}>
-                        <TouchableOpacity onPress={hanldPressSendEmail} style={styles.bottom} >
-                            <Text style={{fontSize:20, color:'#fff',fontWeight:'bold'}}> Lấy mật khẩu </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={styles.containerFooter}>
-                    <View style={{justifyContent:'center',alignItems:'center',display:'flex',flexDirection:'row',}}>
-                        <TouchableOpacity  style={{height:40,width:40,justifyContent:'center',alignItems:'center',borderRadius:20,backgroundColor:"#DCDCDC"}} >
-                                <Image source={require('../../../assets/icons/google.png')}/>
-                        </TouchableOpacity>
-                        <View style={{marginRight:20,}}></View>
-                        <TouchableOpacity  style={{height:40,width:40,justifyContent:'center',alignItems:'center',borderRadius:20,backgroundColor:"#DCDCDC"}} >
-                                <Image source={require('../../../assets/icons/facebook.png')}/>
-                        </TouchableOpacity>
-                        <View style={{marginRight:20,}}></View>
-                        <TouchableOpacity  style={{height:40,width:40,justifyContent:'center',alignItems:'center',borderRadius:20,backgroundColor:"#DCDCDC"}} >
-                                <Image source={require('../../../assets/icons/twitter.png')}/>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{justifyContent:'center',alignItems:'center',display:'flex',flexDirection:'row',marginTop:20,}}>
-                            <Text style={{fontSize:16,marginRight:10,}}>Chưa có tài khoản?</Text>
-                            <TouchableOpacity onPress={hanldPressRegister}>
-                                <Text style={{fontSize:20,color:'#F4A460',fontWeight:'bold'}}>Đăng ký</Text>
+                    <View style={styles.containerBody}>
+                        <View style={styles.containerInput}>
+                            <View style={{ flex: 0.15, alignItems: 'center' }}>
+                                <Feather name="mail" size={22} color="black" />
+                            </View>
+                            <TextInput onChangeText={x => setEmail(x)} value={email} placeholder="Vui lòng nhập Email" style={{ marginRight: 15, height: 50, fontSize: 16, flex: 0.85 }} />
+                        </View>
+                        <View style={styles.containerBottom}>
+                            <TouchableOpacity onPress={hanldPressSendEmail} style={styles.bottom} >
+                                <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}> Lấy mật khẩu </Text>
                             </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
-            </SafeAreaView>
-        }
+                    <View style={styles.containerFooter}>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'row', }}>
+                            <TouchableOpacity style={{ height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 20, backgroundColor: "#DCDCDC" }} >
+                                <Image source={require('../../../assets/icons/google.png')} />
+                            </TouchableOpacity>
+                            <View style={{ marginRight: 20, }}></View>
+                            <TouchableOpacity style={{ height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 20, backgroundColor: "#DCDCDC" }} >
+                                <Image source={require('../../../assets/icons/facebook.png')} />
+                            </TouchableOpacity>
+                            <View style={{ marginRight: 20, }}></View>
+                            <TouchableOpacity style={{ height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 20, backgroundColor: "#DCDCDC" }} >
+                                <Image source={require('../../../assets/icons/twitter.png')} />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'row', marginTop: 20, }}>
+                            <Text style={{ fontSize: 16, marginRight: 10, }}>Chưa có tài khoản?</Text>
+                            <TouchableOpacity onPress={hanldPressRegister}>
+                                <Text style={{ fontSize: 20, color: '#F4A460', fontWeight: 'bold' }}>Đăng ký</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </SafeAreaView>
+            }
         </>
     );
 }
 
-  
+
 export default ForgotPassword;
