@@ -39,7 +39,7 @@ function Jar({ navigation }) {
                     authorization: accessToken
                 }
             }).then((res) => {
-                dispatch(reload_IU(reload_IU + 1));
+                dispatch(reload_IU(idReload + 1));
                 Alert.alert("Thông báo", "Thêm thành công");
                 navigation.goBack();
 

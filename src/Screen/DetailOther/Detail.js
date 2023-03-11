@@ -14,6 +14,8 @@ import { colorJar } from '../../../assets/AppColors/AppColors';
 import { BarChart, PieChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
 import { Image } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import { reload_IU } from '../../redux/action/ActionRedux';
 function Detail({ navigation, route }) {
     const { id, name, itemName, money, idJar, moneyPurpose, status, availableBalances } = route.params;
     const [moneyR, setMoneyR] = useState(parseInt(money));
@@ -39,6 +41,7 @@ function Detail({ navigation, route }) {
     const [year, setYear] = useState(selectedDate.getFullYear());
     const [labels, setlabels] = useState([]);
     const [datasets, setdatasets] = useState([]);
+    const dispatch = useDispatch();
     const [dataChart, setdataChart] = useState({
         labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "16", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", ""],
         datasets: [
@@ -111,6 +114,18 @@ function Detail({ navigation, route }) {
             datasets: [{ data: datasets }],
         })
     }, [datasets]);
+
+    const deleteItem = () => {
+        axios.delete(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`, {
+            headers: { authorization: accessToken },
+        }).then((res) => {
+            dispatch(reload_IU(idReload + 1));
+            navigation.goBack();
+        }).catch((err) => {
+            console.log(err)
+        });
+    };
+
     return (
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
@@ -240,6 +255,11 @@ function Detail({ navigation, route }) {
                             <View style={{ marginTop: 20, marginLeft: 20, }}>
                             </View>
                         </View>
+                    </View>
+                    <View style={{marginTop:10}}>
+                        <TouchableOpacity style={styles.button} onPress={deleteItem} >
+                        <Text style={{ fontSize: 18, color: 'red', fontWeight: '600' }}>Xóa mục</Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={{ marginTop: 20, }}>
                         <View style={{ marginTop: 20, marginLeft: 20, }}>
