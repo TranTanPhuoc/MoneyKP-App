@@ -113,5 +113,24 @@ const styles = StyleSheet.create({
     paddingTop:15,
     paddingBottom:15,
   },
+  button:{
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    margin:5,
+    justifyContent:'center',
+    alignItems:'center',
+    marginRight:20,
+    marginLeft:20,
+    paddingTop:15,
+    paddingBottom:15,
+  }
 });
 export default styles;

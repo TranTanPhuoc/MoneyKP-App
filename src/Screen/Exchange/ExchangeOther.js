@@ -287,9 +287,21 @@ function ExchangeOther({ navigation }) {
                                                     authorization: accessToken
                                                 }
                                             }).then((res) => {
-                                                setidIU(idReload + 1);
-                                                const item = idReload + 1;
-                                                dispatch(reload_IU(item));
+                                                axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/update-status/${idJar}/1`,
+                                                {
+                                                },
+                                                {
+                                                    headers: {
+                                                        authorization: accessToken
+                                                    }
+                                                }
+                                                ).then((res) => {
+                                                        setidIU(idReload + 1);
+                                                        const item = idReload + 1;
+                                                        dispatch(reload_IU(item));
+                                                    }).catch((err) => {
+                                                        console.log(err);
+                                                    })
                                             }).catch((err) => {
                                                 console.log(err);
                                             })

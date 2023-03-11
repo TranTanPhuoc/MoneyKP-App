@@ -99,7 +99,7 @@ function SetPercentJar({ navigation }) {
                         }).then((res) => {
                             const newData = data.filter(i => i.id !== item.id);
                             setData(newData);
-                            dispatch(reload_IU(999999));
+                            dispatch(reload_IU(idReload+1));
                         }).catch((err) => {
                             console.log(err)
                         })
