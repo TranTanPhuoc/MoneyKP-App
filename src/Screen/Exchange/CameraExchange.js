@@ -1,7 +1,7 @@
 import { Camera } from "expo-camera";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Image } from "react-native";
+import { Image, SafeAreaView } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
@@ -37,7 +37,7 @@ function CameraExchange({ navigation }) {
       allowsEditing: true,
       quality: 1,
     });
-    if (!result.cancelled) {
+    if (!result.canceled) {
       if (result.assets != null) {
         let localUri = "";
         result.assets.map((item) => {
@@ -46,7 +46,7 @@ function CameraExchange({ navigation }) {
         setPhoto(localUri);
       }
     }
-    else if (result.cancelled) {
+    else if (result.canceled) {
       console.log(result);
     }
   };
@@ -75,11 +75,11 @@ function CameraExchange({ navigation }) {
           setCameraRef(ref);
         }}
       >
-        <View style={{ alignItems: 'flex-end' }}>
+        <SafeAreaView style={{ alignItems: 'flex-end',marginRight:20,marginTop:10}}>
           <TouchableOpacity onPress={hanldPressClose}>
             <AntDesign name="closecircle" size={32} color="white" />
           </TouchableOpacity>
-        </View>
+        </SafeAreaView>
       </Camera>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={pickImage}>

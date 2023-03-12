@@ -145,12 +145,32 @@ function Exchange({ navigation }) {
         }
         return words;
     }
-
+    const [moneyR, setMoneyR] = useState(parseFloat(money));
+    const moneyFormat = (amount) => {
+        return amount.toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+            maximumFractionDigits: 3,
+        });
+    };
     useEffect(() => {
-        (money > 0) ?
-            setWordsMoney(convertVNDToWords(money) + "Đồng") : setWordsMoney("");
+        if (parseFloat(money) > 0) {
+            setWordsMoney(convertVNDToWords(money) + "Đồng");
+            setMoneyR(moneyFormat(parseFloat(money)));
 
+        } else {
+            setWordsMoney("");
+            setMoneyR(0);
+        }
     }, [money])
+    useEffect(() => {
+        if (parseFloat(money) > 0) {
+            setMoneyR(moneyR.toString().replace("₫", ""));
+        }
+        else {
+            setMoneyR(0);
+        }
+    }, [moneyR])
     // Connect FireBase
     const app = initializeApp(firebaseConfig);
     const auth = initializeAuth(app, {
@@ -250,7 +270,7 @@ function Exchange({ navigation }) {
                         userId: idUser,
                         basketId: idJar,
                         createDate: dateGD,
-                        moneyTransaction: money,
+                        moneyTransaction: parseFloat(money),
                         type: type,
                         note: noteGD,
                         typeBasket: typeBasket
@@ -334,7 +354,7 @@ function Exchange({ navigation }) {
                         userId: idUser,
                         sentBasketId: idJar,
                         receiveBasketId: idJarTo,
-                        money: money,
+                        money: parseFloat(money),
                         createdDate: dateGD,
                         note: noteGD
                     },
@@ -360,7 +380,7 @@ function Exchange({ navigation }) {
                 axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/distribute-money',
                     {
                         userId: idUser,
-                        money: money,
+                        money: parseFloat(money),
                         createdDate: dateGD,
                         note: noteGD
                     },
@@ -434,8 +454,22 @@ function Exchange({ navigation }) {
                     </View>
                     <View style={{ flex: 0.6, justifyContent: 'center', alignItems: 'center', }}>
                         <TextInput keyboardType='number-pad' onChangeText={x => {
-                            (x > 10000000001) ? Alert.alert("Lỗi", `Không nhập quá 10 tỷ`) : setMoney(x)
-                        }} placeholder="0" placeholderTextColor={'#000'} style={{ fontSize: 30, flex: 1, }}>{money}</TextInput>
+                                const arr = x.split(".");
+                                var moneyG = "";
+                                if (arr.length > 0) {
+                                    arr.map((x) => {
+                                        moneyG += x;
+                                    });
+                                    if (moneyG > 10000000001) {
+                                        Alert.alert("Lỗi", `Không nhập quá 10 tỷ`)
+                                    }
+                                    setMoney(moneyG);
+                                }
+                                else{
+                                    setMoney(x)
+                                }
+                            
+                        }} placeholder="0" placeholderTextColor={'#000'} style={{ fontSize: 30, flex: 1, }}>{moneyR}</TextInput>
                     </View>
                     <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center', }}>
                         <View style={{ width: 50, height: 30, backgroundColor: '#F0A587', borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>

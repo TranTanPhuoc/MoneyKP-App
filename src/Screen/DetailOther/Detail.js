@@ -160,6 +160,20 @@ function Detail({ navigation, route }) {
 
                     </View>
                 </View>
+                {
+                    id != 4 &&
+                    <View style={styles.containerMoney}>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', height: 50 }}>
+                            <Text style={{ fontSize: 20, fontWeight: '600' }}>Số tiền {name} của mục</Text>
+                        </View>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', height: 50 }}>
+                            <Text style={{ fontSize: 35, fontWeight: '700' }}>{moneyFormat(moneyPurpose)}</Text>
+                        </View>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', height: 50,display:'flex',flexDirection:'row'}}>
+                            <Text style={{ fontSize: 20, fontWeight: '700' }}>Mức độ hoàn thành : {moneyR/moneyPurpose * 100} %</Text>
+                        </View>
+                    </View>
+                }
                 <View style={styles.containerMoney}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: 50 }}>
                         <Text style={{ fontSize: 20, fontWeight: '600' }}>Tổng số tiền</Text>
@@ -168,6 +182,7 @@ function Detail({ navigation, route }) {
                         <Text style={{ fontSize: 35, fontWeight: '700' }}>{moneyFormat(moneyR)}</Text>
                     </View>
                 </View>
+
                 <View style={{ marginTop: 20, }}>
                     <View style={styles.containerBody}>
                         <View style={{ marginTop: 20, marginLeft: 20, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -256,9 +271,9 @@ function Detail({ navigation, route }) {
                             </View>
                         </View>
                     </View>
-                    <View style={{marginTop:10}}>
+                    <View style={{ marginTop: 10 }}>
                         <TouchableOpacity style={styles.button} onPress={deleteItem} >
-                        <Text style={{ fontSize: 18, color: 'red', fontWeight: '600' }}>Xóa mục</Text>
+                            <Text style={{ fontSize: 18, color: 'red', fontWeight: '600' }}>Xóa mục</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{ marginTop: 20, }}>

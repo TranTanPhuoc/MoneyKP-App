@@ -177,12 +177,33 @@ function ExchangeOther({ navigation }) {
         }
         return words;
     }
+    const [moneyR, setMoneyR] = useState(parseFloat(money));
+    const moneyFormat = (amount) => {
+        return amount.toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+            maximumFractionDigits: 3,
+        });
+    };
+    useEffect(() => {
+        if (money > 0) {
+            setWordsMoney(convertVNDToWords(money) + "Đồng");
+            setMoneyR(moneyFormat(parseFloat(money)));
+
+        } else {
+            setWordsMoney("");
+            setMoneyR(0);
+        }
+    }, [money]);
 
     useEffect(() => {
-        (money > 0) ?
-            setWordsMoney(convertVNDToWords(money) + "Đồng") : setWordsMoney("");
-
-    }, [money])
+        if (money > 0) {
+            setMoneyR(moneyR.toString().replace("₫", ""));
+        }
+        else {
+            setMoneyR(0);
+        }
+    }, [moneyR])
     // Connect FireBase
     const app = initializeApp(firebaseConfig);
     const auth = initializeAuth(app, {
@@ -226,7 +247,7 @@ function ExchangeOther({ navigation }) {
                                 userId: idUser,
                                 basketId: idJar,
                                 createDate: dateGD,
-                                moneyTransaction: money,
+                                moneyTransaction: parseFloat(money),
                                 type: type,
                                 note: noteGD,
                                 typeBasket: typeBasket
@@ -288,20 +309,20 @@ function ExchangeOther({ navigation }) {
                                                 }
                                             }).then((res) => {
                                                 axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/update-status/${idJar}/1`,
-                                                {
-                                                },
-                                                {
-                                                    headers: {
-                                                        authorization: accessToken
+                                                    {
+                                                    },
+                                                    {
+                                                        headers: {
+                                                            authorization: accessToken
+                                                        }
                                                     }
-                                                }
                                                 ).then((res) => {
-                                                        setidIU(idReload + 1);
-                                                        const item = idReload + 1;
-                                                        dispatch(reload_IU(item));
-                                                    }).catch((err) => {
-                                                        console.log(err);
-                                                    })
+                                                    setidIU(idReload + 1);
+                                                    const item = idReload + 1;
+                                                    dispatch(reload_IU(item));
+                                                }).catch((err) => {
+                                                    console.log(err);
+                                                })
                                             }).catch((err) => {
                                                 console.log(err);
                                             })
@@ -323,7 +344,7 @@ function ExchangeOther({ navigation }) {
                             userId: idUser,
                             basketId: idJar,
                             createDate: dateGD,
-                            moneyTransaction: money,
+                            moneyTransaction: parseFloat(money),
                             type: type,
                             note: noteGD,
                             typeBasket: typeBasket
@@ -383,7 +404,7 @@ function ExchangeOther({ navigation }) {
                         userId: idUser,
                         sentBasketId: idJar,
                         receiveBasketId: idJarTo,
-                        money: money,
+                        money: parseFloat(money),
                         createdDate: dateGD,
                         note: noteGD
                     },
@@ -549,14 +570,34 @@ function ExchangeOther({ navigation }) {
                         </TouchableOpacity>
                     </View>
                 }
+                {typeBasket != 4 && dataJarTemp.length > 0 &&
+                    <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 20, fontWeight: '500', textAlign: 'center' }}>
+                            Số tiền cần thêm vào để hoàn thành ước mơ là :{'\n'}{moneyFormat(moneyPurpose - availableBalancesI)}</Text>
+                    </View>
+                }
                 <View style={styles.containerInputMoney}>
                     <View style={{ flex: 0.2, justifyContent: 'flex-start', alignItems: 'center', }}>
                         <Text style={{ fontSize: 16 }}>Số tiền</Text>
                     </View>
                     <View style={{ flex: 0.6, justifyContent: 'center', alignItems: 'center', }}>
                         <TextInput keyboardType='number-pad' onChangeText={x => {
-                            (x > 10000000001) ? Alert.alert("Lỗi", `Không nhập quá 10 tỷ`) : setMoney(x)
-                        }} value={money} placeholder="0" placeholderTextColor={'#000'} style={{ fontSize: 30, flex: 1, }} />
+                            const arr = x.split(".");
+                            var moneyG = "";
+                            if (arr.length > 0) {
+                                arr.map((x) => {
+                                    moneyG += x;
+                                });
+                                if (moneyG > 10000000001) {
+                                    Alert.alert("Lỗi", `Không nhập quá 10 tỷ`)
+                                }
+                                setMoney(moneyG);
+                            }
+                            else {
+                                setMoney(x)
+                            }
+
+                        }} placeholder="0" placeholderTextColor={'#000'} style={{ fontSize: 30, flex: 1, }}>{moneyR}</TextInput>
                     </View>
                     <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center', }}>
                         <View style={{ width: 50, height: 30, backgroundColor: '#F0A587', borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
@@ -682,7 +723,6 @@ function ExchangeOther({ navigation }) {
                             <Image source={require('../../../assets/icons/note.png')} />
                         </View>
                         <View style={{ flex: 0.8, justifyContent: 'center', borderBottomWidth: 1 }}>
-
                             <TextInput value={noteGD} onChangeText={x => setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{ fontSize: 16, marginLeft: 10, marginRight: 20, }} />
                         </View>
                     </View>
@@ -704,6 +744,4 @@ function ExchangeOther({ navigation }) {
         </SafeAreaView>
     );
 }
-
-
 export default ExchangeOther;

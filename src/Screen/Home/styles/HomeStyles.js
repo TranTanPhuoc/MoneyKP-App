@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     containerTopName: {
         flex: 0.6,
         marginLeft: 10,
+        width:"100%",
     },
     containerTopIcon: {
         flex: 0.25,
