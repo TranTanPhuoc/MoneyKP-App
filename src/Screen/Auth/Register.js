@@ -18,6 +18,9 @@ function Register() {
     const [passWord, setPassWord] = useState("");
     const [passWordConfirm, setPasswordConfirm] = useState("");
     const [loading, setisLoading] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [month, setMonth] = useState(selectedDate.getMonth() + 1);
+    const [year, setYear] = useState(selectedDate.getFullYear());
     const hanldPressLogin = () => {
         navigation.navigate("Login");
     };
@@ -87,7 +90,9 @@ function Register() {
                                     availableBalances: 0,
                                     totalSpending: 0,
                                     totalIncome: 0,
-                                    type: 1
+                                    type: 1,
+                                    monthNumber: month,
+                                    yearNumber: year,
                                 },
                                 {
                                     userId: userCredential.user.uid,
@@ -96,7 +101,9 @@ function Register() {
                                     availableBalances: 0,
                                     totalSpending: 0,
                                     totalIncome: 0,
-                                    type: 1
+                                    type: 1,
+                                    monthNumber: month,
+                                    yearNumber: year,
                                 },
                                 {
                                     userId: userCredential.user.uid,
@@ -105,7 +112,9 @@ function Register() {
                                     availableBalances: 0,
                                     totalSpending: 0,
                                     totalIncome: 0,
-                                    type: 1
+                                    type: 1,
+                                    monthNumber: month,
+                                    yearNumber: year,
                                 },
                                 {
                                     userId: userCredential.user.uid,
@@ -114,7 +123,9 @@ function Register() {
                                     availableBalances: 0,
                                     totalSpending: 0,
                                     totalIncome: 0,
-                                    type: 1
+                                    type: 1,
+                                    monthNumber: month,
+                                    yearNumber: year,
                                 },
                                 {
                                     userId: userCredential.user.uid,
@@ -123,7 +134,9 @@ function Register() {
                                     availableBalances: 0,
                                     totalSpending: 0,
                                     totalIncome: 0,
-                                    type: 1
+                                    type: 1,
+                                    monthNumber: month,
+                                    yearNumber: year,
                                 },
                                 {
                                     userId: userCredential.user.uid,
@@ -132,7 +145,9 @@ function Register() {
                                     availableBalances: 0,
                                     totalSpending: 0,
                                     totalIncome: 0,
-                                    type: 1
+                                    type: 1,
+                                    monthNumber: month,
+                                    yearNumber: year,
                                 }
                             ]
                             axios({
@@ -144,6 +159,29 @@ function Register() {
                                 data: dataListJar
                             }
                             ).then(() => {
+                                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
+                                    {
+                                        userId: userCredential.user.uid,
+                                        name: "Tiền mặt",
+                                        precent: 0,
+                                        availableBalances: 0,
+                                        totalSpending: 0,
+                                        totalIncome: 0,
+                                        type: 4,
+                                        status: 0,
+                                        moneyPurpose: 0,
+                                        createdDate: selectedDate,
+                                        isCash: true
+                                    },
+                                    {
+                                        headers: {
+                                            authorization: accessToken
+                                        }
+                                }).then((res)=>{
+                                    console.log(res.data);
+                                }).catch((err)=>{
+                                    console.log(err);
+                                })
                             }).catch((err) => {
                                 console.log(err)
                             });

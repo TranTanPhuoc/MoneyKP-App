@@ -15,7 +15,7 @@ import { reload_IU } from '../../redux/action/ActionRedux';
 import { Modal } from 'react-native';
 import { useEffect } from 'react';
 import CalendarPicker from 'react-native-calendar-picker';
-
+import { colorJar } from '../../../assets/AppColors/AppColors';
 function JarOther({ navigation, route }) {
     const { id, name } = route.params;
     const [JarOther, setJarOther] = useState("");
@@ -32,6 +32,19 @@ function JarOther({ navigation, route }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [dateGD, setDate] = useState(selectedDate);
     const [dateNote, setdateNote] = useState(selectedDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' }));
+    const [typeTS, setTypeTS] = useState("Tiền mặt");
+    const [colorTSTienMat,setcolorTSTienMat] = useState(colorJar[2]);
+    const [colorTSCoPhieu,setColorTSCoPhieu] = useState("#fff");
+    const hanldPressTienMat = ()=>{
+        setTypeTS("Tiền mặt");
+        setcolorTSTienMat(colorJar[2]);
+        setColorTSCoPhieu("#fff");
+    }
+    const hanldPressCoPhieu = ()=>{
+        setTypeTS("Cổ Phiếu");
+        setcolorTSTienMat("#fff");
+        setColorTSCoPhieu(colorJar[5]);
+    }
     const hanldhanldAddJarOther = () => {
         if (id == 4) {
             axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
@@ -139,39 +152,53 @@ function JarOther({ navigation, route }) {
 
                 </View>
             </View>
-            <View style={styles.viewBody}>
-                <View style={{ flex: 0.15, justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assets/icons/jar.png')} />
+            {
+                id == 4 &&
+                <View style={{ backgroundColor: colorTSTienMat, height: 40, width: "100%", display: 'flex', flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={hanldPressTienMat} style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 16, }}>Thêm tiền mặt</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={hanldPressCoPhieu} style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center',backgroundColor:colorTSCoPhieu}}>
+                        <Text style={{ fontSize: 16, }}>Thêm cổ phiếu</Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={{ flex: 0.85, justifyContent: 'center', marginLeft: 10, marginRight: 10 }}>
-                    <TextInput value={JarOther} onChangeText={x => setJarOther(x)} style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, fontSize: 16, }} placeholder='Nhập tên mục cần thêm' />
-                </View>
-            </View>
-            <View style={styles.viewBody}>
-                <View style={{ flex: 0.15, justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assets/icons/wallet.png')} />
-                </View>
-                <View style={{ flex: 0.85, justifyContent: 'center', marginLeft: 10, marginRight: 10 }}>
-                    <TextInput keyboardType='number-pad' value={money} onChangeText={x => setMoney(x)} style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, fontSize: 16, }} placeholder='Nhập tiền' />
-                </View>
-            </View>
+            }
+
             {
                 id != 4 &&
-                <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.viewBody}>
-                    <View style={{ flex: 0.15, justifyContent: 'center', alignItems: 'center' }}>
-                        <Image source={require('../../../assets/icons/calendar.png')} />
-                    </View>
-                    <View style={{ flex: 0.85, justifyContent: 'center', alignItems: 'center' }}>
-                        <View style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, width: "100%", display: 'flex', flexDirection: 'row' }}>
-                            <View style={{ flex: 0.8, width: "100%", justifyContent: 'center' }}>
-                                <Text style={{ fontSize: 16, }}>{dateNote}</Text>
-                            </View>
-                            <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center' }}>
-                                <Image source={require('../../../assets/icons/reset.png')} />
-                            </View>
+                <>
+                    <View style={styles.viewBody}>
+                        <View style={{ flex: 0.15, justifyContent: 'center', alignItems: 'center' }}>
+                            <Image source={require('../../../assets/icons/jar.png')} />
+                        </View>
+                        <View style={{ flex: 0.85, justifyContent: 'center', marginLeft: 10, marginRight: 10 }}>
+                            <TextInput value={JarOther} onChangeText={x => setJarOther(x)} style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, fontSize: 16, }} placeholder='Nhập tên mục cần thêm' />
                         </View>
                     </View>
-                </TouchableOpacity>
+                    <View style={styles.viewBody}>
+                        <View style={{ flex: 0.15, justifyContent: 'center', alignItems: 'center' }}>
+                            <Image source={require('../../../assets/icons/wallet.png')} />
+                        </View>
+                        <View style={{ flex: 0.85, justifyContent: 'center', marginLeft: 10, marginRight: 10 }}>
+                            <TextInput keyboardType='number-pad' value={money} onChangeText={x => setMoney(x)} style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, fontSize: 16, }} placeholder='Nhập tiền' />
+                        </View>
+                    </View>
+                    <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.viewBody}>
+                        <View style={{ flex: 0.15, justifyContent: 'center', alignItems: 'center' }}>
+                            <Image source={require('../../../assets/icons/calendar.png')} />
+                        </View>
+                        <View style={{ flex: 0.85, justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, width: "100%", display: 'flex', flexDirection: 'row' }}>
+                                <View style={{ flex: 0.8, width: "100%", justifyContent: 'center' }}>
+                                    <Text style={{ fontSize: 16, }}>{dateNote}</Text>
+                                </View>
+                                <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Image source={require('../../../assets/icons/reset.png')} />
+                                </View>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </>
             }
             <View style={styles.containerButton}>
                 <TouchableOpacity onPress={hanldhanldAddJarOther} style={styles.buttonStyle}>
