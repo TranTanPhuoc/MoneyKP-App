@@ -17,6 +17,8 @@ import { colorJar } from '../../../assets/AppColors/AppColors';
 import { reload_IU } from '../../redux/action/ActionRedux';
 import { Linking } from 'react-native';
 import moment from 'moment-timezone';
+import { Modal } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 function Home({ navigation }) {
     const { width } = Dimensions.get('window');
     const idReload = useSelector(state => state.reload.idReload);
@@ -27,6 +29,7 @@ function Home({ navigation }) {
     const [avtPic, setavtPic] = useState("https://res.cloudinary.com/drljnqaai/image/upload/v1676181723/KhoaLuan/images_dcewqt.png");
     const [name, setName] = useState("");
     const [dataListJar, setdataListJar] = useState([]);
+    const [showPicker, setShowPicker] = useState(false);
     const dispatch = useDispatch();
     // Ngày hiện tại
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -45,6 +48,18 @@ function Home({ navigation }) {
             },
         ],
     });
+    const onDateChange = (event, selectedDate) => {
+        if (selectedDate) {
+            const newDate = new Date(selectedDate);
+            setSelectedDate(newDate);
+            Platform.OS === 'android' ? setShowPicker(false) : setShowPicker(true);
+        }
+    };
+    const hanldChon = () => {
+        setShowPicker(false);
+        setMonth(selectedDate.getMonth() + 1);
+        setYear(selectedDate.getFullYear());
+    }
     // Data biểu đồ cột của chi tiêu
     const [datasets2, setdatasets2] = useState([]);
     const [data2, setdata2] = useState({
@@ -93,30 +108,117 @@ function Home({ navigation }) {
     }, [totalIncome, totalSpending]);
 
     useEffect(() => {
-        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/1`, {
+        axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
+            monthNumber: parseInt(month),
+            yearNumber: parseInt(year)
+        }, {
             headers: { authorization: accessToken },
         })
             .then((res) => {
-                setdataListJar(res.data);
-                setdataPieChart(res.data.map((item, index) => {
-                    let randomColor = colorJar[index]
-                    var obj = { id: item.id, name: item.name, population: item.precent, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
-                    return obj;
-                }));
-                var totalIncomeItem = 0;
-                var totalSpendingItem = 0;
-                res.data.map((item) => {
-                    totalIncomeItem += item.totalIncome;
-                })
-                settotalIncome(totalIncomeItem);
-                res.data.map((item) => {
-                    totalSpendingItem += item.totalSpending
-                })
-                settotalSpending(totalSpendingItem);
+                if (res.data.length == 0) {
+                    const dataListJar = [
+                        {
+                            userId: idUser,
+                            name: "Cần thiết",
+                            precent: 50,
+                            availableBalances: 0,
+                            totalSpending: 0,
+                            totalIncome: 0,
+                            type: 1,
+                            monthNumber: month,
+                            yearNumber: year,
+                        },
+                        {
+                            userId: idUser,
+                            name: "Giáo dục",
+                            precent: 10,
+                            availableBalances: 0,
+                            totalSpending: 0,
+                            totalIncome: 0,
+                            type: 1,
+                            monthNumber: month,
+                            yearNumber: year,
+                        },
+                        {
+                            userId: idUser,
+                            name: "Tiết kiệm",
+                            precent: 15,
+                            availableBalances: 0,
+                            totalSpending: 0,
+                            totalIncome: 0,
+                            type: 1,
+                            monthNumber: month,
+                            yearNumber: year,
+                        },
+                        {
+                            userId: idUser,
+                            name: "Hưởng thụ",
+                            precent: 10,
+                            availableBalances: 0,
+                            totalSpending: 0,
+                            totalIncome: 0,
+                            type: 1,
+                            monthNumber: month,
+                            yearNumber: year,
+                        },
+                        {
+                            userId: idUser,
+                            name: "Đầu tư",
+                            precent: 10,
+                            availableBalances: 0,
+                            totalSpending: 0,
+                            totalIncome: 0,
+                            type: 1,
+                            monthNumber: month,
+                            yearNumber: year,
+                        },
+                        {
+                            userId: idUser,
+                            name: "Từ thiện",
+                            precent: 5,
+                            availableBalances: 0,
+                            totalSpending: 0,
+                            totalIncome: 0,
+                            type: 1,
+                            monthNumber: month,
+                            yearNumber: year,
+                        }
+                    ]
+                    axios({
+                        url: 'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
+                        method: 'POST',
+                        headers: {
+                            authorization: accessToken
+                        },
+                        data: dataListJar
+                    }).then((res) => {
+                        dispatch(reload_IU(idReload + 1));
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+                }
+                else {
+                    setdataListJar(res.data);
+                    setdataPieChart(res.data.map((item, index) => {
+                        let randomColor = colorJar[index]
+                        var obj = { id: item.id, name: item.name, population: item.precent, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
+                        return obj;
+                    }));
+                    var totalIncomeItem = 0;
+                    var totalSpendingItem = 0;
+                    res.data.map((item) => {
+                        totalIncomeItem += item.totalIncome;
+                    })
+                    settotalIncome(totalIncomeItem);
+                    res.data.map((item) => {
+                        totalSpendingItem += item.totalSpending
+                    })
+                    settotalSpending(totalSpendingItem);
+                }
             }).catch((err) => {
                 console.log(err);
             })
-    }, [idReload]);
+    }, [idReload,month,year]);
     useEffect(() => {
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user/${idUser}`, {
             headers: { authorization: accessToken },
@@ -224,6 +326,38 @@ function Home({ navigation }) {
     }, [vietnamTime.hour()])
     return (
         <SafeAreaView style={styles.container} >
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={showPicker}
+                onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalVisible(!modalVisible);
+                }}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                            <View style={{ justifyContent: 'flex-start', flex: 1, marginLeft: 30, height: 30 }}>
+
+                            </View>
+                            <View style={{ justifyContent: 'flex-end', flex: 1, marginRight: 30, }}>
+                                {
+                                    Platform.OS === 'ios' &&
+                                    <TouchableOpacity onPress={hanldChon}>
+                                        <Text style={{ fontSize: 24, color: '#0099FF', textAlign: 'right', fontWeight: 'normal' }}>Chọn</Text>
+                                    </TouchableOpacity>
+                                }
+                            </View>
+                        </View>
+                        <DateTimePicker
+                            value={selectedDate}
+                            mode="date"
+                            display="spinner"
+                            onChange={onDateChange}
+                        />
+                    </View>
+                </View>
+            </Modal>
             <ScrollView style={styles.scrollview}>
                 <View style={styles.containerTop}>
                     <View style={styles.containerTopImage}>
@@ -265,7 +399,14 @@ function Home({ navigation }) {
                 <ScrollView scrollEnabled={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }} style={styles.containerInfoWallet}>
 
                 </ScrollView>
-                <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, }}>Ngày : {selectedDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
+                <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, }}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', }}>Ngày : {selectedDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
+                    <TouchableOpacity style={styles.buttom} onPress={() => setShowPicker(true)} >
+                        <Text>
+                            Chọn tháng
+                        </Text>
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.containerListJar}>
                     <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Danh sách lọ</Text>
                     <View style={styles.containerListJarItem}>

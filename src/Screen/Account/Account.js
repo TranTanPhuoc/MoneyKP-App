@@ -9,8 +9,9 @@ import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import { Platform } from 'react-native';
 import axios from 'axios';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import { reload_IU } from '../../redux/action/ActionRedux';
 function Account({ navigation }) {
     const [name, setName] = useState("");
     const hanldPressUpdateInfo = () => {
@@ -23,11 +24,13 @@ function Account({ navigation }) {
     const app = initializeApp(firebaseConfig);
     const auth = initializeAuth(app, {
     });
+    const dispatch = useDispatch();
     const hanldPressExit = () => {
         // Connect FireBase
 
         signOut(auth).then(() => {
             navigation.navigate("Login");
+            dispatch(reload_IU(idReload+1));
         }).catch((err) => {
             console.log("Lỗi")
         })

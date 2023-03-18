@@ -58,11 +58,18 @@ function DetailOther({ navigation, route }) {
             headers: { authorization: accessToken },
         })
             .then((res) => {
-                if (res.data.length !== 0) {
+                if (res.data.length !== 0 && res.data.length > 1) {
                     setdataPieChart(res.data.map((item, index) => {
                         const precent = parseInt(item.availableBalances) / parseInt(moneyR);
                         let randomColor = colorJar[index]
                         var obj = { id: item.id, name: item.name, population: precent, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
+                        return obj;
+                    }));
+                }
+                else if (res.data.length == 1) {
+                    setdataPieChart(res.data.map((item, index) => {
+                        let randomColor = colorJar[index]
+                        var obj = { id: item.id, name: item.name, population: 100, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
                         return obj;
                     }));
                 }

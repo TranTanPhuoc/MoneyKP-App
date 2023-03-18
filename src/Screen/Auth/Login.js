@@ -56,6 +56,9 @@ function Login() {
                 console.log(accessToken);
                 navigation.navigate("Tabs");
                 dispatch(reload_IU(1));
+                setEmail("");
+                setPassWord("");
+                setPassword(true);
             })
             .catch(error => {
                 setisLoading(false);

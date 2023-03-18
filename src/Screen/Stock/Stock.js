@@ -50,20 +50,42 @@ function Stock({ navigation, route }) {
             setPriceStock(0);
         }
         else {
-            
-            axios({
-                url: 'https://finance.vietstock.vn/company/tradinginfo',
+            // axios({
+            //     url: 'https://finance.vietstock.vn/company/tradinginfo',
+            //     method: 'POST',
+            //     headers: {
+            //         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            //         "Cookie": "__RequestVerificationToken=XTIJqg6nv9qd5jazSpJsFeef5E6mOmOWAGdP6cP9CQkoDayp_agtS9wTGMBoFOD2OGdH1Bq7JVKHubdjPQHnx2PNUsa-L0d1o32DQIVK-PI1;; ASP.NET_SessionId=35yxrw5ysehjfgawgo22nejn; language=vi-VN",
+            //         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
+            //     },
+            //     data:`code=${codeStock}&s=0&t=&__RequestVerificationToken=bx-iabZXI1TIAkI4_J0Cmz5Bb2_sru91ot_TXq8nd0JNxhjOIr9UOzeZNBj3Bmw5fMNH6_Iw-b47M5KsCf2pQeW_s-hL6a28_y3I_ghgX9g1`
+            // }
+            // ).then((res) => {
+            //     console.log(res.data);
+            // }).catch((err) => {
+            //     console.log(err)
+            // });
+
+            const headers = {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Cookie': '__RequestVerificationToken=XTIJqg6nv9qd5jazSpJsFeef5E6mOmOWAGdP6cP9CQkoDayp_agtS9wTGMBoFOD2OGdH1Bq7JVKHubdjPQHnx2PNUsa-L0d1o32DQIVK-PI1; ASP.NET_SessionId=35yxrw5ysehjfgawgo22nejn; language=vi-VN',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36'
+              };
+              
+              const data = new URLSearchParams();
+              data.append('code', 'HPG');
+              data.append('s', '0');
+              data.append('__RequestVerificationToken', 'bx-iabZXI1TIAkI4_J0Cmz5Bb2_sru91ot_TXq8nd0JNxhjOIr9UOzeZNBj3Bmw5fMNH6_Iw-b47M5KsCf2pQeW_s-hL6a28_y3I_ghgX9g1');
+              
+              axios('https://finance.vietstock.vn/company/tradinginfo', {
                 method: 'POST',
-                headers: {
-                    'Content-Type':'text/plain'
-                },
-                data: `code=${codeStock}&s=0&t=&__RequestVerificationToken=bx-iabZXI1TIAkI4_J0Cmz5Bb2_sru91ot_TXq8nd0JNxhjOIr9UOzeZNBj3Bmw5fMNH6_Iw-b47M5KsCf2pQeW_s-hL6a28_y3I_ghgX9g1`
-            }
-            ).then((res) => {
+                headers: headers,
+                data: data.toString()
+              }).then((res)=>{
                 console.log(res.data);
-            }).catch((err) => {
-                console.log(err)
-            });
+              }).catch((err)=>{
+                console.log(err);
+              })
         }
     }, [nameStock])
     return (
