@@ -14,6 +14,12 @@ import { useEffect } from 'react';
 import { reload_IU } from '../../redux/action/ActionRedux';
 function Account({ navigation }) {
     const [name, setName] = useState("");
+    // Ngày hiện tại
+    const [selectedDate, setSelectedDate] = useState(new Date());
+     // Tháng hiện tại
+     const [month, setMonth] = useState(selectedDate.getMonth() + 1);
+     // Năm hiện tại
+     const [year, setYear] = useState(selectedDate.getFullYear());
     const hanldPressUpdateInfo = () => {
         navigation.navigate("User");
     }
@@ -36,7 +42,10 @@ function Account({ navigation }) {
         })
     }
     const handSetPercentJar = () => {
-        navigation.navigate("SetPercentJar");
+        navigation.navigate("SetPercentJar",{
+            month : month,
+            year : year
+        });
     }
     const idUser = auth.currentUser.uid;
     const idReload = useSelector(state => state.reload.idReload);

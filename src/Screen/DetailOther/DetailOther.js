@@ -134,12 +134,22 @@ function DetailOther({ navigation, route }) {
                         </View>
                         {
                             !hidden &&
-                            <ScrollView style={{ marginTop: 20, marginLeft: 20, marginRight: 20, maxHeight: 150 }}>
+                            <ScrollView style={{ marginTop: 10, marginLeft: 10, marginRight: 10, maxHeight: 150 }}>
                                 {
                                     data.map((item, index) => {
                                         if (item != null) {
                                             return (
-                                                <View key={index} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 50, }}>
+                                                <View key={index} style={{
+                                                    display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 50,
+                                                    borderWidth: 0.5, marginBottom: 10, paddingHorizontal: 10, borderRadius: 20, borderColor: 'black', backgroundColor: '#fff',
+                                                    shadowOffset: {
+                                                        width: 0,
+                                                        height: 1,
+                                                    },
+                                                    shadowColor: '#999999',
+                                                    shadowOpacity: 0.5,
+                                                    shadowRadius: 2
+                                                }}>
                                                     <Text style={{ fontSize: 20 }}>{index + 1}. {item.name}</Text>
                                                     <Text style={{ fontSize: 20, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
                                                 </View>

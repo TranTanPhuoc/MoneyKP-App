@@ -190,9 +190,17 @@ function Exchange({ navigation }) {
     // Nhận biết hủ hay nợ hay giấc mơ hay tài sản
     const [typeBasket, settypeBasket] = useState(1);
     const [availableBalancesI, setavailableBalancesI] = useState(0);
+    // Tháng hiện tại
+    const [month, setMonth] = useState(selectedDate.getMonth() + 1);
+    // Năm hiện tại
+    const [year, setYear] = useState(selectedDate.getFullYear());
     useEffect(() => {
         const accessToken = `Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
-        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/1`, {
+        axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
+            monthNumber: parseInt(month),
+            yearNumber: parseInt(year)
+        }, 
+        {
             headers: { authorization: accessToken },
         })
             .then((res) => {
@@ -225,7 +233,7 @@ function Exchange({ navigation }) {
             }).catch((err) => {
                 console.log(err);
             })
-    }, [idReload]);
+    }, [idReload, month, year]);
     const onDateChange = (date) => {
         setDate(date);
         setModalVisible(!modalVisible);
@@ -246,6 +254,8 @@ function Exchange({ navigation }) {
         if (dateGD != "") {
             const newDate = new Date(dateGD);
             setdateNote(newDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' }));
+            setMonth(newDate.getMonth() + 1);
+            setYear(newDate.getFullYear());
         }
     }, [dateGD])
     const accessToken = `Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
@@ -382,7 +392,9 @@ function Exchange({ navigation }) {
                         userId: idUser,
                         money: parseFloat(money),
                         createdDate: dateGD,
-                        note: noteGD
+                        note: noteGD,
+                        monthNumber: parseInt(month),
+                        yearNumber: parseInt(year)
                     },
                     {
                         headers: {
@@ -418,7 +430,7 @@ function Exchange({ navigation }) {
                 }}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <CalendarPicker onDateChange={onDateChange}>
+                        <CalendarPicker  onDateChange={onDateChange}>
                         </CalendarPicker>
                     </View>
                 </View>
@@ -454,21 +466,21 @@ function Exchange({ navigation }) {
                     </View>
                     <View style={{ flex: 0.6, justifyContent: 'center', alignItems: 'center', }}>
                         <TextInput keyboardType='number-pad' onChangeText={x => {
-                                const arr = x.split(".");
-                                var moneyG = "";
-                                if (arr.length > 0) {
-                                    arr.map((x) => {
-                                        moneyG += x;
-                                    });
-                                    if (moneyG > 10000000001) {
-                                        Alert.alert("Lỗi", `Không nhập quá 10 tỷ`)
-                                    }
-                                    setMoney(moneyG);
+                            const arr = x.split(".");
+                            var moneyG = "";
+                            if (arr.length > 0) {
+                                arr.map((x) => {
+                                    moneyG += x;
+                                });
+                                if (moneyG > 10000000001) {
+                                    Alert.alert("Lỗi", `Không nhập quá 10 tỷ`)
                                 }
-                                else{
-                                    setMoney(x)
-                                }
-                            
+                                setMoney(moneyG);
+                            }
+                            else {
+                                setMoney(x)
+                            }
+
                         }} placeholder="0" placeholderTextColor={'#000'} style={{ fontSize: 30, flex: 1, }}>{moneyR}</TextInput>
                     </View>
                     <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center', }}>
@@ -487,10 +499,11 @@ function Exchange({ navigation }) {
                     (type == 2) && <Text style={{ fontSize: 20, marginLeft: 20, }}>Lọ gởi :</Text>
                 }
                 {
-                    type == 1 && !isSelected &&
+                    type == 1 &&
                     <View style={styles.containerJar}>
                         <SelectDropdown
                             data={dataJar}
+                            disabled= {isSelected ? true : false}
                             defaultButtonText={valuesDefaut}
                             buttonTextStyle={{ fontSize: 16, }}
                             onSelect={(selectedItem, index) => {

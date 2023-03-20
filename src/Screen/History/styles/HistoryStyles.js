@@ -113,6 +113,21 @@ const styles = StyleSheet.create({
     alignItems:'center',
     width:150,
    },
+   buttomItem:{
+    borderRadius:20,
+    borderWidth:0.5,
+    borderColor:'black',
+    borderRadius:20,
+    backgroundColor:'#fff',
+    shadowOffset:{
+      width:0,
+      height:1,
+    },
+    shadowColor:'#999999',
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    marginTop:20,
+   }
 });
 
 export default styles;

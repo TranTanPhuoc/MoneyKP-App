@@ -17,7 +17,8 @@ import { colorJar } from '../../../assets/AppColors/AppColors';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { reload_IU } from '../../redux/action/ActionRedux';
-function SetPercentJar({ navigation }) {
+function SetPercentJar({ navigation,route }) {
+    const { month, year } = route.params;
     const width = Dimensions.get('window').width;
     var tong = 0;
     const [dataPieChart, setdataPieChart] = useState([]);
@@ -116,7 +117,10 @@ function SetPercentJar({ navigation }) {
 
 
     useEffect(() => {
-        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/1`, {
+        axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
+            monthNumber: parseInt(month),
+            yearNumber: parseInt(year)
+        }, {
             headers: { authorization: accessToken },
         })
             .then((res) => {
