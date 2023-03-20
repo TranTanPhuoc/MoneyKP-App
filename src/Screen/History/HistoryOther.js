@@ -29,6 +29,19 @@ function HistoryOther({ navigation, route }) {
     });
     const idUser = auth.currentUser.uid;
     const accessToken = `Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
+    const [statusItem, setstatusItem] = useState(0);
+    const [colorItem0, setColoritem0] = useState(colorJar[5]);
+    const [colorItem1, setColoritem1] = useState("#fff");
+    const hanldPressStatus0 = () => {
+        setstatusItem(0);
+        setColoritem0(colorJar[5]);
+        setColoritem1("#fff");
+    }
+    const hanldPressStatus1 = () => {
+        setstatusItem(1);
+        setColoritem0("#fff");
+        setColoritem1(colorJar[5]);
+    }
     useEffect(() => {
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/${id}`, {
             headers: { authorization: accessToken },
@@ -68,15 +81,26 @@ function HistoryOther({ navigation, route }) {
             </View>
             <ScrollView style={styles.viewBody}>
                 {
+                    id != 4 &&
+                    <View style={{ backgroundColor: colorItem0, height: 40, width: "100%", display: 'flex', flexDirection: 'row' }}>
+                        <TouchableOpacity onPress={hanldPressStatus0} style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ fontSize: 16, }}>Chưa hoàn thành</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={hanldPressStatus1} style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center', backgroundColor: colorItem1 }}>
+                            <Text style={{ fontSize: 16, }}>Hoàn thành</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
+                {
                     dataHistory.map((item, index) => {
-                        if (item != null) {
+                        if (item != null && item.status == statusItem) {
                             return (
                                 <TouchableOpacity key={index} onPress={() => {
                                     navigation.navigate("Detail", {
                                         id: id, name: name, itemName: item.name, money: item.availableBalances, idJar: item.id,
                                         moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status
                                     });
-                                }} style={{ borderBottomWidth: 0.3 }}>
+                                }} style={styles.buttomItem}>
                                     <View
                                         style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 50, marginLeft: 10, marginRight: 10 }}>
                                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 10 }}>

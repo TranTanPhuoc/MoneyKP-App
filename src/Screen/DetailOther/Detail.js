@@ -1,4 +1,4 @@
-import { ScrollView, View } from 'react-native';
+import { Alert, ScrollView, View } from 'react-native';
 import { Text, SafeAreaView } from 'react-native';
 import styles from "./styles/DetailStyle";
 import { AntDesign } from '@expo/vector-icons';
@@ -50,6 +50,7 @@ function Detail({ navigation, route }) {
             },
         ],
     });
+
     useEffect(() => {
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-basketId/${idUser}/${idJar}`, {
             headers: { authorization: accessToken },
@@ -126,6 +127,23 @@ function Detail({ navigation, route }) {
         });
     };
 
+    const updateStatus = () => {
+        axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/update-status/${idJar}/1`,
+            {
+            },
+            {
+                headers: {
+                    authorization: accessToken
+                }
+            }
+        ).then((res) => {
+            dispatch(reload_IU(idReload + 1));
+            Alert.alert("Thông báo", "Cập nhật trạng thái thành công")
+            navigation.goBack();
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
     return (
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
@@ -169,8 +187,8 @@ function Detail({ navigation, route }) {
                         <View style={{ justifyContent: 'center', alignItems: 'center', height: 50 }}>
                             <Text style={{ fontSize: 35, fontWeight: '700' }}>{moneyFormat(moneyPurpose)}</Text>
                         </View>
-                        <View style={{ justifyContent: 'center', alignItems: 'center', height: 50,display:'flex',flexDirection:'row'}}>
-                            <Text style={{ fontSize: 20, fontWeight: '700' }}>Mức độ hoàn thành : {moneyR/moneyPurpose * 100} %</Text>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', height: 50, display: 'flex', flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 20, fontWeight: '700' }}>Mức độ hoàn thành : {moneyR / moneyPurpose * 100} %</Text>
                         </View>
                     </View>
                 }
@@ -271,11 +289,23 @@ function Detail({ navigation, route }) {
                             </View>
                         </View>
                     </View>
-                    <View style={{ marginTop: 10 }}>
-                        <TouchableOpacity style={styles.button} onPress={deleteItem} >
-                            <Text style={{ fontSize: 18, color: 'red', fontWeight: '600' }}>Xóa mục</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {
+                        id != 4 && money - moneyPurpose == 0 && status == 0
+                        &&
+                        <View style={{ marginTop: 10 }}>
+                            <TouchableOpacity style={styles.button} onPress={updateStatus} >
+                                <Text style={{ fontSize: 18, color: 'green', fontWeight: '600' }}>Xác nhận hoàn thành</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
+                    {
+                        itemName != "Tiền mặt" &&
+                        <View style={{ marginTop: 10 }}>
+                            <TouchableOpacity style={styles.button} onPress={deleteItem} >
+                                <Text style={{ fontSize: 18, color: 'red', fontWeight: '600' }}>Xóa mục</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
                     <View style={{ marginTop: 20, }}>
                         <View style={{ marginTop: 20, marginLeft: 20, }}>
                         </View>

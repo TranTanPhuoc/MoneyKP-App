@@ -494,7 +494,10 @@ function Home({ navigation }) {
                     </View>
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <TouchableOpacity onPress={() => {
-                            navigation.navigate("SetPercentJar");
+                            navigation.navigate("SetPercentJar",{
+                                month : month,
+                                year : year
+                            });
                         }} style={styles.buttonStyle}>
                             <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>Chỉnh sửa tỉ lệ, thêm lọ</Text>
                         </TouchableOpacity>
