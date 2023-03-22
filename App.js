@@ -22,15 +22,15 @@ import DetailJarOther from './src/Screen/Jar/DetailJarOther';
 import JarOther from './src/Screen/Jar/JarOther';
 import HistoryOther from './src/Screen/History/HistoryOther';
 import Detail from './src/Screen/DetailOther/Detail';
-import CameraExchange from './src/Screen/Exchange/CameraExchange';
-import Photo from './src/Screen/Exchange/Photo';
 import Stock from './src/Screen/Stock/Stock';
+import CameraPic from './src/Screen/Exchange/CameraPic';
+import PhotoCameraPic from './src/Screen/Exchange/PhotoCameraPic';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={'Stock'} screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName={'Login'} screenOptions={{ headerShown: false }}>
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Register' component={Register} />
           <Stack.Screen name='Tabs' component={Tabs} />
@@ -49,9 +49,9 @@ export default function App() {
           <Stack.Screen name='JarOther' component={JarOther} />
           <Stack.Screen name='HistoryOther' component={HistoryOther} />
           <Stack.Screen name='Detail' component={Detail} />
-          <Stack.Screen name='CameraExchange' component={CameraExchange} />
-          <Stack.Screen name='Photo' component={Photo} />
           <Stack.Screen name='Stock' component={Stock} />
+          <Stack.Screen name='CameraPic' component={CameraPic} />
+          <Stack.Screen name='PhotoCameraPic' component={PhotoCameraPic} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

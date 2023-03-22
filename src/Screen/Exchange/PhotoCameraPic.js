@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { send_Photo_Success } from "../../redux/action/ActionRedux";
-function Photo({ navigation, route }) {
+function PhotoCameraPic({ navigation, route }) {
     const { photo } = route.params;
     const dispatch = useDispatch();
     const hanldPressClose = () => {
@@ -78,4 +78,4 @@ function Photo({ navigation, route }) {
     );
 }
 
-export default Photo;
+export default PhotoCameraPic;

@@ -452,7 +452,7 @@ function Exchange({ navigation }) {
                     <View style={{ marginLeft: 20, marginTop: 20 }}>
                         <TouchableOpacity onPress={
                             () => {
-                                navigation.navigate('CameraExchange');
+                                navigation.navigate('CameraPic');
                             }
                         } style={{ width: 130, borderWidth: 0.5, paddingTop: 10, paddingBottom: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 20, display: 'flex', flexDirection: 'row' }}>
                             <Text style={{ fontSize: 16 }}>Thêm nhanh</Text>
