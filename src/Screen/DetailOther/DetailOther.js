@@ -109,7 +109,7 @@ function DetailOther({ navigation, route }) {
             <ScrollView style={styles.viewBody}>
                 <View style={styles.containerMoney}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: 50 }}>
-                        <Text style={{ fontSize: 20, fontWeight: '600' }}>Tổng số tiền còn lại</Text>
+                        <Text style={{ fontSize: 18, fontWeight: '600' }}>Tổng số tiền còn lại</Text>
                     </View>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: 100 }}>
                         <Text style={{ fontSize: 35, fontWeight: '700' }}>{moneyFormat(moneyR)}</Text>
@@ -119,13 +119,13 @@ function DetailOther({ navigation, route }) {
                     <TouchableOpacity onPress={() => {
                         navigation.navigate("JarOther", { id: id, name: name });
                     }} style={styles.bottom} >
-                        <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}> Thêm mục mới</Text>
+                        <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}> Thêm mục mới</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ marginTop: 20, }}>
                     <View style={styles.containerBody}>
                         <View style={{ marginTop: 20, marginLeft: 20, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 20, fontWeight: '600' }}>Danh sách các mục</Text>
+                            <Text style={{ fontSize: 18, fontWeight: '600' }}>Danh sách các mục</Text>
                             <TouchableOpacity onPress={() => sethidden(!hidden)} style={{ marginRight: 20, }}>
                                 {
                                     hidden ? <AntDesign name="down" size={24} color="black" /> : <AntDesign name="up" size={24} color="black" />
@@ -150,8 +150,8 @@ function DetailOther({ navigation, route }) {
                                                     shadowOpacity: 0.5,
                                                     shadowRadius: 2
                                                 }}>
-                                                    <Text style={{ fontSize: 20 }}>{index + 1}. {item.name}</Text>
-                                                    <Text style={{ fontSize: 20, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
+                                                    <Text style={{ fontSize: 18 }}>{index + 1}. {item.name}</Text>
+                                                    <Text style={{ fontSize: 18, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
                                                 </View>
                                             );
                                         }
@@ -164,7 +164,7 @@ function DetailOther({ navigation, route }) {
                             <TouchableOpacity onPress={() => {
                                 navigation.navigate("HistoryOther", { id: id, name: name });
                             }} style={styles.bottom} >
-                                <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
+                                <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ marginTop: 20, marginLeft: 20, }}>
@@ -173,13 +173,13 @@ function DetailOther({ navigation, route }) {
                 </View>
                 <View style={styles.containerListJar}>
                     <View style={{ marginTop: 20, marginLeft: 20, justifyContent: 'space-between', marginRight: 20, }}>
-                        <Text style={{ fontSize: 20, fontWeight: '600' }}>Cơ cấu các mục {name}</Text>
+                        <Text style={{ fontSize: 18, fontWeight: '600' }}>Cơ cấu các mục {name}</Text>
                         {
                             dataPieChart.length !== 0 &&
                             <View style={styles.containerListJars}>
                                 <PieChart
                                     data={dataPieChart}
-                                    height={250}
+                                    height={200}
                                     width={width}
                                     chartConfig={chartConfigPie}
                                     accessor="population"
@@ -190,7 +190,7 @@ function DetailOther({ navigation, route }) {
                         {
                             dataPieChart.length === 0 &&
                             <View style={{ height: 150, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={{ fontSize: 24, color: '#C0C0C0' }}>Không tìm thấy dữ liệu</Text>
+                                <Text style={{ fontSize: 18, color: '#C0C0C0' }}>Không tìm thấy dữ liệu</Text>
                             </View>
                         }
                     </View>

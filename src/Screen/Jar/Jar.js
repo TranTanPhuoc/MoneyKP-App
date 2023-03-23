@@ -77,7 +77,7 @@ function Jar({ navigation }) {
             </View>
             <View style={styles.containerButton}>
                 <TouchableOpacity onPress={hanldhanldAddJar} style={styles.buttonStyle}>
-                    <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>Thêm</Text>
+                    <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}>Thêm</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

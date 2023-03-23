@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     containerTopName: {
         flex: 0.6,
         marginLeft: 10,
-        width:"100%",
+        width: "100%",
     },
     containerTopIcon: {
         flex: 0.25,
@@ -98,29 +98,29 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-      },
-      modalView: {
-        backgroundColor: '#555555',
+    },
+    modalView: {
+        backgroundColor: 'white',
         borderRadius: 20,
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 2,
+            width: 0,
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-      },
-      containerItemSelect: {
+    },
+    containerItemSelect: {
         height: 80,
         margin: 5,
         borderRadius: 10,
         justifyContent: 'center',
         marginLeft: 10,
         marginRight: 10,
-      },
-      buttom: {
+    },
+    buttom: {
         borderRadius: 20,
         borderWidth: 0.5,
         borderColor: 'black',
@@ -128,8 +128,8 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         backgroundColor: '#fff',
         shadowOffset: {
-          width: 0,
-          height: 1,
+            width: 0,
+            height: 1,
         },
         shadowColor: '#999999',
         shadowOpacity: 0.5,
@@ -137,9 +137,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         paddingLeft: 10,
-        paddingRight:10,
-        marginLeft:20,
-      },
+        paddingRight: 10,
+        marginLeft: 20,
+    },
 });
 
 export default styles;

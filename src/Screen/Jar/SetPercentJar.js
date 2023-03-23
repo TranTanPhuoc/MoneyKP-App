@@ -180,7 +180,7 @@ function SetPercentJar({ navigation,route }) {
                 </View>
                 <View style={styles.containerButton}>
                     <TouchableOpacity onPress={hanldhanldAddJar} style={styles.buttonStyle}>
-                        <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>Thêm hủ mới</Text>
+                        <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}>Thêm hủ mới</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -190,12 +190,12 @@ function SetPercentJar({ navigation,route }) {
                     return (
                         <View key={item.id} style={styles.containerItem}>
                             <View style={{ flex: 0.7, alignItems: 'center', height: "100%", display: 'flex', flexDirection: 'row' }}>
-                                <Text style={{ fontSize: 20, fontWeight: '500', marginRight: 10, }}>{index + 1}.</Text>
-                                <TextInput onChangeText={x => updateItemName(item, x)} style={{ fontSize: 20, fontWeight: '500' }}>{item.name}</TextInput>
+                                <Text style={{ fontSize: 18, fontWeight: '500', marginRight: 10, }}>{index + 1}.</Text>
+                                <TextInput onChangeText={x => updateItemName(item, x)} style={{ fontSize: 18, fontWeight: '500' }}>{item.name}</TextInput>
                             </View>
                             <View style={{ flex: 0.3, justifyContent: 'center', height: "100%", alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                                 <View style={{ flex: 0.75, borderWidth: 0.3, marginRight: 20, paddingTop: 5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center' }}>
-                                    <TextInput keyboardType='number-pad' onChangeText={x => updateItemPopulation(item, x)} style={{ fontSize: 20, fontWeight: '500' }}>
+                                    <TextInput keyboardType='number-pad' onChangeText={x => updateItemPopulation(item, x)} style={{ fontSize: 18, fontWeight: '500' }}>
                                         {item.population}
                                     </TextInput>
                                 </View>
@@ -215,10 +215,10 @@ function SetPercentJar({ navigation,route }) {
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'row', margin: 20, marginBottom: 20, alignItems: 'center', justifyContent: 'space-between' }}>
                     <View style={{ flex: 0.75 }}>
-                        <Text style={{ fontSize: 20, fontWeight: '500' }}>Tổng cộng: </Text>
+                        <Text style={{ fontSize: 18, fontWeight: '500' }}>Tổng cộng: </Text>
                     </View>
                     <View style={{ flex: 0.25 }}>
-                        <Text style={{ fontSize: 20, fontWeight: '500' }}>{tong}</Text>
+                        <Text style={{ fontSize: 18, fontWeight: '500' }}>{tong}</Text>
                     </View>
 
                 </View>

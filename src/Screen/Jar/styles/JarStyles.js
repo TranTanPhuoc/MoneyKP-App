@@ -74,6 +74,19 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  bodyContainerSearch:{
+    height: 50, 
+    borderRadius:20,
+    backgroundColor:'#fff',
+    paddingHorizontal:20,
+    display:'flex',
+    flexDirection:'row',
+    alignItems:'center',
+ },
+ bodyContainerField:{
+    paddingHorizontal:10,
+    marginVertical:10,
+ },
 });
 
 export default styles;

@@ -49,7 +49,7 @@ function PhotoCameraPic({ navigation, route }) {
     }
     return (
         <View style={styles.container}>
-            <View style={{ flex: 0.1, alignItems: "flex-end", width: "100%", justifyContent: 'flex-end', paddingRight: 30, backgroundColor: "#1C1C1C", marginTop: 20 }}>
+            <View style={{ flex: 0.1, alignItems: "flex-end", width: "100%", justifyContent: 'flex-end', paddingRight: 10, backgroundColor: "#1C1C1C", marginTop: 10 }}>
                 <View style={{ display: 'flex', flexDirection: "row" }}>
                     <TouchableOpacity onPress={hanldPressClose} >
                         <AntDesign name="closecircle" size={32} color="white" style={{ marginTop: 20, marginRight: 20 }} />

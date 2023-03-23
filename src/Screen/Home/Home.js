@@ -19,6 +19,7 @@ import { Linking } from 'react-native';
 import moment from 'moment-timezone';
 import { Modal } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import CalendarPicker from 'react-native-calendar-picker';
 function Home({ navigation }) {
     const { width } = Dimensions.get('window');
     const idReload = useSelector(state => state.reload.idReload);
@@ -48,17 +49,19 @@ function Home({ navigation }) {
             },
         ],
     });
-    const onDateChange = (event, selectedDate) => {
-        if (selectedDate) {
-            const newDate = new Date(selectedDate);
-            setSelectedDate(newDate);
-            Platform.OS === 'android' ? setShowPicker(false) : setShowPicker(true);
-        }
-    };
-    const hanldChon = () => {
-        setShowPicker(false);
-        setMonth(selectedDate.getMonth() + 1);
-        setYear(selectedDate.getFullYear());
+    // const onDateChange = (event, selectedDate) => {
+    //     if (selectedDate) {
+    //         const newDate = new Date(selectedDate);
+    //         setSelectedDate(newDate);
+    //         Platform.OS === 'android' ? setShowPicker(false) : setShowPicker(true);
+    //     }
+    // };
+    const onDateChange = (date) => {
+        const newDate = new Date(date);
+        setSelectedDate(newDate);
+        setModalVisible(!modalVisible);
+        setMonth(newDate.getMonth() + 1);
+        setYear(newDate.getFullYear());
     }
     // Data biểu đồ cột của chi tiêu
     const [datasets2, setdatasets2] = useState([]);
@@ -323,38 +326,22 @@ function Home({ navigation }) {
         } else {
             setsession('Chào buổi khuya!');
         }
-    }, [vietnamTime.hour()])
+    }, [vietnamTime.hour()]);
+    const [modalVisible, setModalVisible] = useState(false);
+
     return (
         <SafeAreaView style={styles.container} >
             <Modal
                 animationType="slide"
                 transparent={true}
-                visible={showPicker}
+                visible={modalVisible}
                 onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
                     setModalVisible(!modalVisible);
                 }}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                            <View style={{ justifyContent: 'flex-start', flex: 1, marginLeft: 30, height: 30 }}>
-
-                            </View>
-                            <View style={{ justifyContent: 'flex-end', flex: 1, marginRight: 30, }}>
-                                {
-                                    Platform.OS === 'ios' &&
-                                    <TouchableOpacity onPress={hanldChon}>
-                                        <Text style={{ fontSize: 24, color: '#0099FF', textAlign: 'right', fontWeight: 'normal' }}>Chọn</Text>
-                                    </TouchableOpacity>
-                                }
-                            </View>
-                        </View>
-                        <DateTimePicker
-                            value={selectedDate}
-                            mode="date"
-                            display="spinner"
-                            onChange={onDateChange}
-                        />
+                        <CalendarPicker  onDateChange={onDateChange}>
+                        </CalendarPicker>
                     </View>
                 </View>
             </Modal>
@@ -368,7 +355,7 @@ function Home({ navigation }) {
                             <Text style={{ color: '#000', fontSize: 16, }}>{session}</Text>
                         </View>
                         <View style={{ flex: 0.8, justifyContent: 'center' }}>
-                            <Text style={{ color: '#000', fontSize: 20, fontWeight: 'bold' }}>{name}</Text>
+                            <Text style={{ color: '#000', fontSize: 18, fontWeight: 'bold' }}>{name}</Text>
                         </View>
                     </View>
                     <View style={styles.containerTopIcon}>
@@ -385,11 +372,11 @@ function Home({ navigation }) {
                                     <View style={styles.containerItemTop}>
                                         <View style={{ display: 'flex', flexDirection: 'row' }}>
                                             <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
-                                            <Text style={{ color: '#000', fontSize: 20, marginLeft: 10, }}>{item.name}</Text>
+                                            <Text style={{ color: '#000', fontSize: 18, marginLeft: 10, }}>{item.name}</Text>
                                         </View>
                                     </View>
                                     <View>
-                                        <Text style={{ color: '#000', fontSize: 20, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
+                                        <Text style={{ color: '#000', fontSize: 18, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
                                     </View>
                                 </View>
                             );
@@ -400,8 +387,8 @@ function Home({ navigation }) {
 
                 </ScrollView>
                 <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, }}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold', }}>Ngày : {selectedDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
-                    <TouchableOpacity style={styles.buttom} onPress={() => setShowPicker(true)} >
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', }}>Ngày : {selectedDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
+                    <TouchableOpacity style={styles.buttom} onPress={() => setModalVisible(true)} >
                         <Text>
                             Chọn tháng
                         </Text>
@@ -423,7 +410,7 @@ function Home({ navigation }) {
                                         </View>
                                         <View style={{ flex: 0.7, height: "100%", }}>
                                             <View style={{ flex: 0.4, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
-                                                <Text style={{ color: '#000', fontSize: 20, fontWeight: 'bold' }}>{item.name}</Text>
+                                                <Text style={{ color: '#000', fontSize: 18, fontWeight: 'bold' }}>{item.name}</Text>
                                                 <Text style={{ color: '#FF4040', fontSize: 16, }}>{moneyFormat(item.totalIncome)}</Text>
                                             </View>
                                             <View style={{ flex: 0.2, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
@@ -485,7 +472,7 @@ function Home({ navigation }) {
                     <View style={styles.containerListJars}>
                         <PieChart
                             data={dataPieChart}
-                            height={250}
+                            height={200}
                             width={width}
                             chartConfig={chartConfigPie}
                             accessor="population"
@@ -499,7 +486,7 @@ function Home({ navigation }) {
                                 year : year
                             });
                         }} style={styles.buttonStyle}>
-                            <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>Chỉnh sửa tỉ lệ, thêm lọ</Text>
+                            <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}>Chỉnh sửa tỉ lệ, thêm lọ</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

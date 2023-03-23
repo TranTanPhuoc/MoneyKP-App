@@ -496,7 +496,7 @@ function Exchange({ navigation }) {
                 }
 
                 {
-                    (type == 2) && <Text style={{ fontSize: 20, marginLeft: 20, }}>Lọ gởi :</Text>
+                    (type == 2) && <Text style={{ fontSize: 18, marginLeft: 20, }}>Lọ gởi :</Text>
                 }
                 {
                     type == 1 &&
@@ -591,7 +591,7 @@ function Exchange({ navigation }) {
                 }
                 {
                     type == 1 &&
-                    <View style={{ display: 'flex', flexDirection: 'row', fontSize: 20, marginLeft: 20, marginRight: 20, marginTop: 15, justifyContent: 'flex-end', alignItems: 'center' }}>
+                    <View style={{ display: 'flex', flexDirection: 'row', fontSize: 18, marginLeft: 20, marginRight: 20, marginTop: 15, justifyContent: 'flex-end', alignItems: 'center' }}>
                         <CheckBox
                             value={isSelected}
                             onValueChange={setSelection}
@@ -603,7 +603,7 @@ function Exchange({ navigation }) {
                 {
                     (type == 2) &&
                     <View>
-                        <Text style={{ fontSize: 20, marginLeft: 20, marginTop: 15, }}>Lọ nhận :</Text>
+                        <Text style={{ fontSize: 18, marginLeft: 20, marginTop: 15, }}>Lọ nhận :</Text>
                         <View style={styles.containerJar}>
                             <SelectDropdown
                                 data={dataJarTo}
@@ -678,10 +678,10 @@ function Exchange({ navigation }) {
                     <TouchableOpacity onPress={() => {
                         navigation.goBack();
                     }} style={styles.buttonStyle}>
-                        <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>Hủy</Text>
+                        <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}>Hủy</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={onHanldSave} style={styles.buttonStyle}>
-                        <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>Lưu</Text>
+                        <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}>Lưu</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

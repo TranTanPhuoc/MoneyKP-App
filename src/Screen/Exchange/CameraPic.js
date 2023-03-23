@@ -23,7 +23,6 @@ function CameraPic({ navigation }) {
     }, []);
     useEffect(() => {
       if (photo !== null) {
-  
         navigation.navigate("PhotoCameraPic", {
           photo: photo
         });
@@ -37,7 +36,7 @@ function CameraPic({ navigation }) {
         allowsEditing: true,
         quality: 1,
       });
-      if (!result.canceled) {
+      if (!result.cancelled) {
         if (result.assets != null) {
           let localUri = "";
           result.assets.map((item) => {
@@ -46,7 +45,7 @@ function CameraPic({ navigation }) {
           setPhoto(localUri);
         }
       }
-      else if (result.canceled) {
+      else if (result.cancelled) {
         console.log(result);
       }
     };

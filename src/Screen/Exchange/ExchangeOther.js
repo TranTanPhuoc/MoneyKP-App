@@ -560,7 +560,7 @@ function ExchangeOther({ navigation }) {
                 }
                 {typeBasket != 4 && dataJarTemp.length > 0 &&
                     <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ fontSize: 20, fontWeight: '500', textAlign: 'center' }}>
+                        <Text style={{ fontSize: 18, fontWeight: '500', textAlign: 'center' }}>
                             Số tiền cần thêm vào để hoàn thành ước mơ là :{'\n'}{moneyFormat(moneyPurpose - availableBalancesI)}</Text>
                     </View>
                 }
@@ -600,7 +600,7 @@ function ExchangeOther({ navigation }) {
                 }
                 {
                     (type == 2) &&
-                    <Text style={{ fontSize: 20, marginLeft: 20, marginTop: 15, }}>Mục mơ ước gởi :</Text>
+                    <Text style={{ fontSize: 18, marginLeft: 20, marginTop: 15, }}>Mục mơ ước gởi :</Text>
                 }
                 <View style={styles.containerJar}>
                     <SelectDropdown
@@ -651,7 +651,7 @@ function ExchangeOther({ navigation }) {
                 {
                     (type == 2) &&
                     <View>
-                        <Text style={{ fontSize: 20, marginLeft: 20, marginTop: 15, }}>Mục mơ ước nhận :</Text>
+                        <Text style={{ fontSize: 18, marginLeft: 20, marginTop: 15, }}>Mục mơ ước nhận :</Text>
                         <View style={styles.containerJar}>
                             <SelectDropdown
                                 data={dataJarTo}
@@ -722,10 +722,10 @@ function ExchangeOther({ navigation }) {
                     <TouchableOpacity onPress={() => {
                         navigation.goBack();
                     }} style={styles.buttonStyle}>
-                        <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>Hủy</Text>
+                        <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}>Hủy</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={onHanldSave} style={styles.buttonStyle}>
-                        <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>Lưu</Text>
+                        <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}>Lưu</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

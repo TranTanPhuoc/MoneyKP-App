@@ -138,7 +138,7 @@ function DetailJar({ navigation, route }) {
             <ScrollView style={styles.viewBody}>
                 <View style={styles.containerMoney}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: 50 }}>
-                        <Text style={{ fontSize: 20, fontWeight: '600' }}>Tổng số tiền còn lại</Text>
+                        <Text style={{ fontSize: 18, fontWeight: '600' }}>Tổng số tiền còn lại</Text>
                     </View>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: 100 }}>
                         <Text style={{ fontSize: 35, fontWeight: '700' }}>{moneyFormat(moneyR)}</Text>
@@ -153,11 +153,11 @@ function DetailJar({ navigation, route }) {
                                         <View style={styles.containerItemTop}>
                                             <View style={{ display: 'flex', flexDirection: 'row' }}>
                                                 <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
-                                                <Text style={{ color: '#000', fontSize: 20, marginLeft: 10, }}>{item.name}</Text>
+                                                <Text style={{ color: '#000', fontSize: 18, marginLeft: 10, }}>{item.name}</Text>
                                             </View>
                                         </View>
                                         <View>
-                                            <Text style={{ color: '#000', fontSize: 20, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
+                                            <Text style={{ color: '#000', fontSize: 18, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
                                         </View>
                                     </View>
                                 );
@@ -168,7 +168,7 @@ function DetailJar({ navigation, route }) {
                 <View style={{ marginTop: 20, }}>
                     <View style={styles.containerBody}>
                         <View style={{ marginTop: 20, marginLeft: 20, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 20, fontWeight: '600' }}>Lịch sử giao dịch lọ {name}</Text>
+                            <Text style={{ fontSize: 18, fontWeight: '600' }}>Lịch sử giao dịch lọ {name}</Text>
                             <TouchableOpacity onPress={() => sethidden(!hidden)} style={{ marginRight: 20, }}>
                                 {
                                     hidden ? <AntDesign name="down" size={24} color="black" /> : <AntDesign name="up" size={24} color="black" />
@@ -189,7 +189,7 @@ function DetailJar({ navigation, route }) {
                                                 </View>
                                                 <View style={{ flex: 0.45, }}>
                                                     <View style={{ marginBottom: 10, }}>
-                                                        <Text style={{ color: '#000', fontSize: 20, fontWeight: 'bold' }}>{item.note}</Text>
+                                                        <Text style={{ color: '#000', fontSize: 18, fontWeight: 'bold' }}>{item.note}</Text>
                                                     </View>
                                                     {
                                                         (item.type == 1) ? <Text>Thu nhập</Text> : <Text>Chi tiền</Text>
@@ -212,7 +212,7 @@ function DetailJar({ navigation, route }) {
                             <TouchableOpacity onPress={() => {
                                 navigation.navigate("History", { id: id, name: name });
                             }} style={styles.bottom} >
-                                <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
+                                <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ marginTop: 20, marginLeft: 20, }}>
@@ -222,7 +222,7 @@ function DetailJar({ navigation, route }) {
                 <View style={{ marginTop: 20, }}>
                     <View style={styles.containerBody}>
                         <View style={{ marginTop: 20, marginLeft: 20, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 20, fontWeight: '600' }}>Xem biểu đồ giao dịch lọ {name}</Text>
+                            <Text style={{ fontSize: 18, fontWeight: '600' }}>Xem biểu đồ giao dịch lọ {name}</Text>
                             <TouchableOpacity onPress={() => sethidden2(!hidden2)} style={{ marginRight: 20, }}>
                                 {
                                     hidden2 ? <AntDesign name="down" size={24} color="black" /> : <AntDesign name="up" size={24} color="black" />
@@ -248,7 +248,7 @@ function DetailJar({ navigation, route }) {
                             <TouchableOpacity onPress={() => {
                                 navigation.navigate("Chart", { id: id, name: name });
                             }} style={styles.bottom} >
-                                <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}> Xem chi tiết</Text>
+                                <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}> Xem chi tiết</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ marginTop: 20, marginLeft: 20, }}>

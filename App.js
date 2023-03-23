@@ -22,7 +22,6 @@ import DetailJarOther from './src/Screen/Jar/DetailJarOther';
 import JarOther from './src/Screen/Jar/JarOther';
 import HistoryOther from './src/Screen/History/HistoryOther';
 import Detail from './src/Screen/DetailOther/Detail';
-import Stock from './src/Screen/Stock/Stock';
 import CameraPic from './src/Screen/Exchange/CameraPic';
 import PhotoCameraPic from './src/Screen/Exchange/PhotoCameraPic';
 const Stack = createNativeStackNavigator();
@@ -49,7 +48,6 @@ export default function App() {
           <Stack.Screen name='JarOther' component={JarOther} />
           <Stack.Screen name='HistoryOther' component={HistoryOther} />
           <Stack.Screen name='Detail' component={Detail} />
-          <Stack.Screen name='Stock' component={Stock} />
           <Stack.Screen name='CameraPic' component={CameraPic} />
           <Stack.Screen name='PhotoCameraPic' component={PhotoCameraPic} />
         </Stack.Navigator>

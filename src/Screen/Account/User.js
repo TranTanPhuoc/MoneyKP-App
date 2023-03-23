@@ -35,7 +35,7 @@ function User({ navigation }) {
             allowsEditing: true,
             quality: 1,
         });
-        if (!result.canceled) {
+        if (!result.cancelled) {
             let localUri = "";
             result.assets.map((item) => {
                 localUri = item.uri;
@@ -52,7 +52,7 @@ function User({ navigation }) {
             };
             formData.append("file", _image);
         }
-        else if (result.canceled) {
+        else if (result.cancelled) {
             console.log(result);
         }
     };

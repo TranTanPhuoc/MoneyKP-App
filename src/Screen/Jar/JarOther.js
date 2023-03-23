@@ -33,44 +33,106 @@ function JarOther({ navigation, route }) {
     const [dateGD, setDate] = useState(selectedDate);
     const [dateNote, setdateNote] = useState(selectedDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' }));
     const [typeTS, setTypeTS] = useState("Tiền mặt");
-    const [colorTSTienMat,setcolorTSTienMat] = useState(colorJar[2]);
-    const [colorTSCoPhieu,setColorTSCoPhieu] = useState("#fff");
-    const hanldPressTienMat = ()=>{
+    const [colorTSTienMat, setcolorTSTienMat] = useState(colorJar[2]);
+    const [colorTSCoPhieu, setColorTSCoPhieu] = useState("#fff");
+    const hanldPressTienMat = () => {
         setTypeTS("Tiền mặt");
         setcolorTSTienMat(colorJar[2]);
         setColorTSCoPhieu("#fff");
     }
-    const hanldPressCoPhieu = ()=>{
-        setTypeTS("Cổ Phiếu");
+    const hanldPressCoPhieu = () => {
+        setTypeTS("Cổ phiếu");
         setcolorTSTienMat("#fff");
         setColorTSCoPhieu(colorJar[5]);
     }
-    const hanldhanldAddJarOther = () => {
-        if (id == 4) {
-            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
-                {
-                    userId: idUser,
-                    name: JarOther,
-                    precent: 0,
-                    availableBalances: money,
-                    totalSpending: 0,
-                    totalIncome: 0,
-                    type: id,
-                    status: 0,
-                    moneyPurpose: 999999999999999,
-                },
-                {
-                    headers: {
-                        authorization: accessToken
-                    }
-                }).then((res) => {
-                    dispatch(reload_IU(idReload + 1));
-                    Alert.alert("Thông báo", "Thêm thành công");
-                    navigation.goBack();
+    const [stock, setStock] = useState("");
+    const [dataStock, setDataStock] = useState([]);
+    const [nameStock, setNameStock] = useState("Không có dữ liệu");
+    const [codeStock, setCodeStock] = useState("");
+    const [priceStock, setPriceStock] = useState(0);
+    const [slStock, setslStock] = useState(0);
+    useEffect(() => {
+        axios.get(`https://finance.vietstock.vn/search-stock?query=${stock}&page=1&pageSize=1`, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
+                'Cookie': 'ASP.NET_SessionId=j0zzpsplrfboyomyruq3rwae; language=vi-VN'
+            },
+        })
+            .then((res) => {
+                setDataStock(res.data.data[0]);
+            }).catch((err) => {
+                console.log(err);
+            })
+    }, [stock]);
 
+    useEffect(() => {
+        if (stock != '') {
+            if (dataStock != undefined) {
+                if (dataStock.FullName == undefined) {
+                    setNameStock("Không có dữ liệu");
+                    setCodeStock("");
+                }
+                else {
+                    setNameStock(dataStock.FullName);
+                    setCodeStock(dataStock.Code);
+                }
+            }
+        }
+        else {
+            setNameStock("Không có dữ liệu");
+            setCodeStock("");
+        }
+    }, [dataStock]);
+    useEffect(() => {
+        if (nameStock == "Không có dữ liệu") {
+            setPriceStock(0);
+        }
+        else {
+            axios.get(`http://54.250.86.78:5000?code=${codeStock}`)
+                .then((res) => {
+                    setPriceStock(res.data.LastPrice);
                 }).catch((err) => {
                     console.log(err);
                 })
+        }
+    }, [nameStock]);
+    const slStockFormat = (amount) => {
+        return amount.toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+            maximumFractionDigits: 3,
+        });
+    };
+    const hanldhanldAddJarOther = () => {
+        if (id == 4) {
+            if(id == 4 && typeTS == "Cổ phiếu"){
+                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
+                    {
+                        userId: idUser,
+                        name: codeStock,
+                        precent: 0,
+                        availableBalances: parseInt(priceStock * slStock),
+                        totalSpending: 0,
+                        totalIncome: 0,
+                        type: id,
+                        status: 0,
+                        moneyPurpose: 9999999999999999999,
+                        datedComplete: dateGD,
+                        createdDate: selectedDate
+                    },
+                    {
+                        headers: {
+                            authorization: accessToken
+                        }
+                    }).then((res) => {
+                        dispatch(reload_IU(idReload + 1));
+                        Alert.alert("Thông báo", "Thêm thành công");
+                        navigation.goBack();
+
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+            }
         }
         else {
             const date = new Date(dateGD);
@@ -158,12 +220,79 @@ function JarOther({ navigation, route }) {
                     <TouchableOpacity onPress={hanldPressTienMat} style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontSize: 16, }}>Thêm tiền mặt</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={hanldPressCoPhieu} style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center',backgroundColor:colorTSCoPhieu}}>
+                    <TouchableOpacity onPress={hanldPressCoPhieu} style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center', backgroundColor: colorTSCoPhieu }}>
                         <Text style={{ fontSize: 16, }}>Thêm cổ phiếu</Text>
                     </TouchableOpacity>
                 </View>
             }
-
+            {
+                id == 4 && typeTS == "Tiền mặt" &&
+                <>
+                    <View style={styles.viewBody}>
+                        <View style={{ flex: 0.15, justifyContent: 'center', alignItems: 'center' }}>
+                            <Image source={require('../../../assets/icons/jar.png')} />
+                        </View>
+                        <View style={{ flex: 0.85, justifyContent: 'center', marginLeft: 10, marginRight: 10 }}>
+                            <TextInput value={JarOther} onChangeText={x => setJarOther(x)} style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, fontSize: 16, }} placeholder='Nhập tên mục cần thêm' />
+                        </View>
+                    </View>
+                    <View style={styles.viewBody}>
+                        <View style={{ flex: 0.15, justifyContent: 'center', alignItems: 'center' }}>
+                            <Image source={require('../../../assets/icons/wallet.png')} />
+                        </View>
+                        <View style={{ flex: 0.85, justifyContent: 'center', marginLeft: 10, marginRight: 10 }}>
+                            <TextInput keyboardType='number-pad' value={money} onChangeText={x => setMoney(x)} style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, fontSize: 16, }} placeholder='Nhập tiền' />
+                        </View>
+                    </View>
+                </>
+            }
+            {
+                id == 4 && typeTS == "Cổ phiếu" &&
+                <>
+                    <View style={styles.bodyContainerField}>
+                        <View style={styles.bodyContainerSearch}>
+                            <TextInput maxLength={3} onChangeText={x => {
+                                setStock(x);
+                            }
+                            }
+                                value={stock} placeholder="Vui lòng nhập từ khóa cổ phiếu" style={{ flex: 1, fontSize: 16, height: "100%" }} />
+                            <AntDesign name="search1" size={24} color="black" />
+                        </View>
+                    </View>
+                    <View style={styles.bodyContainerField}>
+                        <Text style={{ fontSize: 18, marginBottom: 10, }}>
+                            Tên cổ phiếu :
+                        </Text>
+                        <View style={styles.bodyContainerSearch}>
+                            <Text style={{ fontSize: 16, color: 'grey' }}>
+                                {nameStock} {
+                                    codeStock != "" ? `(${codeStock})` : ""
+                                }
+                            </Text>
+                        </View>
+                    </View>
+                    <View style={styles.bodyContainerField}>
+                        <Text style={{ fontSize: 18, marginBottom: 10, }}>
+                            Giá thị trường của 1 cổ phiếu:
+                        </Text>
+                        <View style={styles.bodyContainerSearch}>
+                            <Text style={{ fontSize: 18, color: 'grey' }}>
+                                {slStockFormat(priceStock * slStock)}
+                            </Text>
+                        </View>
+                    </View>
+                    <View style={styles.bodyContainerField}>
+                        <Text style={{ fontSize: 18, marginBottom: 10, }}>
+                            Số lượng cổ phiếu:
+                        </Text>
+                        <View style={styles.bodyContainerSearch}>
+                            <TextInput keyboardType='number-pad' onChangeText={x => {
+                                setslStock(x)
+                            }} placeholder="0" placeholderTextColor={'#000'} style={{ fontSize: 18, flex: 1, }}>{slStock}</TextInput>
+                        </View>
+                    </View>
+                </>
+            }
             {
                 id != 4 &&
                 <>
@@ -202,7 +331,7 @@ function JarOther({ navigation, route }) {
             }
             <View style={styles.containerButton}>
                 <TouchableOpacity onPress={hanldhanldAddJarOther} style={styles.buttonStyle}>
-                    <Text style={{ fontSize: 20, color: '#fff', fontWeight: 'bold' }}>Thêm</Text>
+                    <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}>Thêm</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

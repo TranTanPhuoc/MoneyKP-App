@@ -169,8 +169,8 @@ function Wallet({ navigation }) {
                         />
                     </View>
                     <View style={styles.containerHeaderBottom}>
-                        <Text style={{ color: "#fff", fontSize: 20, }}>Tài sản</Text>
-                        <Text style={{ color: "#fff", fontSize: 20, }}>{moneyFormat(total)}</Text>
+                        <Text style={{ color: "#fff", fontSize: 18, }}>Tài sản</Text>
+                        <Text style={{ color: "#fff", fontSize: 18, }}>{moneyFormat(total)}</Text>
                     </View>
                 </LinearGradient>
                 <ScrollView scrollEnabled={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }} style={styles.containerInfoWallet}>
@@ -181,10 +181,10 @@ function Wallet({ navigation }) {
                                     <View style={styles.containerItemTop}>
                                         <View style={{ display: 'flex', flexDirection: 'row' }}>
                                             <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
-                                            <Text style={{ color: '#000', fontSize: 20, marginLeft: 10, }}>{item.name}</Text>
+                                            <Text style={{ color: '#000', fontSize: 18, marginLeft: 10, }}>{item.name}</Text>
                                         </View>
                                     </View>
-                                    <Text style={{ color: '#000', fontSize: 20, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
+                                    <Text style={{ color: '#000', fontSize: 18, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
                                 </View>
                             );
                         })
@@ -210,7 +210,7 @@ function Wallet({ navigation }) {
                                         </View>
                                         <View style={{ flex: 0.7, height: "100%", }}>
                                             <View style={{ flex: 1, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
-                                                <Text style={{ color: '#000', fontSize: 20, fontWeight: 'bold' }}>{item.name}</Text>
+                                                <Text style={{ color: '#000', fontSize: 18, fontWeight: 'bold' }}>{item.name}</Text>
                                                 <Text style={{ color: '#FF4040', fontSize: 16, }}>{moneyFormat(item.money)}</Text>
                                             </View>
                                         </View>
@@ -259,19 +259,6 @@ function Wallet({ navigation }) {
                         />
                     </View>
                 </View>
-                {/* <View style={styles.containerListJar}>
-                    <Text style={{color:'#000',fontSize:24,marginLeft:10, marginRight:10,}}>Cơ cấu tài sản</Text>
-                    <View style={styles.containerListJars}>
-                        <PieChart
-                            data={dataPieChart}
-                            height={300}
-                            width={width}
-                            chartConfig={chartConfigPie}
-                            accessor="population"
-                            paddingLeft='30'
-                            />
-                    </View>
-                </View> */}
             </ScrollView>
         </SafeAreaView>
     );

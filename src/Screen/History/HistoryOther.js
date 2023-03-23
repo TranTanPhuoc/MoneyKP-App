@@ -107,13 +107,13 @@ function HistoryOther({ navigation, route }) {
                                             <View style={{ height: 30, width: 30, justifyContent: 'center', alignItems: 'center' }}>
                                                 <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
                                             </View>
-                                            <Text style={{ fontSize: 24, marginLeft: 15, fontWeight: 'bold', marginRight: 15, }}> {item.name}</Text>
+                                            <Text style={{ fontSize: 18, marginLeft: 15, fontWeight: 'bold', marginRight: 15, }}> {item.name}</Text>
                                             {
                                                 id != 4 && (item.status == 1 || item.moneyPurpose == item.availableBalances) &&
                                                 <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/checked.png')} />
                                             }
                                         </View>
-                                        <Text style={{ fontSize: 20, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
+                                        <Text style={{ fontSize: 18, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
                                     </View>
                                 </TouchableOpacity>
                             );
