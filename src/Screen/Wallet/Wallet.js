@@ -24,16 +24,15 @@ function Wallet({ navigation }) {
     const app = initializeApp(firebaseConfig);
     const auth = initializeAuth(app, {
     });
-     // Ngày hiện tại
-     const [selectedDate, setSelectedDate] = useState(new Date());
-     // Tháng hiện tại
-     const [month, setMonth] = useState(selectedDate.getMonth() + 1);
-     // Năm hiện tại
-     const [year, setYear] = useState(selectedDate.getFullYear());
+    // Ngày hiện tại
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    // Tháng hiện tại
+    const [month, setMonth] = useState(selectedDate.getMonth() + 1);
+    // Năm hiện tại
+    const [year, setYear] = useState(selectedDate.getFullYear());
     const idUser = auth.currentUser.uid;
     const idReload = useSelector(state => state.reload.idReload);
     const accessToken = `Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
-    const [dataIncomeAndSpending, setdataIncomeAndSpending] = useState([]);
     const [totalIncome, settotalIncome] = useState(10);
     const [totalSpending, settotalSpending] = useState(5);
     const [dataDS, setdataDS] = useState([
@@ -45,8 +44,10 @@ function Wallet({ navigation }) {
     // Data biểu đồ tròn
     const [total, settotal] = useState(0);
     const [dataPieChart, setdataPieChart] = useState([
-        { id: 1, name: "Thu nhập", population: 50, color: colorJar[0], legendFontColor: '#000', legendFontSize: 15 },
-        { id: 2, name: "Chi tiêu", population: 50, color: colorJar[1], legendFontColor: '#000', legendFontSize: 15 },
+        { id: 1, name: "Tài sản", population: 25, color: colorJar[0], legendFontColor: '#000', legendFontSize: 15 },
+        { id: 2, name: "Mơ ước", population: 25, color: colorJar[1], legendFontColor: '#000', legendFontSize: 15 },
+        { id: 3, name: "6 Lọ", population: 25, color: colorJar[2], legendFontColor: '#000', legendFontSize: 15 },
+        { id: 4, name: "Nợ", population: 25, color: colorJar[3], legendFontColor: '#000', legendFontSize: 15 },
     ]);
     const dataLineChart = {
         labels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4', 'Tuần 5'],
@@ -95,14 +96,7 @@ function Wallet({ navigation }) {
         useShadowColorFromDataset: false,
         borderWidth: 0.5,
     };
-    useEffect(() => {
-        setdataIncomeAndSpending(
-            [
-                { id: 1, name: 'Thu nhập', price: totalIncome, color: '#03fc41', icon: require('../../../assets/icons/add.png') },
-                { id: 2, name: 'Chi tiêu', price: totalSpending, color: '#fc3030', icon: require('../../../assets/icons/minus.png') },
-            ]
-        )
-    }, [totalIncome, totalSpending]);
+
     useEffect(() => {
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/1`, {
             headers: { authorization: accessToken },
@@ -122,9 +116,9 @@ function Wallet({ navigation }) {
                 console.log(err);
             });
         axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-asset-by-userId/${idUser}`, {
-                monthNumber: parseInt(month),
-                yearNumber: parseInt(year)
-            },
+            monthNumber: parseInt(month),
+            yearNumber: parseInt(year)
+        },
             {
                 headers: { authorization: accessToken },
             })
@@ -139,30 +133,35 @@ function Wallet({ navigation }) {
                         { id: 1, name: "6 Lọ", money: listdata[2] },
                         { id: 2, name: "Nợ", money: listdata[3] },
                     ]
-                )
+                );
+                const totalMoney = parseInt(listdata[0]) + parseInt(listdata[1]) + parseInt(listdata[2]) + parseInt(listdata[3]) 
+                var precent1 = 100;
+                var precent2 = 0;
+                var precent3 = 0;
+                var precent4 = 0;
+                if (parseInt(listdata[0]) == 0 && parseInt(listdata[1]) == 0 && parseInt(listdata[2]) == 0 && parseInt(listdata[3]) == 0) {
+                    precent1 = 100;
+                    precent2 = 0;
+                    precent3 = 0;
+                    precent4 = 0;
+                }
+                else {
+                    precent1 =  parseInt(listdata[0])/ totalMoney * 100;
+                    precent2 =  parseInt(listdata[1])/ totalMoney * 100;
+                    precent3 =  parseInt(listdata[2])/ totalMoney * 100;
+                    precent4 =  parseInt(listdata[3])/ totalMoney * 100;
+                }
+                setdataPieChart([
+                    { id: 1, name: "Tài sản", population: precent1, color: colorJar[0], legendFontColor: '#000', legendFontSize: 15 },
+                    { id: 2, name: "Mơ ước", population: precent2, color: colorJar[1], legendFontColor: '#000', legendFontSize: 15 },
+                    { id: 3, name: "6 Lọ", population: precent3, color: colorJar[2], legendFontColor: '#000', legendFontSize: 15 },
+                    { id: 4, name: "Nợ", population: precent4, color: colorJar[3], legendFontColor: '#000', legendFontSize: 15 },
+                ]);
+                settotal(parseInt(listdata[0]) + parseInt(listdata[1]) + parseInt(listdata[2]));
             }).catch((err) => {
                 console.log(err);
             });
     }, [idReload])
-    useEffect(() => {
-        const totalMoney = totalIncome + totalSpending;
-        var precentIncome = 100;
-        var precentSpeeding = 0;
-        if (totalIncome == 0 && totalSpending == 0) {
-            precentIncome = 100;
-            precentSpeeding = 0;
-        }
-        else {
-            precentIncome = totalIncome / totalMoney * 100;
-            precentSpeeding = totalSpending / totalMoney * 100;
-        }
-
-        setdataPieChart([
-            { id: 1, name: "Thu nhập", population: precentIncome, color: colorJar[0], legendFontColor: '#000', legendFontSize: 15 },
-            { id: 2, name: "Chi tiêu", population: precentSpeeding, color: colorJar[1], legendFontColor: '#000', legendFontSize: 15 },
-        ]);
-        settotal(totalIncome - totalSpending);
-    }, [totalIncome, totalSpending])
     return (
         <SafeAreaView style={styles.container} >
             <ScrollView style={styles.scrollview}>
@@ -182,23 +181,7 @@ function Wallet({ navigation }) {
                         <Text style={{ color: "#fff", fontSize: 18, }}>{moneyFormat(total)}</Text>
                     </View>
                 </LinearGradient>
-                <ScrollView scrollEnabled={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }} style={styles.containerInfoWallet}>
-                    {
-                        dataIncomeAndSpending.map((item) => {
-                            return (
-                                <View key={item.id} style={styles.containerItem}>
-                                    <View style={styles.containerItemTop}>
-                                        <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                            <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
-                                            <Text style={{ color: '#000', fontSize: 18, marginLeft: 10, }}>{item.name}</Text>
-                                        </View>
-                                    </View>
-                                    <Text style={{ color: '#000', fontSize: 18, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
-                                </View>
-                            );
-                        })
-                    }
-                </ScrollView>
+
                 <View style={styles.containerListJar}>
                     <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Danh sách lọ</Text>
                     <View style={styles.containerListJarItem}>
@@ -230,42 +213,6 @@ function Wallet({ navigation }) {
                                 );
                             })
                         }
-                    </View>
-                </View>
-                <View style={styles.containerListJar}>
-                    <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Thống kê tài sản</Text>
-                    <View style={styles.containerListJars}>
-                        <LineChart
-                            data={dataLineChart}
-                            width={width - 40}
-                            height={200}
-                            chartConfig={chartConfigBarChart}
-                            withInnerLines={false}
-                            withOuterLines={false}
-                            withDots={false}
-                            withShadow={false}
-                            fromZero={true}
-                            bezier
-
-                        />
-                    </View>
-                </View>
-                <View style={styles.containerListJar}>
-                    <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Thống kê tài sản nợ</Text>
-                    <View style={styles.containerListJars}>
-                        <LineChart
-                            data={dataLineChart}
-                            width={width - 40}
-                            height={200}
-                            chartConfig={chartConfigBarChart}
-                            withInnerLines={false}
-                            withOuterLines={false}
-                            withDots={false}
-                            withShadow={false}
-                            fromZero={true}
-                            bezier
-
-                        />
                     </View>
                 </View>
             </ScrollView>

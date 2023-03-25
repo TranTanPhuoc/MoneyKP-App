@@ -30,14 +30,13 @@ function PhotoCameraPic({ navigation, route }) {
                 'Authorization': '7734748aa782d2162471ad4fccc411f5',
                 'Content-Type': 'multipart/form-data',
             },
+        }).then((response) => {
+            const money = response.data.document.inference.pages[0].prediction.total_amount.value * 1000;
+            const note = response.data.document.inference.pages[0].prediction.supplier.value;
+            const date = response.data.document.inference.started_at;
+            dispatch(send_Photo_Success(money, note, date));
+            navigation.navigate("Tabs");
         })
-            .then((response) => {
-                const money = response.data.document.inference.pages[0].prediction.total_amount.value;
-                const note = response.data.document.inference.pages[0].prediction.supplier.value;
-                const date = response.data.document.inference.started_at;
-                dispatch(send_Photo_Success(money, note, date));
-                navigation.navigate("Tabs");
-            })
             .catch((error) => {
                 alert("Error");
                 console.error(error);

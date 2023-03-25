@@ -17,7 +17,7 @@ import { Image } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { reload_IU } from '../../redux/action/ActionRedux';
 function Detail({ navigation, route }) {
-    const { id, name, itemName, money, idJar, moneyPurpose, status, availableBalances } = route.params;
+    const { id, name, itemName, money, idJar, moneyPurpose, status, availableBalances,isCash } = route.params;
     const [moneyR, setMoneyR] = useState(parseInt(money));
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
@@ -167,12 +167,28 @@ function Detail({ navigation, route }) {
                 <View style={styles.viewBody_Top}>
                     <View>
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
-                            <Image source={require('../../../assets/icons/money.png')} ></Image>
+                            {
+                                id == 4 && isCash &&
+                                <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
+                            }
+                            {
+                                id == 4 && !isCash &&
+                                <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/stock.png')} />
+                            }
+                            {
+                                id != 4 &&
+                                <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
+                            }
                             <Text style={{ color: '#000', fontSize: 18, fontWeight: '500', marginLeft: 15, marginRight: 15 }}>{name}</Text>
                             {
                                 id != 4 && (status == 1 || moneyPurpose == availableBalances) &&
                                 <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/checked.png')} />
                             }
+                            <TouchableOpacity onPress={()=>{
+                                navigation.navigate("ExchangeOther");
+                            }}>
+                                <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/add.png')} />
+                            </TouchableOpacity>
                         </View>
                         <Text style={{ color: '#000', fontSize: 25, fontWeight: 'bold', marginTop: 5 }}>{itemName}</Text>
 

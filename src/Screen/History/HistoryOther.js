@@ -52,7 +52,8 @@ function HistoryOther({ navigation, route }) {
                         id: item.id, name: item.name, population: item.precent, userId: item.userId,
                         precent: item.precent, totalIncome: item.totalIncome, totalSpending: item.totalSpending,
                         availableBalances: item.availableBalances, moneyPurpose: item.moneyPurpose,
-                        datedComplete: item.datedComplete, createdDate: item.createdDate, status: item.status
+                        datedComplete: item.datedComplete, createdDate: item.createdDate, status: item.status,
+                        isCash: item.isCash
                     };
                     return objtemp;
                 }));
@@ -95,23 +96,41 @@ function HistoryOther({ navigation, route }) {
                     dataHistory.map((item, index) => {
                         if (item != null && item.status == statusItem) {
                             return (
-                                <TouchableOpacity key={index} onPress={() => {
-                                    navigation.navigate("Detail", {
-                                        id: id, name: name, itemName: item.name, money: item.availableBalances, idJar: item.id,
-                                        moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status
-                                    });
-                                }} style={styles.buttomItem}>
+                                <TouchableOpacity key={index} onPress={
+                                    () => {
+                                        navigation.navigate("Detail", {
+                                            id: id, name: name, itemName: item.name, money: item.availableBalances, idJar: item.id,
+                                            moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status,
+                                            isCash : item.isCash
+                                        });
+                                    }} style={styles.buttomItem}>
                                     <View
                                         style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 50, marginLeft: 10, marginRight: 10 }}>
                                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 10 }}>
                                             <View style={{ height: 30, width: 30, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
+                                                {
+                                                    id == 4 && item.isCash &&
+                                                    <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
+                                                }
+                                                {
+                                                    id == 4 && !item.isCash &&
+                                                    <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/stock.png')} />
+                                                }
+                                                {
+                                                    id != 4 &&
+                                                    <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
+                                                }
                                             </View>
                                             <Text style={{ fontSize: 18, marginLeft: 15, fontWeight: 'bold', marginRight: 15, }}> {item.name}</Text>
+                                            {
+                                                id != 4 &&
+                                                <Text style={{ fontSize: 18, fontWeight: 'bold', marginRight: 15, }}>({item.availableBalances / item.moneyPurpose * 100} %) </Text>
+                                            }
                                             {
                                                 id != 4 && (item.status == 1 || item.moneyPurpose == item.availableBalances) &&
                                                 <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/checked.png')} />
                                             }
+                                            
                                         </View>
                                         <Text style={{ fontSize: 18, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
                                     </View>

@@ -116,105 +116,124 @@ function JarOther({ navigation, route }) {
         });
     };
     const hanldhanldAddJarOther = () => {
-        if (id == 4) {
-            if (id == 4 && typeTS == "Cổ phiếu") {
-                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
-                    {
-                        userId: idUser,
-                        name: codeStock,
-                        precent: 0,
-                        availableBalances: parseInt(priceStock * slStock),
-                        totalSpending: 0,
-                        totalIncome: 0,
-                        type: id,
-                        status: 0,
-                        moneyPurpose: 9999999999999999999,
-                        datedComplete: dateGD,
-                        createdDate: selectedDate
-                    },
-                    {
-                        headers: {
-                            authorization: accessToken
-                        }
-                    }).then((res) => {
-                        dispatch(reload_IU(idReload + 1));
-                        Alert.alert("Thông báo", "Thêm thành công");
-                        navigation.goBack();
+        var mess = "";
 
-                    }).catch((err) => {
-                        console.log(err);
-                    })
+        if (id == 4) {
+            if (money == 0) {
+                mess += "Số tiền không được bằng 0";
+                Alert.alert("Thông báo", mess);
             }
             else {
-                axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-cash-basket/${idUser}/4`, {
-                    headers: { authorization: accessToken },
-                })
-                    .then((res) => {
-                        console.log(res.data)
-                        axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${res.data.id}`,
-                            {
-                                id: res.data.id,
-                                userId: res.data.userId,
-                                name: res.data.name,
-                                precent: res.data.precent,
-                                availableBalances: parseInt(res.data.availableBalances) + parseInt(money),
-                                totalSpending: res.data.totalSpending,
-                                totalIncome: res.data.totalIncome,
-                                createdDate: res.data.createdDate,
-                                datedComplete: res.data.datedComplete,
-                                moneyPurpose: 99999999999999999999,
-                                status: res.data.status,
-                                type: 4,
-                                isCash: 1,
+                if (id == 4 && typeTS == "Cổ phiếu") {
+                    axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
+                        {
+                            userId: idUser,
+                            name: codeStock,
+                            precent: 0,
+                            availableBalances: parseInt(priceStock * slStock),
+                            totalSpending: 0,
+                            totalIncome: 0,
+                            type: id,
+                            status: 0,
+                            moneyPurpose: 9999999999999999999,
+                            datedComplete: dateGD,
+                            createdDate: selectedDate
+                        },
+                        {
+                            headers: {
+                                authorization: accessToken
+                            }
+                        }).then((res) => {
+                            dispatch(reload_IU(idReload + 1));
+                            Alert.alert("Thông báo", "Thêm thành công");
+                            navigation.goBack();
 
-                            },
-                            {
-                                headers: {
-                                    authorization: accessToken
-                                }
-                            }).then((res) => {
-                                dispatch(reload_IU(idReload + 1));
-                                navigation.goBack();
-                            }).catch((err) => {
-                                console.log(err);
-                            })
-                    }).catch((err) => {
-                        console.log(err);
+                        }).catch((err) => {
+                            console.log(err);
+                        })
+                }
+                else {
+                    axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-cash-basket/${idUser}/4`, {
+                        headers: { authorization: accessToken },
                     })
+                        .then((res) => {
+                            axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${res.data.id}`,
+                                {
+                                    id: res.data.id,
+                                    userId: res.data.userId,
+                                    name: res.data.name,
+                                    precent: res.data.precent,
+                                    availableBalances: parseInt(res.data.availableBalances) + parseInt(money),
+                                    totalSpending: res.data.totalSpending,
+                                    totalIncome: res.data.totalIncome,
+                                    createdDate: res.data.createdDate,
+                                    datedComplete: res.data.datedComplete,
+                                    moneyPurpose: 99999999999999999999,
+                                    status: res.data.status,
+                                    type: 4,
+                                    isCash: 1,
+
+                                },
+                                {
+                                    headers: {
+                                        authorization: accessToken
+                                    }
+                                }).then((res) => {
+                                    dispatch(reload_IU(idReload + 1));
+                                    navigation.goBack();
+                                }).catch((err) => {
+                                    console.log(err);
+                                })
+                        }).catch((err) => {
+                            console.log(err);
+                        })
+                }
             }
         }
         else {
-            const date = new Date(dateGD);
-            if (selectedDate.getTime() <= date.getTime()) {
-                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
-                    {
-                        userId: idUser,
-                        name: JarOther,
-                        precent: 0,
-                        availableBalances: 0,
-                        totalSpending: 0,
-                        totalIncome: 0,
-                        type: id,
-                        status: 0,
-                        moneyPurpose: money,
-                        datedComplete: dateGD,
-                        createdDate: selectedDate
-                    },
-                    {
-                        headers: {
-                            authorization: accessToken
-                        }
-                    }).then((res) => {
-                        dispatch(reload_IU(idReload + 1));
-                        Alert.alert("Thông báo", "Thêm thành công");
-                        navigation.goBack();
-
-                    }).catch((err) => {
-                        console.log(err);
-                    })
+            var mess = "";
+            if (money == 0) {
+                mess += "Số tiền không được bằng 0";
+            }
+            if (JarOther == "") {
+                mess += "\nTên mục không được rỗng ";
+            }
+            if (money == 0 || JarOther == "") {
+                Alert.alert("Thông báo", mess);
             }
             else {
-                Alert.alert("Thông báo", "Ngày hoàn thành phải sau ngày hiện tại hoặc bằng ngày hiện tại");
+                const date = new Date(dateGD);
+                if (selectedDate.getTime() <= date.getTime()) {
+                    axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
+                        {
+                            userId: idUser,
+                            name: JarOther,
+                            precent: 0,
+                            availableBalances: 0,
+                            totalSpending: 0,
+                            totalIncome: 0,
+                            type: id,
+                            status: 0,
+                            moneyPurpose: money,
+                            datedComplete: dateGD,
+                            createdDate: selectedDate
+                        },
+                        {
+                            headers: {
+                                authorization: accessToken
+                            }
+                        }).then((res) => {
+                            dispatch(reload_IU(idReload + 1));
+                            Alert.alert("Thông báo", "Thêm thành công");
+                            navigation.goBack();
+
+                        }).catch((err) => {
+                            console.log(err);
+                        })
+                }
+                else {
+                    Alert.alert("Thông báo", "Ngày hoàn thành phải sau ngày hiện tại hoặc bằng ngày hiện tại");
+                }
             }
         }
     }

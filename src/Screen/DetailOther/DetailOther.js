@@ -1,4 +1,4 @@
-import { ScrollView, View } from 'react-native';
+import { Image, ScrollView, View } from 'react-native';
 import { Text, SafeAreaView } from 'react-native';
 import styles from "./styles/DetailOtherStyles";
 import { AntDesign } from '@expo/vector-icons';
@@ -43,8 +43,12 @@ function DetailOther({ navigation, route }) {
         })
             .then((res) => {
                 var moneyI = 0;
+                console.log(res.data)
                 setData(res.data.map((item) => {
-                    var objtemp = { id: item.id, name: item.name, population: item.precent, userId: item.userId, precent: item.precent, totalIncome: item.totalIncome, totalSpending: item.totalSpending, availableBalances: item.availableBalances ,moneyPurpose:item.moneyPurpose};
+                    var objtemp = {
+                        id: item.id, name: item.name, population: item.precent, userId: item.userId, precent: item.precent, totalIncome: item.totalIncome,
+                        totalSpending: item.totalSpending, availableBalances: item.availableBalances, moneyPurpose: item.moneyPurpose, isCash: item.isCash
+                    };
                     moneyI += item.availableBalances;
                     return objtemp;
                 }));
@@ -139,26 +143,43 @@ function DetailOther({ navigation, route }) {
                                     data.map((item, index) => {
                                         if (item != null) {
                                             return (
-                                                <TouchableOpacity 
-                                                onPress={()=>{
-                                                    navigation.navigate("Detail", {
-                                                        id: id, name: item.name, itemName: name, money: item.availableBalances, idJar: item.id,
-                                                        moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status
-                                                    });
-                                                }}
-                                                key={index} style={{
-                                                    display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 50,
-                                                    borderWidth: 0.5, marginBottom: 10, paddingHorizontal: 10, borderRadius: 20, borderColor: 'black', backgroundColor: '#fff',
-                                                    shadowOffset: {
-                                                        width: 0,
-                                                        height: 1,
-                                                    },
-                                                    shadowColor: '#999999',
-                                                    shadowOpacity: 0.5,
-                                                    shadowRadius: 2
-                                                }}>
-                                                    <Text style={{ fontSize: 18 }}>{index + 1}. {item.name}</Text>
-                                                    <Text style={{ fontSize: 18, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
+                                                <TouchableOpacity key={index} onPress={
+                                                    () => {
+                                                        navigation.navigate("Detail", {
+                                                            id: id, name: name, itemName: item.name, money: item.availableBalances, idJar: item.id,
+                                                            moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status, isCash: item.isCash
+                                                        });
+                                                    }} style={styles.buttomItem}>
+                                                    <View
+                                                        style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 50, marginLeft: 10, marginRight: 10 }}>
+                                                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 10 }}>
+                                                            <View style={{ height: 30, width: 30, justifyContent: 'center', alignItems: 'center' }}>
+                                                                {
+                                                                    id == 4 && item.isCash &&
+                                                                    <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
+                                                                }
+                                                                {
+                                                                    id == 4 && !item.isCash &&
+                                                                    <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/stock.png')} />
+                                                                }
+                                                                {
+                                                                    id != 4 &&
+                                                                    <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
+                                                                }
+                                                            </View>
+                                                            <Text style={{ fontSize: 18, marginLeft: 15, fontWeight: 'bold', marginRight: 15, }}> {item.name}</Text>
+                                                            {
+                                                                id != 4 &&
+                                                                <Text style={{ fontSize: 18, fontWeight: 'bold', marginRight: 15, }}>({item.availableBalances / item.moneyPurpose * 100} %)</Text>
+                                                            }
+                                                            {
+                                                                id != 4 && (item.status == 1 || item.moneyPurpose == item.availableBalances) &&
+                                                                <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/checked.png')} />
+                                                            }
+
+                                                        </View>
+                                                        <Text style={{ fontSize: 18, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
+                                                    </View>
                                                 </TouchableOpacity>
                                             );
                                         }
