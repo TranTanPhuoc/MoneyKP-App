@@ -15,8 +15,8 @@ import { PieChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
 function DetailOther({ navigation, route }) {
     // Định dạng tiền tệ VNĐ
-    const { id, name, money } = route.params;
-    const [moneyR, setmoneyR] = useState(parseInt(money));
+    const { id, name, } = route.params;
+    const [moneyR, setmoneyR] = useState(1);
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
             style: "currency",
@@ -44,7 +44,7 @@ function DetailOther({ navigation, route }) {
             .then((res) => {
                 var moneyI = 0;
                 setData(res.data.map((item) => {
-                    var objtemp = { id: item.id, name: item.name, population: item.precent, userId: item.userId, precent: item.precent, totalIncome: item.totalIncome, totalSpending: item.totalSpending, availableBalances: item.availableBalances };
+                    var objtemp = { id: item.id, name: item.name, population: item.precent, userId: item.userId, precent: item.precent, totalIncome: item.totalIncome, totalSpending: item.totalSpending, availableBalances: item.availableBalances ,moneyPurpose:item.moneyPurpose};
                     moneyI += item.availableBalances;
                     return objtemp;
                 }));
@@ -139,7 +139,14 @@ function DetailOther({ navigation, route }) {
                                     data.map((item, index) => {
                                         if (item != null) {
                                             return (
-                                                <View key={index} style={{
+                                                <TouchableOpacity 
+                                                onPress={()=>{
+                                                    navigation.navigate("Detail", {
+                                                        id: id, name: item.name, itemName: name, money: item.availableBalances, idJar: item.id,
+                                                        moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status
+                                                    });
+                                                }}
+                                                key={index} style={{
                                                     display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 50,
                                                     borderWidth: 0.5, marginBottom: 10, paddingHorizontal: 10, borderRadius: 20, borderColor: 'black', backgroundColor: '#fff',
                                                     shadowOffset: {
@@ -152,7 +159,7 @@ function DetailOther({ navigation, route }) {
                                                 }}>
                                                     <Text style={{ fontSize: 18 }}>{index + 1}. {item.name}</Text>
                                                     <Text style={{ fontSize: 18, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
-                                                </View>
+                                                </TouchableOpacity>
                                             );
                                         }
                                     })

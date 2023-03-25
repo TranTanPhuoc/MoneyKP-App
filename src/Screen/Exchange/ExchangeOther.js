@@ -180,9 +180,8 @@ function ExchangeOther({ navigation }) {
     const [moneyR, setMoneyR] = useState(parseFloat(money));
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
-            style: "currency",
-            currency: "VND",
-            maximumFractionDigits: 3,
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
         });
     };
     useEffect(() => {
@@ -274,7 +273,10 @@ function ExchangeOther({ navigation }) {
                                                 createdDate: createdDate,
                                                 datedComplete: datedComplete,
                                                 moneyPurpose: moneyPurpose,
-                                                status: status
+                                                status: status,
+                                                type: typeBasket,
+                                                isCash: isCash,
+                                                code: code,
                                             },
                                             {
                                                 headers: {
@@ -301,7 +303,10 @@ function ExchangeOther({ navigation }) {
                                                 createdDate: createdDate,
                                                 datedComplete: datedComplete,
                                                 moneyPurpose: moneyPurpose,
-                                                status: 1
+                                                status: status,
+                                                type: typeBasket,
+                                                isCash: isCash,
+                                                code: code,
                                             },
                                             {
                                                 headers: {
@@ -358,7 +363,10 @@ function ExchangeOther({ navigation }) {
                                         createdDate: createdDate,
                                         datedComplete: datedComplete,
                                         moneyPurpose: moneyPurpose,
-                                        status: status
+                                        status: status,
+                                        type: typeBasket,
+                                        isCash: isCash,
+                                        code: code,
                                     },
                                     {
                                         headers: {
@@ -424,6 +432,9 @@ function ExchangeOther({ navigation }) {
     const [nameJar, setNameJar] = useState("");
     const [precentJar, SetprecentJar] = useState();
     const [availableBalancesI, setavailableBalancesI] = useState(0);
+    const [code, setcode] = useState("");
+    const [isCash, setIsCash] = useState("");
+    const [quantity, setquantity] = useState("");
     useEffect(() => {
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type/${idUser}/${typeBasket}/0`, {
             headers: { authorization: accessToken },
@@ -444,6 +455,10 @@ function ExchangeOther({ navigation }) {
                             setstatus(item.status);
                             setdatedComplete(item.datedComplete);
                             setcreatedDate(item.createdDate);
+                            setcode(item.code);
+                            setIsCash(item.isCash);
+                            setquantity(item.quantity);
+
                         }
                         return obj;
                     }));
@@ -452,7 +467,7 @@ function ExchangeOther({ navigation }) {
                             id: item.id, name: item.name, population: item.precent, userId: item.userId,
                             precent: item.precent, totalIncome: item.totalIncome, totalSpending: item.totalSpending,
                             availableBalances: item.availableBalances, moneyPurpose: item.moneyPurpose, datedComplete: item.datedComplete,
-                            createdDate: item.createdDate, status: item.status
+                            createdDate: item.createdDate, status: item.status, code: item.code, isCash: item.isCash, quantity: item.quantity
                         };
                         return objtemp;
                     }));
@@ -479,6 +494,9 @@ function ExchangeOther({ navigation }) {
                     setstatus();
                     setdatedComplete();
                     setcreatedDate();
+                    setcode();
+                    setIsCash();
+                    setquantity();
                 }
 
             }).catch((err) => {
@@ -561,7 +579,7 @@ function ExchangeOther({ navigation }) {
                 {typeBasket != 4 && dataJarTemp.length > 0 &&
                     <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontSize: 18, fontWeight: '500', textAlign: 'center' }}>
-                            Số tiền cần thêm vào để hoàn thành ước mơ là :{'\n'}{moneyFormat(moneyPurpose - availableBalancesI)}</Text>
+                            Số tiền cần thêm vào để hoàn thành ước mơ là :{'\n'}{moneyFormat(moneyPurpose - availableBalancesI)} vnđ</Text>
                     </View>
                 }
                 <View style={styles.containerInputMoney}>
@@ -624,6 +642,9 @@ function ExchangeOther({ navigation }) {
                                     setdatedComplete(item.datedComplete);
                                     setcreatedDate(item.createdDate);
                                     setavailableBalancesI(item.availableBalances);
+                                    setcode(item.code);
+                                    setIsCash(item.isCash);
+                                    setquantity(item.quantity);
                                 }
                             })
                         }}

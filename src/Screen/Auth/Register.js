@@ -169,7 +169,7 @@ function Register() {
                                         totalIncome: 0,
                                         type: 4,
                                         status: 0,
-                                        moneyPurpose: 0,
+                                        moneyPurpose: 99999999999999999999,
                                         createdDate: selectedDate,
                                         isCash: true
                                     },

@@ -148,9 +148,8 @@ function Exchange({ navigation }) {
     const [moneyR, setMoneyR] = useState(parseFloat(money));
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
-            style: "currency",
-            currency: "VND",
-            maximumFractionDigits: 3,
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
         });
     };
     useEffect(() => {
@@ -283,7 +282,7 @@ function Exchange({ navigation }) {
                         moneyTransaction: parseFloat(money),
                         type: type,
                         note: noteGD,
-                        typeBasket: typeBasket
+                        typeBasket: typeBasket,
                     },
                     {
                         headers: {
@@ -304,6 +303,8 @@ function Exchange({ navigation }) {
                                     totalSpending: totalSpending,
                                     totalIncome: income,
                                     type: 1,
+                                    monthNumber: month,
+                                    yearNumber: year,
                                 },
                                 {
                                     headers: {
@@ -330,6 +331,8 @@ function Exchange({ navigation }) {
                                     availableBalances: availableBalancesI - spending,
                                     totalSpending: spending,
                                     totalIncome: totalIncome,
+                                    monthNumber: month,
+                                    yearNumber: year,
                                     type: 1,
                                 },
                                 {

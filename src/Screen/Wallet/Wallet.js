@@ -24,9 +24,14 @@ function Wallet({ navigation }) {
     const app = initializeApp(firebaseConfig);
     const auth = initializeAuth(app, {
     });
+     // Ngày hiện tại
+     const [selectedDate, setSelectedDate] = useState(new Date());
+     // Tháng hiện tại
+     const [month, setMonth] = useState(selectedDate.getMonth() + 1);
+     // Năm hiện tại
+     const [year, setYear] = useState(selectedDate.getFullYear());
     const idUser = auth.currentUser.uid;
     const idReload = useSelector(state => state.reload.idReload);
-    const [idIU, setIdIU] = useState(idReload);
     const accessToken = `Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const [dataIncomeAndSpending, setdataIncomeAndSpending] = useState([]);
     const [totalIncome, settotalIncome] = useState(10);
@@ -116,9 +121,13 @@ function Wallet({ navigation }) {
             }).catch((err) => {
                 console.log(err);
             });
-        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-asset-by-userId/${idUser}`, {
-            headers: { authorization: accessToken },
-        })
+        axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-asset-by-userId/${idUser}`, {
+                monthNumber: parseInt(month),
+                yearNumber: parseInt(year)
+            },
+            {
+                headers: { authorization: accessToken },
+            })
             .then((res) => {
                 const listdata = res.data.map((item) => {
                     return item;

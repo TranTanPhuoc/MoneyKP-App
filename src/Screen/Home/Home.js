@@ -30,7 +30,6 @@ function Home({ navigation }) {
     const [avtPic, setavtPic] = useState("https://res.cloudinary.com/drljnqaai/image/upload/v1676181723/KhoaLuan/images_dcewqt.png");
     const [name, setName] = useState("");
     const [dataListJar, setdataListJar] = useState([]);
-    const [showPicker, setShowPicker] = useState(false);
     const dispatch = useDispatch();
     // Ngày hiện tại
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -368,7 +367,9 @@ function Home({ navigation }) {
                     {
                         dataIncomeAndSpending.map((item) => {
                             return (
-                                <View key={item.id} style={styles.containerItem}>
+                                <TouchableOpacity onPress={()=>{
+                                    navigation.navigate("Exchange");
+                                }} key={item.id} style={styles.containerItem}>
                                     <View style={styles.containerItemTop}>
                                         <View style={{ display: 'flex', flexDirection: 'row' }}>
                                             <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
@@ -378,7 +379,7 @@ function Home({ navigation }) {
                                     <View>
                                         <Text style={{ color: '#000', fontSize: 18, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
                             );
                         })
                     }

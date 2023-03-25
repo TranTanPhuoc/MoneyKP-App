@@ -52,17 +52,29 @@ function JarOther({ navigation, route }) {
     const [priceStock, setPriceStock] = useState(0);
     const [slStock, setslStock] = useState(0);
     useEffect(() => {
-        axios.get(`https://finance.vietstock.vn/search-stock?query=${stock}&page=1&pageSize=1`, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
-                'Cookie': 'ASP.NET_SessionId=j0zzpsplrfboyomyruq3rwae; language=vi-VN'
-            },
-        })
-            .then((res) => {
-                setDataStock(res.data.data[0]);
-            }).catch((err) => {
-                console.log(err);
+        Platform.OS === "android" ?
+            axios.get(`https://finance.vietstock.vn/search-stock?query=${stock}&page=1&pageSize=1`, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
+                    'Cookie': 'ASP.NET_SessionId=j0zzpsplrfboyomyruq3rwae; language=vi-VN'
+                },
             })
+                .then((res) => {
+                    setDataStock(res.data.data[0]);
+                }).catch((err) => {
+                    console.log(err);
+                })
+            :
+            axios.get(`https://finance.vietstock.vn/search-stock?query=${stock}&page=1&pageSize=1`, {
+                headers: {
+
+                },
+            })
+                .then((res) => {
+                    setDataStock(res.data.data[0]);
+                }).catch((err) => {
+                    console.log(err);
+                })
     }, [stock]);
 
     useEffect(() => {
@@ -105,7 +117,7 @@ function JarOther({ navigation, route }) {
     };
     const hanldhanldAddJarOther = () => {
         if (id == 4) {
-            if(id == 4 && typeTS == "Cổ phiếu"){
+            if (id == 4 && typeTS == "Cổ phiếu") {
                 axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
                     {
                         userId: idUser,
@@ -129,6 +141,43 @@ function JarOther({ navigation, route }) {
                         Alert.alert("Thông báo", "Thêm thành công");
                         navigation.goBack();
 
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+            }
+            else {
+                axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-cash-basket/${idUser}/4`, {
+                    headers: { authorization: accessToken },
+                })
+                    .then((res) => {
+                        console.log(res.data)
+                        axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${res.data.id}`,
+                            {
+                                id: res.data.id,
+                                userId: res.data.userId,
+                                name: res.data.name,
+                                precent: res.data.precent,
+                                availableBalances: parseInt(res.data.availableBalances) + parseInt(money),
+                                totalSpending: res.data.totalSpending,
+                                totalIncome: res.data.totalIncome,
+                                createdDate: res.data.createdDate,
+                                datedComplete: res.data.datedComplete,
+                                moneyPurpose: 99999999999999999999,
+                                status: res.data.status,
+                                type: 4,
+                                isCash: 1,
+
+                            },
+                            {
+                                headers: {
+                                    authorization: accessToken
+                                }
+                            }).then((res) => {
+                                dispatch(reload_IU(idReload + 1));
+                                navigation.goBack();
+                            }).catch((err) => {
+                                console.log(err);
+                            })
                     }).catch((err) => {
                         console.log(err);
                     })
@@ -180,6 +229,30 @@ function JarOther({ navigation, route }) {
         setDate(date);
         setModalVisible(!modalVisible);
     }
+    const [moneyR, setMoneyR] = useState("");
+    const moneyFormat = (amount) => {
+        return amount.toLocaleString("vi-VN", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        });
+    };
+    useEffect(() => {
+        if (money > 0) {
+            setMoneyR(moneyFormat(parseInt(money)));
+        } else {
+            setMoneyR("");
+        }
+    }, [money]);
+
+    useEffect(() => {
+        if (money > 0) {
+            setMoneyR(moneyR.toString().replace("₫", "").replace(" ", ""));
+        }
+        else {
+            setMoneyR("");
+        }
+    }, [moneyR]);
+    console.log(money);
     return (
         <SafeAreaView style={styles.container} >
             <Modal
@@ -230,18 +303,28 @@ function JarOther({ navigation, route }) {
                 <>
                     <View style={styles.viewBody}>
                         <View style={{ flex: 0.15, justifyContent: 'center', alignItems: 'center' }}>
-                            <Image source={require('../../../assets/icons/jar.png')} />
-                        </View>
-                        <View style={{ flex: 0.85, justifyContent: 'center', marginLeft: 10, marginRight: 10 }}>
-                            <TextInput value={JarOther} onChangeText={x => setJarOther(x)} style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, fontSize: 16, }} placeholder='Nhập tên mục cần thêm' />
-                        </View>
-                    </View>
-                    <View style={styles.viewBody}>
-                        <View style={{ flex: 0.15, justifyContent: 'center', alignItems: 'center' }}>
                             <Image source={require('../../../assets/icons/wallet.png')} />
                         </View>
                         <View style={{ flex: 0.85, justifyContent: 'center', marginLeft: 10, marginRight: 10 }}>
-                            <TextInput keyboardType='number-pad' value={money} onChangeText={x => setMoney(x)} style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, fontSize: 16, }} placeholder='Nhập tiền' />
+                            <TextInput keyboardType='number-pad' onChangeText={x => {
+                                if (money > 100) {
+                                    const arr = x.split(".");
+                                    var moneyG = "";
+                                    if (arr.length > 0) {
+                                        arr.map((x) => {
+                                            moneyG += x;
+                                        });
+                                        setMoney(moneyG);
+                                    }
+                                    else {
+                                        setMoney(x)
+                                    }
+                                }
+                                else {
+                                    setMoney(x)
+                                }
+
+                            }} placeholderTextColor={'#000'} style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, fontSize: 16, }} placeholder='Nhập tiền'>{moneyR}</TextInput>
                         </View>
                     </View>
                 </>
@@ -277,7 +360,7 @@ function JarOther({ navigation, route }) {
                         </Text>
                         <View style={styles.bodyContainerSearch}>
                             <Text style={{ fontSize: 18, color: 'grey' }}>
-                                {slStockFormat(priceStock * slStock)}
+                                {slStockFormat(priceStock)}
                             </Text>
                         </View>
                     </View>
@@ -289,6 +372,16 @@ function JarOther({ navigation, route }) {
                             <TextInput keyboardType='number-pad' onChangeText={x => {
                                 setslStock(x)
                             }} placeholder="0" placeholderTextColor={'#000'} style={{ fontSize: 18, flex: 1, }}>{slStock}</TextInput>
+                        </View>
+                    </View>
+                    <View style={styles.bodyContainerField}>
+                        <Text style={{ fontSize: 18, marginBottom: 10, }}>
+                            Số tiền để mua cổ phiếu
+                        </Text>
+                        <View style={styles.bodyContainerSearch}>
+                            <Text style={{ fontSize: 18, color: 'grey' }}>
+                                {slStockFormat(priceStock * slStock)}
+                            </Text>
                         </View>
                     </View>
                 </>
@@ -309,7 +402,25 @@ function JarOther({ navigation, route }) {
                             <Image source={require('../../../assets/icons/wallet.png')} />
                         </View>
                         <View style={{ flex: 0.85, justifyContent: 'center', marginLeft: 10, marginRight: 10 }}>
-                            <TextInput keyboardType='number-pad' value={money} onChangeText={x => setMoney(x)} style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, fontSize: 16, }} placeholder='Nhập tiền' />
+                            <TextInput keyboardType='number-pad' onChangeText={x => {
+                                if (money > 100) {
+                                    const arr = x.split(".");
+                                    var moneyG = "";
+                                    if (arr.length > 0) {
+                                        arr.map((x) => {
+                                            moneyG += x;
+                                        });
+                                        setMoney(moneyG);
+                                    }
+                                    else {
+                                        setMoney(x)
+                                    }
+                                }
+                                else {
+                                    setMoney(x)
+                                }
+
+                            }} placeholderTextColor={'#000'} style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, fontSize: 16, }} placeholder='Nhập tiền'>{moneyR}</TextInput>
                         </View>
                     </View>
                     <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.viewBody}>
