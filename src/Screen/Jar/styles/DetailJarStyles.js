@@ -58,6 +58,13 @@ const styles = StyleSheet.create({
   containerItem: {
     flex: 0.5,
     backgroundColor: '#E6E6FA',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowColor: '#999999',
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
     height: 80,
     margin: 5,
     borderRadius: 10,

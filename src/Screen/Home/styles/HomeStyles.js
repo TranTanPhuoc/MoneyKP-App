@@ -41,6 +41,13 @@ const styles = StyleSheet.create({
     containerItem: {
         flex: 0.5,
         backgroundColor: '#E6E6FA',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowColor: '#999999',
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
         height: 80,
         margin: 5,
         borderRadius: 10,
@@ -60,7 +67,14 @@ const styles = StyleSheet.create({
     containerListJarItem: {
         marginTop: 20,
         width: "100%",
-        backgroundColor: "#E6E6FA",
+        backgroundColor: '#E6E6FA',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowColor: '#999999',
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
         borderRadius: 40,
     },
     containerListJarItem_Item: {
@@ -117,7 +131,15 @@ const styles = StyleSheet.create({
         margin: 5,
         borderRadius: 10,
         justifyContent: 'center',
-        marginLeft: 10,
+        marginLeft: 10, backgroundColor: '#E6E6FA',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowColor: '#999999',
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+        borderRadius: 20,
         marginRight: 10,
     },
     buttom: {

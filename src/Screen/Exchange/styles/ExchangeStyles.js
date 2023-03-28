@@ -16,7 +16,14 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
     backgroundColor: '#E6E6FA',
-    borderRadius: 20,
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowColor: '#999999',
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    borderRadius:20,
     flex: 1,
     display: 'flex',
     flexDirection: 'row'
@@ -29,6 +36,16 @@ const styles = StyleSheet.create({
     flex: 1,
     display: 'flex',
     flexDirection: 'row',
+    alignItems:'center',
+    backgroundColor: '#E6E6FA',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowColor: '#999999',
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    borderRadius:20,
   },
   containerMoneyWords: {
     height: 60,

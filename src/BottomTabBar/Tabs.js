@@ -19,17 +19,36 @@ const Tabs = ({ navigation }) => {
                 elevation: 0,
                 height: 60,
                 ...styles.shadow
-            }
+            },
+            headerTitleAlign: 'center'
         }}>
             <Tab.Screen name='Home' component={Home} options={{
                 headerShown: false, tabBarIcon: ({ focused }) => (
                     <Image source={require('../../assets/icons/home.png')} resizeMode="contain" style={{ width: 22, height: 22, tintColor: focused ? '#000' : '#748c94' }} />
-                )
+                ),headerLeft: () => (
+                    <View style={{ marginLeft: 10, }}>
+                        <TouchableOpacity onPress={() => {
+                            navigation.goBack();
+                        }}>
+                            <AntDesign name="arrowleft" size={24} color="black" />
+                        </TouchableOpacity>
+                    </View>
+                ),
+                title:"Trang chủ"
             }} />
             <Tab.Screen name='Wallet' component={Wallet} options={{
                 tabBarIcon: ({ focused }) => (
                     <Image source={require('../../assets/icons/wallet.png')} resizeMode="contain" style={{ width: 22, height: 22, tintColor: focused ? '#000' : '#748c94' }} />
-                )
+                ),headerLeft: () => (
+                    <View style={{ marginLeft: 10, }}>
+                        <TouchableOpacity onPress={() => {
+                            navigation.goBack();
+                        }}>
+                            <AntDesign name="arrowleft" size={24} color="black" />
+                        </TouchableOpacity>
+                    </View>
+                ),
+                title:'Ví',
             }} />
             <Tab.Screen name='Exchange' component={Exchange} options={{
                 tabBarIcon: ({ focused }) => (
@@ -37,25 +56,42 @@ const Tabs = ({ navigation }) => {
                         <Image source={require('../../assets/icons/plus.png')} resizeMode="contain" style={{ width: 25, height: 25, tintColor: '#fff' }} />
                     </LinearGradient>
                 ),
-                // headerLeft: ()=>(
-                //         <View style={{marginLeft:10,}}>
-                //             <TouchableOpacity onPress={()=>{
-                //                 navigation.goBack();
-                //             }}>
-                //                 <AntDesign name="arrowleft" size={24} color="black" />
-                //             </TouchableOpacity>
-                //         </View>
-                // ),
+                headerLeft: () => (
+                    <View style={{ marginLeft: 10, }}>
+                        <TouchableOpacity onPress={() => {
+                            navigation.goBack();
+                        }}>
+                            <AntDesign name="arrowleft" size={24} color="black" />
+                        </TouchableOpacity>
+                    </View>
+                ),
                 title: "Thêm giao dịch",
+
             }} />
             <Tab.Screen name='ExchangeOther' component={ExchangeOther} options={{
                 tabBarIcon: ({ focused }) => (
                     <Image source={require('../../assets/icons/transaction.png')} resizeMode="contain" style={{ width: 22, height: 22, tintColor: focused ? '#000' : '#748c94' }} />
+                ), headerLeft: () => (
+                    <View style={{ marginLeft: 10, }}>
+                        <TouchableOpacity onPress={() => {
+                            navigation.goBack();
+                        }}>
+                            <AntDesign name="arrowleft" size={24} color="black" />
+                        </TouchableOpacity>
+                    </View>
                 ), headerTitle: "Thông tin"
             }} />
             <Tab.Screen name='Settings' component={Account} options={{
                 tabBarIcon: ({ focused }) => (
                     <Image source={require('../../assets/icons/user.png')} resizeMode="contain" style={{ width: 22, height: 22, tintColor: focused ? '#000' : '#748c94' }} />
+                ), headerLeft: () => (
+                    <View style={{ marginLeft: 10, }}>
+                        <TouchableOpacity onPress={() => {
+                            navigation.goBack();
+                        }}>
+                            <AntDesign name="arrowleft" size={24} color="black" />
+                        </TouchableOpacity>
+                    </View>
                 ), headerTitle: "Cài đặt"
             }} />
         </Tab.Navigator>

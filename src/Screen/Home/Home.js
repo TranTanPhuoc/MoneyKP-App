@@ -220,7 +220,7 @@ function Home({ navigation }) {
             }).catch((err) => {
                 console.log(err);
             })
-    }, [idReload,month,year]);
+    }, [idReload, month, year]);
     useEffect(() => {
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user/${idUser}`, {
             headers: { authorization: accessToken },
@@ -339,7 +339,10 @@ function Home({ navigation }) {
                 }}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <CalendarPicker  onDateChange={onDateChange}>
+                        <CalendarPicker
+                            scrollable={true}
+                            onDateChange={onDateChange}
+                        >
                         </CalendarPicker>
                     </View>
                 </View>
@@ -367,7 +370,7 @@ function Home({ navigation }) {
                     {
                         dataIncomeAndSpending.map((item) => {
                             return (
-                                <TouchableOpacity onPress={()=>{
+                                <TouchableOpacity onPress={() => {
                                     navigation.navigate("Exchange");
                                 }} key={item.id} style={styles.containerItem}>
                                     <View style={styles.containerItemTop}>
@@ -482,9 +485,9 @@ function Home({ navigation }) {
                     </View>
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <TouchableOpacity onPress={() => {
-                            navigation.navigate("SetPercentJar",{
-                                month : month,
-                                year : year
+                            navigation.navigate("SetPercentJar", {
+                                month: month,
+                                year: year
                             });
                         }} style={styles.buttonStyle}>
                             <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Chỉnh sửa tỉ lệ, thêm lọ</Text>

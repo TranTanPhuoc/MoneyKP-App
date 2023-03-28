@@ -5,7 +5,6 @@ import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Modal } from 'react-native';
 // Import FireBase
 import { initializeAuth, } from 'firebase/auth';
@@ -14,6 +13,7 @@ import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import axios from 'axios';
 import { BarChart } from "react-native-chart-kit";
 import { Dimensions } from 'react-native';
+import CalendarPicker from 'react-native-calendar-picker';
 
 function Chart({ navigation, route }) {
     const { id, name } = route.params;
@@ -23,22 +23,16 @@ function Chart({ navigation, route }) {
     const [valuesDefaut, setvaluesDefaut] = useState("Theo tháng");
     const [selectDefaut, setselectDefaut] = useState("Thu nhập");
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [showPicker, setShowPicker] = useState(false);
     const [month, setMonth] = useState(selectedDate.getMonth() + 1);
     const [year, setYear] = useState(selectedDate.getFullYear());
     const [labels, setlabels] = useState([]);
     const [datasets, setdatasets] = useState([]);
-    const onDateChange = (event, selectedDate) => {
-        if (selectedDate) {
-            const newDate = new Date(selectedDate);
-            setSelectedDate(newDate);
-            Platform.OS === 'android' ? setShowPicker(false) : setShowPicker(true);
-        }
-    };
-    const hanldChon = () => {
-        setShowPicker(false);
-        setMonth(selectedDate.getMonth() + 1);
-        setYear(selectedDate.getFullYear());
+    const onDateChange = (date) => {
+        const newDate = new Date(date);
+        setSelectedDate(newDate);
+        setModalVisible(!modalVisible);
+        setMonth(newDate.getMonth() + 1);
+        setYear(newDate.getFullYear());
     }
     // Connect FireBase
     const app = initializeApp(firebaseConfig);
@@ -316,38 +310,23 @@ function Chart({ navigation, route }) {
         categoryPercentage: 0.8,
 
     };
-
+    const [modalVisible, setModalVisible] = useState(false);
     return (
         <SafeAreaView style={styles.container} >
             <Modal
                 animationType="slide"
                 transparent={true}
-                visible={showPicker}
+                visible={modalVisible}
                 onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
                     setModalVisible(!modalVisible);
                 }}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                            <View style={{ justifyContent: 'flex-start', flex: 1, marginLeft: 30, height: 30 }}>
-
-                            </View>
-                            <View style={{ justifyContent: 'flex-end', flex: 1, marginRight: 30, }}>
-                                {
-                                    Platform.OS === 'ios' &&
-                                    <TouchableOpacity onPress={hanldChon}>
-                                        <Text style={{ fontSize: 24, color: '#0099FF', textAlign: 'right', fontWeight: 'normal' }}>Chọn</Text>
-                                    </TouchableOpacity>
-                                }
-                            </View>
-                        </View>
-                        <DateTimePicker
-                            value={selectedDate}
-                            mode="date"
-                            display="spinner"
-                            onChange={onDateChange}
-                        />
+                        <CalendarPicker
+                            scrollable={true}
+                            onDateChange={onDateChange}
+                        >
+                        </CalendarPicker>
                     </View>
                 </View>
             </Modal>
@@ -414,7 +393,7 @@ function Chart({ navigation, route }) {
                 {
                     (valuesDefaut == "Theo tháng" || valuesDefaut == "Theo năm") &&
                     <View style={styles.containerItemSelect}>
-                        <TouchableOpacity style={styles.buttom} onPress={() => setShowPicker(true)} >
+                        <TouchableOpacity style={styles.buttom} onPress={() => setModalVisible(true)} >
                             <Text>
                                 Chọn tháng
                             </Text>
