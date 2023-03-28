@@ -114,7 +114,7 @@ function User({ navigation }) {
                 </View>
                 <View style={{ marginTop: 20, }} />
                 <TouchableOpacity style={styles.button}>
-                    <Text style={{ fontSize: 18, color: 'red', fontWeight: '600' }}>Lưu thay đổi</Text>
+                    <Text style={{ fontSize: 16, color: 'red', fontWeight: '600' }}>Lưu thay đổi</Text>
                 </TouchableOpacity>
             </ScrollView>
 

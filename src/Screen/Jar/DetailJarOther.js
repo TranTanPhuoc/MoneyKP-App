@@ -28,17 +28,17 @@ function DetailJarOther({ navigation, route }) {
                 <TouchableOpacity onPress={() => {
                     navigation.navigate("JarOther", { id: id, name: name });
                 }} style={styles.button}>
-                    <Text style={{ fontSize: 18, marginLeft: 20, }}>1. Thêm {name} mới</Text>
+                    <Text style={{ fontSize: 16, marginLeft: 20, }}>1. Thêm {name} mới</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     navigation.navigate("ExchangeOther", { id: id, name: name });
                 }} style={styles.button}>
-                    <Text style={{ fontSize: 18, marginLeft: 20, }}>2. Thêm giao dịch mới</Text>
+                    <Text style={{ fontSize: 16, marginLeft: 20, }}>2. Thêm giao dịch mới</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     navigation.navigate("DetailOther", { id: id, name: name, money: money });
                 }} style={styles.button}>
-                    <Text style={{ fontSize: 18, marginLeft: 20, }}>3. Xem biểu đồ</Text>
+                    <Text style={{ fontSize: 16, marginLeft: 20, }}>3. Xem biểu đồ</Text>
                 </TouchableOpacity>
             </View>
 

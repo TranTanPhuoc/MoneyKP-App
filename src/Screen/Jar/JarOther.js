@@ -119,12 +119,12 @@ function JarOther({ navigation, route }) {
         var mess = "";
 
         if (id == 4) {
-            if (money == 0) {
-                mess += "Số tiền không được bằng 0";
-                Alert.alert("Thông báo", mess);
-            }
-            else {
-                if (id == 4 && typeTS == "Cổ phiếu") {
+            if (id == 4 && typeTS == "Cổ phiếu") {
+                if (parseInt(priceStock * slStock) == 0) {
+                    mess += "Số tiền không được bằng 0";
+                    Alert.alert("Thông báo", mess);
+                }
+                else {
                     axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
                         {
                             userId: idUser,
@@ -135,7 +135,7 @@ function JarOther({ navigation, route }) {
                             totalIncome: 0,
                             type: id,
                             status: 0,
-                            moneyPurpose: 9999999999999999999,
+                            moneyPurpose: 1000000000,
                             datedComplete: dateGD,
                             createdDate: selectedDate
                         },
@@ -151,6 +151,12 @@ function JarOther({ navigation, route }) {
                         }).catch((err) => {
                             console.log(err);
                         })
+                }
+            }
+            else {
+                if (money == 0) {
+                    mess += "Số tiền không được bằng 0";
+                    Alert.alert("Thông báo", mess);
                 }
                 else {
                     axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-cash-basket/${idUser}/4`, {
@@ -168,7 +174,7 @@ function JarOther({ navigation, route }) {
                                     totalIncome: res.data.totalIncome,
                                     createdDate: res.data.createdDate,
                                     datedComplete: res.data.datedComplete,
-                                    moneyPurpose: 99999999999999999999,
+                                    moneyPurpose: 1000000000,
                                     status: res.data.status,
                                     type: 4,
                                     isCash: 1,
@@ -200,6 +206,9 @@ function JarOther({ navigation, route }) {
             }
             if (money == 0 || JarOther == "") {
                 Alert.alert("Thông báo", mess);
+            }
+            if( money > 1000000000){
+                Alert.alert("Thông báo","Số tiền nhập phải dưới 1 tỷ")
             }
             else {
                 const date = new Date(dateGD);
@@ -271,7 +280,6 @@ function JarOther({ navigation, route }) {
             setMoneyR("");
         }
     }, [moneyR]);
-    console.log(money);
     return (
         <SafeAreaView style={styles.container} >
             <Modal
@@ -362,7 +370,7 @@ function JarOther({ navigation, route }) {
                         </View>
                     </View>
                     <View style={styles.bodyContainerField}>
-                        <Text style={{ fontSize: 18, marginBottom: 10, }}>
+                        <Text style={{ fontSize: 16, marginBottom: 10, }}>
                             Tên cổ phiếu :
                         </Text>
                         <View style={styles.bodyContainerSearch}>
@@ -374,31 +382,31 @@ function JarOther({ navigation, route }) {
                         </View>
                     </View>
                     <View style={styles.bodyContainerField}>
-                        <Text style={{ fontSize: 18, marginBottom: 10, }}>
+                        <Text style={{ fontSize: 16, marginBottom: 10, }}>
                             Giá thị trường của 1 cổ phiếu:
                         </Text>
                         <View style={styles.bodyContainerSearch}>
-                            <Text style={{ fontSize: 18, color: 'grey' }}>
+                            <Text style={{ fontSize: 16, color: 'grey' }}>
                                 {slStockFormat(priceStock)}
                             </Text>
                         </View>
                     </View>
                     <View style={styles.bodyContainerField}>
-                        <Text style={{ fontSize: 18, marginBottom: 10, }}>
+                        <Text style={{ fontSize: 16, marginBottom: 10, }}>
                             Số lượng cổ phiếu:
                         </Text>
                         <View style={styles.bodyContainerSearch}>
                             <TextInput keyboardType='number-pad' onChangeText={x => {
                                 setslStock(x)
-                            }} placeholder="0" placeholderTextColor={'#000'} style={{ fontSize: 18, flex: 1, }}>{slStock}</TextInput>
+                            }} placeholder="0" placeholderTextColor={'#000'} style={{ fontSize: 16, flex: 1, }}>{slStock}</TextInput>
                         </View>
                     </View>
                     <View style={styles.bodyContainerField}>
-                        <Text style={{ fontSize: 18, marginBottom: 10, }}>
+                        <Text style={{ fontSize: 16, marginBottom: 10, }}>
                             Số tiền để mua cổ phiếu
                         </Text>
                         <View style={styles.bodyContainerSearch}>
-                            <Text style={{ fontSize: 18, color: 'grey' }}>
+                            <Text style={{ fontSize: 16, color: 'grey' }}>
                                 {slStockFormat(priceStock * slStock)}
                             </Text>
                         </View>
@@ -461,7 +469,7 @@ function JarOther({ navigation, route }) {
             }
             <View style={styles.containerButton}>
                 <TouchableOpacity onPress={hanldhanldAddJarOther} style={styles.buttonStyle}>
-                    <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}>Thêm</Text>
+                    <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Thêm</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

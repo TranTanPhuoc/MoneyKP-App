@@ -259,7 +259,7 @@ function Register() {
                         </View>
                         <View style={styles.containerBottom}>
                             <TouchableOpacity onPress={hanldPressRegister} style={styles.bottom} >
-                                <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}> Đăng ký</Text>
+                                <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}> Đăng ký</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -280,7 +280,7 @@ function Register() {
                         <View style={{ justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'row', marginTop: 20, }}>
                             <Text style={{ fontSize: 16, marginRight: 10, }}>Bạn đã có tài khoản?</Text>
                             <TouchableOpacity onPress={hanldPressLogin}>
-                                <Text style={{ fontSize: 18, color: '#F4A460', fontWeight: 'bold' }}>Đăng nhập</Text>
+                                <Text style={{ fontSize: 16, color: '#F4A460', fontWeight: 'bold' }}>Đăng nhập</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

@@ -179,7 +179,7 @@ function Detail({ navigation, route }) {
                                 id != 4 &&
                                 <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
                             }
-                            <Text style={{ color: '#000', fontSize: 18, fontWeight: '500', marginLeft: 15, marginRight: 15 }}>{name}</Text>
+                            <Text style={{ color: '#000', fontSize: 16, fontWeight: '500', marginLeft: 15, marginRight: 15 }}>{name}</Text>
                             {
                                 id != 4 && (status == 1 || moneyPurpose == availableBalances) &&
                                 <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/checked.png')} />
@@ -198,19 +198,19 @@ function Detail({ navigation, route }) {
                     id != 4 &&
                     <View style={styles.containerMoney}>
                         <View style={{ justifyContent: 'center', alignItems: 'center', height: 50 }}>
-                            <Text style={{ fontSize: 18, fontWeight: '600' }}>Số tiền {name} của mục</Text>
+                            <Text style={{ fontSize: 16, fontWeight: '600' }}>Số tiền {name} của mục</Text>
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center', height: 50 }}>
                             <Text style={{ fontSize: 25, fontWeight: '700' }}>{moneyFormat(moneyPurpose)}</Text>
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center', height: 50, display: 'flex', flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 18, fontWeight: '700' }}>Mức độ hoàn thành : {moneyR / moneyPurpose * 100} %</Text>
+                            <Text style={{ fontSize: 16, fontWeight: '700' }}>Mức độ hoàn thành : {moneyR / moneyPurpose * 100} %</Text>
                         </View>
                     </View>
                 }
                 <View style={styles.containerMoney}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: 50 }}>
-                        <Text style={{ fontSize: 18, fontWeight: '600' }}>Tổng số tiền</Text>
+                        <Text style={{ fontSize: 16, fontWeight: '600' }}>Tổng số tiền</Text>
                     </View>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: 100 }}>
                         <Text style={{ fontSize: 35, fontWeight: '700' }}>{moneyFormat(moneyR)}</Text>
@@ -220,7 +220,7 @@ function Detail({ navigation, route }) {
                 <View style={{ marginTop: 20, }}>
                     <View style={styles.containerBody}>
                         <View style={{ marginTop: 20, marginLeft: 20, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 18, fontWeight: '600' }}>Lịch sử giao dịch {itemName}</Text>
+                            <Text style={{ fontSize: 16, fontWeight: '600' }}>Lịch sử giao dịch {itemName}</Text>
                             <TouchableOpacity onPress={() => sethidden(!hidden)} style={{ marginRight: 20, }}>
                                 {
                                     hidden ? <AntDesign name="down" size={24} color="black" /> : <AntDesign name="up" size={24} color="black" />
@@ -241,7 +241,7 @@ function Detail({ navigation, route }) {
                                                 </View>
                                                 <View style={{ flex: 0.45, }}>
                                                     <View style={{ marginBottom: 10, }}>
-                                                        <Text style={{ color: '#000', fontSize: 18, fontWeight: 'bold' }}>{item.note}</Text>
+                                                        <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.note}</Text>
                                                     </View>
                                                     {
                                                         (item.type == 1) ? <Text>Thu nhập</Text> : <Text>Chi tiền</Text>
@@ -250,8 +250,8 @@ function Detail({ navigation, route }) {
                                                 <View style={{ flex: 0.35 }}>
                                                     {
                                                         (item.type == 1) ?
-                                                            <Text style={{ color: '#339900', fontSize: 18, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
-                                                            <Text style={{ color: '#EE0000', fontSize: 18, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
+                                                            <Text style={{ color: '#339900', fontSize: 16, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
+                                                            <Text style={{ color: '#EE0000', fontSize: 16, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
                                                     }
                                                 </View>
                                             </View>
@@ -264,7 +264,7 @@ function Detail({ navigation, route }) {
                             <TouchableOpacity onPress={() => {
                                 navigation.navigate("History", { id: idJar, name: itemName });
                             }} style={styles.bottom} >
-                                <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
+                                <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -272,7 +272,7 @@ function Detail({ navigation, route }) {
                     <View style={{ marginTop: 20, }}>
                         <View style={styles.containerBody}>
                             <View style={{ marginTop: 20, marginLeft: 20, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Text style={{ fontSize: 18, fontWeight: '600' }}>Xem biểu đồ giao dịch lọ {itemName}</Text>
+                                <Text style={{ fontSize: 16, fontWeight: '600' }}>Xem biểu đồ giao dịch lọ {itemName}</Text>
                                 <TouchableOpacity onPress={() => sethidden2(!hidden2)} style={{ marginRight: 20, }}>
                                     {
                                         hidden2 ? <AntDesign name="down" size={24} color="black" /> : <AntDesign name="up" size={24} color="black" />
@@ -298,7 +298,7 @@ function Detail({ navigation, route }) {
                                 <TouchableOpacity onPress={() => {
                                     navigation.navigate("Chart", { id: idJar, name: itemName });
                                 }} style={styles.bottom} >
-                                    <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}> Xem chi tiết</Text>
+                                    <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}> Xem chi tiết</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={{ marginTop: 20, marginLeft: 20, }}>
@@ -310,7 +310,7 @@ function Detail({ navigation, route }) {
                         &&
                         <View style={{ marginTop: 10 }}>
                             <TouchableOpacity style={styles.button} onPress={updateStatus} >
-                                <Text style={{ fontSize: 18, color: 'green', fontWeight: '600' }}>Xác nhận hoàn thành</Text>
+                                <Text style={{ fontSize: 16, color: 'green', fontWeight: '600' }}>Xác nhận hoàn thành</Text>
                             </TouchableOpacity>
                         </View>
                     }
@@ -318,7 +318,7 @@ function Detail({ navigation, route }) {
                         itemName != "Tiền mặt" &&
                         <View style={{ marginTop: 10 }}>
                             <TouchableOpacity style={styles.button} onPress={deleteItem} >
-                                <Text style={{ fontSize: 18, color: 'red', fontWeight: '600' }}>Xóa mục</Text>
+                                <Text style={{ fontSize: 16, color: 'red', fontWeight: '600' }}>Xóa mục</Text>
                             </TouchableOpacity>
                         </View>
                     }

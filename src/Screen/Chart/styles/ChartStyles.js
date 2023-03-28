@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   fontTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '500'
   },
   viewBody: {

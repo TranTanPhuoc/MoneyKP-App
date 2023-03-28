@@ -77,7 +77,7 @@ function ForgotPassword() {
                         </View>
                         <View style={styles.containerBottom}>
                             <TouchableOpacity onPress={hanldPressSendEmail} style={styles.bottom} >
-                                <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}> Lấy mật khẩu </Text>
+                                <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}> Lấy mật khẩu </Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -98,7 +98,7 @@ function ForgotPassword() {
                         <View style={{ justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'row', marginTop: 20, }}>
                             <Text style={{ fontSize: 16, marginRight: 10, }}>Chưa có tài khoản?</Text>
                             <TouchableOpacity onPress={hanldPressRegister}>
-                                <Text style={{ fontSize: 18, color: '#F4A460', fontWeight: 'bold' }}>Đăng ký</Text>
+                                <Text style={{ fontSize: 16, color: '#F4A460', fontWeight: 'bold' }}>Đăng ký</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

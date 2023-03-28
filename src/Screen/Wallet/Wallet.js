@@ -177,8 +177,8 @@ function Wallet({ navigation }) {
                         />
                     </View>
                     <View style={styles.containerHeaderBottom}>
-                        <Text style={{ color: "#fff", fontSize: 18, }}>Tài sản</Text>
-                        <Text style={{ color: "#fff", fontSize: 18, }}>{moneyFormat(total)}</Text>
+                        <Text style={{ color: "#fff", fontSize: 16, }}>Tài sản</Text>
+                        <Text style={{ color: "#fff", fontSize: 16, }}>{moneyFormat(total)}</Text>
                     </View>
                 </LinearGradient>
 
@@ -202,7 +202,7 @@ function Wallet({ navigation }) {
                                         </View>
                                         <View style={{ flex: 0.7, height: "100%", }}>
                                             <View style={{ flex: 1, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
-                                                <Text style={{ color: '#000', fontSize: 18, fontWeight: 'bold' }}>{item.name}</Text>
+                                                <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
                                                 <Text style={{ color: '#FF4040', fontSize: 16, }}>{moneyFormat(item.money)}</Text>
                                             </View>
                                         </View>

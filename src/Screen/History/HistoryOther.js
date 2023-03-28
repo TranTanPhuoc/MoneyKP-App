@@ -121,10 +121,10 @@ function HistoryOther({ navigation, route }) {
                                                     <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
                                                 }
                                             </View>
-                                            <Text style={{ fontSize: 18, marginLeft: 15, fontWeight: 'bold', marginRight: 15, }}> {item.name}</Text>
+                                            <Text style={{ fontSize: 16, marginLeft: 15, fontWeight: 'bold', marginRight: 15, }}> {item.name}</Text>
                                             {
                                                 id != 4 &&
-                                                <Text style={{ fontSize: 18, fontWeight: 'bold', marginRight: 15, }}>({item.availableBalances / item.moneyPurpose * 100} %) </Text>
+                                                <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}>({item.availableBalances / item.moneyPurpose * 100} %) </Text>
                                             }
                                             {
                                                 id != 4 && (item.status == 1 || item.moneyPurpose == item.availableBalances) &&
@@ -132,7 +132,7 @@ function HistoryOther({ navigation, route }) {
                                             }
                                             
                                         </View>
-                                        <Text style={{ fontSize: 18, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
+                                        <Text style={{ fontSize: 16, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
                                     </View>
                                 </TouchableOpacity>
                             );

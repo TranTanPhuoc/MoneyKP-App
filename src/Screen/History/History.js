@@ -83,7 +83,7 @@ function History({ navigation, route }) {
                                 </View>
                                 <View style={{ flex: 0.45, }}>
                                     <View style={{ marginBottom: 10, }}>
-                                        <Text style={{ color: '#000', fontSize: 18, fontWeight: 'bold' }}>{item.note}</Text>
+                                        <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.note}</Text>
                                     </View>
                                     {
                                         (item.type == 1) ? <Text>Thu nhập</Text> : <Text>Chi tiền</Text>
@@ -92,8 +92,8 @@ function History({ navigation, route }) {
                                 <View style={{ flex: 0.35 }}>
                                     {
                                         (item.type == 1) ?
-                                            <Text style={{ color: '#339900', fontSize: 18, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
-                                            <Text style={{ color: '#EE0000', fontSize: 18, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
+                                            <Text style={{ color: '#339900', fontSize: 16, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
+                                            <Text style={{ color: '#EE0000', fontSize: 16, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
                                     }
                                 </View>
                             </View>
