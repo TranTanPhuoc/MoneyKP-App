@@ -43,11 +43,10 @@ function DetailOther({ navigation, route }) {
         })
             .then((res) => {
                 var moneyI = 0;
-                console.log(res.data)
                 setData(res.data.map((item) => {
                     var objtemp = {
                         id: item.id, name: item.name, population: item.precent, userId: item.userId, precent: item.precent, totalIncome: item.totalIncome,
-                        totalSpending: item.totalSpending, availableBalances: item.availableBalances, moneyPurpose: item.moneyPurpose, isCash: item.isCash
+                        totalSpending: item.totalSpending, availableBalances: item.availableBalances, moneyPurpose: item.moneyPurpose, isCash: item.isCash, quantity: item.quantity
                     };
                     moneyI += item.availableBalances;
                     return objtemp;
@@ -147,7 +146,7 @@ function DetailOther({ navigation, route }) {
                                                     () => {
                                                         navigation.navigate("Detail", {
                                                             id: id, name: name, itemName: item.name, money: item.availableBalances, idJar: item.id,
-                                                            moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status, isCash: item.isCash
+                                                            moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status, isCash: item.isCash, quantity: item.quantity
                                                         });
                                                     }} style={styles.buttomItem}>
                                                     <View
@@ -168,6 +167,10 @@ function DetailOther({ navigation, route }) {
                                                                 }
                                                             </View>
                                                             <Text style={{ fontSize: 16, marginLeft: 15, fontWeight: 'bold', marginRight: 15, }}> {item.name}</Text>
+                                                            {
+                                                                id == 4 && !item.isCash &&
+                                                                <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}> Số lượng: {item.quantity}</Text>
+                                                            }
                                                             {
                                                                 id != 4 &&
                                                                 <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}>({item.availableBalances / item.moneyPurpose * 100} %)</Text>

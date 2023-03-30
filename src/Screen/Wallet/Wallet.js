@@ -183,7 +183,7 @@ function Wallet({ navigation }) {
                 </LinearGradient>
 
                 <View style={styles.containerListJar}>
-                    <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Danh sách lọ</Text>
+                    <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Danh sách tài sản</Text>
                     <View style={styles.containerListJarItem}>
                         {
                             dataDS.map((item, index) => {
@@ -203,7 +203,7 @@ function Wallet({ navigation }) {
                                         <View style={{ flex: 0.7, height: "100%", }}>
                                             <View style={{ flex: 1, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                                                 <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
-                                                <Text style={{ color: '#FF4040', fontSize: 16, }}>{moneyFormat(item.money)}</Text>
+                                                <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.money)}</Text>
                                             </View>
                                         </View>
                                         <View style={{ flex: 0.1, height: "100%", justifyContent: 'center', alignItems: 'center' }}>

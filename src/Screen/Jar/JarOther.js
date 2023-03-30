@@ -137,7 +137,8 @@ function JarOther({ navigation, route }) {
                             status: 0,
                             moneyPurpose: 1000000000,
                             datedComplete: dateGD,
-                            createdDate: selectedDate
+                            createdDate: selectedDate,
+                            quantity: slStock,
                         },
                         {
                             headers: {

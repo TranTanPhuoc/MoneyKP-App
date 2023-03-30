@@ -17,7 +17,7 @@ import { Image } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { reload_IU } from '../../redux/action/ActionRedux';
 function Detail({ navigation, route }) {
-    const { id, name, itemName, money, idJar, moneyPurpose, status, availableBalances,isCash } = route.params;
+    const { id, name, itemName, money, idJar, moneyPurpose, status, availableBalances, isCash, quantity } = route.params;
     const [moneyR, setMoneyR] = useState(parseInt(money));
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
@@ -184,7 +184,7 @@ function Detail({ navigation, route }) {
                                 id != 4 && (status == 1 || moneyPurpose == availableBalances) &&
                                 <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/checked.png')} />
                             }
-                            <TouchableOpacity onPress={()=>{
+                            <TouchableOpacity onPress={() => {
                                 navigation.navigate("ExchangeOther");
                             }}>
                                 <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/add.png')} />
@@ -215,6 +215,12 @@ function Detail({ navigation, route }) {
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: 100 }}>
                         <Text style={{ fontSize: 35, fontWeight: '700' }}>{moneyFormat(moneyR)}</Text>
                     </View>
+                    {
+                        id == 4 && !isCash &&
+                        <View style={{ justifyContent: 'center', alignItems: 'center', height: 100 }}>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold'}}> Số lượng cổ phiếu hiện có: {quantity}</Text>
+                        </View>
+                    }
                 </View>
 
                 <View style={{ marginTop: 20, }}>

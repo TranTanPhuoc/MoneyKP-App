@@ -18,7 +18,6 @@ import { reload_IU } from '../../redux/action/ActionRedux';
 import { Linking } from 'react-native';
 import moment from 'moment-timezone';
 import { Modal } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import CalendarPicker from 'react-native-calendar-picker';
 function Home({ navigation }) {
     const { width } = Dimensions.get('window');
@@ -48,13 +47,6 @@ function Home({ navigation }) {
             },
         ],
     });
-    // const onDateChange = (event, selectedDate) => {
-    //     if (selectedDate) {
-    //         const newDate = new Date(selectedDate);
-    //         setSelectedDate(newDate);
-    //         Platform.OS === 'android' ? setShowPicker(false) : setShowPicker(true);
-    //     }
-    // };
     const onDateChange = (date) => {
         const newDate = new Date(date);
         setSelectedDate(newDate);
@@ -415,7 +407,7 @@ function Home({ navigation }) {
                                         <View style={{ flex: 0.7, height: "100%", }}>
                                             <View style={{ flex: 0.4, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                                                 <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
-                                                <Text style={{ color: '#FF4040', fontSize: 16, }}>{moneyFormat(item.totalIncome)}</Text>
+                                                <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.totalIncome)}</Text>
                                             </View>
                                             <View style={{ flex: 0.2, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                                                 <Text style={{ color: '#000', fontSize: 16, }}>Khả dụng</Text>
@@ -423,7 +415,7 @@ function Home({ navigation }) {
                                             </View>
                                             <View style={{ flex: 0.3, alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                                 <Text style={{ color: '#000', fontSize: 16, }}>Tiền khả dụng: </Text>
-                                                <Text style={{ color: 'red', fontSize: 16, }}>{moneyFormat(item.totalIncome - item.totalSpending)}</Text>
+                                                <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.totalIncome - item.totalSpending)}</Text>
                                             </View>
                                         </View>
                                         <View style={{ flex: 0.1, height: "100%", justifyContent: 'center', alignItems: 'center' }}>

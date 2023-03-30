@@ -53,7 +53,7 @@ function HistoryOther({ navigation, route }) {
                         precent: item.precent, totalIncome: item.totalIncome, totalSpending: item.totalSpending,
                         availableBalances: item.availableBalances, moneyPurpose: item.moneyPurpose,
                         datedComplete: item.datedComplete, createdDate: item.createdDate, status: item.status,
-                        isCash: item.isCash
+                        isCash: item.isCash, quantity :item.quantity
                     };
                     return objtemp;
                 }));
@@ -101,7 +101,7 @@ function HistoryOther({ navigation, route }) {
                                         navigation.navigate("Detail", {
                                             id: id, name: name, itemName: item.name, money: item.availableBalances, idJar: item.id,
                                             moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status,
-                                            isCash : item.isCash
+                                            isCash : item.isCash,quantity :item.quantity
                                         });
                                     }} style={styles.buttomItem}>
                                     <View
@@ -122,6 +122,10 @@ function HistoryOther({ navigation, route }) {
                                                 }
                                             </View>
                                             <Text style={{ fontSize: 16, marginLeft: 15, fontWeight: 'bold', marginRight: 15, }}> {item.name}</Text>
+                                            {
+                                                    id == 4 && !item.isCash &&
+                                                    <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}> Số lượng: {item.quantity}</Text>
+                                            }
                                             {
                                                 id != 4 &&
                                                 <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}>({item.availableBalances / item.moneyPurpose * 100} %) </Text>
