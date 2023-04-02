@@ -1,4 +1,4 @@
-import { Text, SafeAreaView, ScrollView, View, Image, FlatList, Dimensions, TouchableOpacity, } from 'react-native';
+import { Text, SafeAreaView, ScrollView, View, Image, FlatList, Dimensions, TouchableOpacity, ActivityIndicator, } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from "./styles/HomeStyles";
 import 'intl';
@@ -47,6 +47,9 @@ function Home({ navigation }) {
             },
         ],
     });
+
+    const [loading, setisLoading] = useState(false);
+
     const onDateChange = (date) => {
         const newDate = new Date(date);
         setSelectedDate(newDate);
@@ -102,6 +105,7 @@ function Home({ navigation }) {
     }, [totalIncome, totalSpending]);
 
     useEffect(() => {
+        setisLoading(true);
         axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
             monthNumber: parseInt(month),
             yearNumber: parseInt(year)
@@ -186,6 +190,7 @@ function Home({ navigation }) {
                         },
                         data: dataListJar
                     }).then((res) => {
+                        setisLoading(false);
                         dispatch(reload_IU(idReload + 1));
                     }).catch((err) => {
                         console.log(err);
@@ -208,24 +213,28 @@ function Home({ navigation }) {
                         totalSpendingItem += item.totalSpending
                     })
                     settotalSpending(totalSpendingItem);
+                    setisLoading(false);
                 }
             }).catch((err) => {
                 console.log(err);
             })
     }, [idReload, month, year]);
     useEffect(() => {
+        setisLoading(true);
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/user/${idUser}`, {
             headers: { authorization: accessToken },
         })
             .then((res) => {
                 setName(res.data.name);
                 setavtPic(res.data.urlPic);
+                setisLoading(false);
                 dispatch(reload_IU(idReload + 1));
             }).catch((err) => {
                 console.log(err);
             })
     }, [idIU])
     useEffect(() => {
+        setisLoading(true);
         axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
             {
                 type: 1,
@@ -239,6 +248,7 @@ function Home({ navigation }) {
                     authorization: accessToken
                 }
             }).then((res) => {
+                setisLoading(false);
                 setlabels(
                     res.data.map((item, index) => {
                         return index + 1;
@@ -265,6 +275,7 @@ function Home({ navigation }) {
                     authorization: accessToken
                 }
             }).then((res) => {
+                setisLoading(false);
                 setdatasets2(
                     res.data.map((item) => {
                         return item;
@@ -273,7 +284,7 @@ function Home({ navigation }) {
             }).catch((err) => {
                 console.log(err);
             })
-    }, [idReload]);
+    }, [idReload, month, year]);
     useEffect(() => {
         setdata({
             labels: labels,
@@ -321,178 +332,190 @@ function Home({ navigation }) {
     const [modalVisible, setModalVisible] = useState(false);
 
     return (
-        <SafeAreaView style={styles.container} >
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}>
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <CalendarPicker
-                            scrollable={true}
-                            onMonthChange={onDateChange}
-                            initialView='months'
-                            selectMonthTitle='Năm '
-                            months= {["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"]}
-                        >
-                        </CalendarPicker>
-                    </View>
-                </View>
-            </Modal>
-            <ScrollView style={styles.scrollview}>
-                <View style={styles.containerTop}>
-                    <View style={styles.containerTopImage}>
-                        <Image source={{ uri: avtPic }} style={{ height: 60, width: 60, borderRadius: 40, }} />
-                    </View>
-                    <View style={styles.containerTopName}>
-                        <View style={{ flex: 0.2, justifyContent: 'flex-end' }}>
-                            <Text style={{ color: '#000', fontSize: 16, }}>{session}</Text>
-                        </View>
-                        <View style={{ flex: 0.8, justifyContent: 'center' }}>
-                            <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{name}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.containerTopIcon}>
-                        <TouchableOpacity onPress={hanldMyContract} style={{ margin: 10, }}>
-                            <Image style={{ tintColor: '#000', height: 24, width: 24 }} source={require('../../../assets/icons/support.png')} />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <ScrollView scrollEnabled={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }} style={styles.containerInfoWallet}>
-                    {
-                        dataIncomeAndSpending.map((item) => {
-                            return (
-                                <TouchableOpacity onPress={() => {
-                                    navigation.navigate("Exchange");
-                                }} key={item.id} style={styles.containerItem}>
-                                    <View style={styles.containerItemTop}>
-                                        <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                            <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
-                                            <Text style={{ color: '#000', fontSize: 16, marginLeft: 10, }}>{item.name}</Text>
-                                        </View>
-                                    </View>
-                                    <View>
-                                        <Text style={{ color: '#000', fontSize: 16, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            );
-                        })
-                    }
-                </ScrollView>
-                <ScrollView scrollEnabled={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }} style={styles.containerInfoWallet}>
+        <>
+            {loading &&
+                <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+                    <ActivityIndicator color='#16C0E5' size='large' />
+                </SafeAreaView>
+            }
+            {(loading == false) &&
 
-                </ScrollView>
-                <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, }}>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Ngày : {selectedDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
-                    <TouchableOpacity style={styles.buttom} onPress={() => setModalVisible(true)} >
-                        <Text>
-                            Chọn tháng
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.containerListJar}>
-                    <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Danh sách lọ</Text>
-                    <View style={styles.containerListJarItem}>
-                        {
-                            dataListJar.map((item, index) => {
-                                return (
-                                    <TouchableOpacity onPress={() => {
-                                        navigation.navigate("DetailJar", { id: item.id, name: item.name, money: item.totalIncome - item.totalSpending, income: item.totalIncome, spending: item.totalSpending });
-                                    }} key={item.id} style={styles.containerListJarItem_Item}>
-                                        <View style={{ flex: 0.2, height: "100%", justifyContent: 'center', marginLeft: 10, }}>
-                                            <View style={{ backgroundColor: colorJar[index], height: 50, width: 50, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Image source={require('../../../assets/icons/jar.png')} style={{ tintColor: '#000' }} />
+
+                <SafeAreaView style={styles.container} >
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            setModalVisible(!modalVisible);
+                        }}>
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <CalendarPicker
+                                    scrollable={true}
+                                    onMonthChange={onDateChange}
+                                    initialView='months'
+                                    selectMonthTitle='Năm '
+                                    months={["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"]}
+                                >
+                                </CalendarPicker>
+                            </View>
+                        </View>
+                    </Modal>
+                    <ScrollView style={styles.scrollview}>
+                        <View style={styles.containerTop}>
+                            <View style={styles.containerTopImage}>
+                                <Image source={{ uri: avtPic }} style={{ height: 60, width: 60, borderRadius: 40, }} />
+                            </View>
+                            <View style={styles.containerTopName}>
+                                <View style={{ flex: 0.2, justifyContent: 'flex-end' }}>
+                                    <Text style={{ color: '#000', fontSize: 16, }}>{session}</Text>
+                                </View>
+                                <View style={{ flex: 0.8, justifyContent: 'center' }}>
+                                    <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{name}</Text>
+                                </View>
+                            </View>
+                            <View style={styles.containerTopIcon}>
+                                <TouchableOpacity onPress={hanldMyContract} style={{ margin: 10, }}>
+                                    <Image style={{ tintColor: '#000', height: 24, width: 24 }} source={require('../../../assets/icons/support.png')} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <ScrollView scrollEnabled={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }} style={styles.containerInfoWallet}>
+                            {
+                                dataIncomeAndSpending.map((item) => {
+                                    return (
+                                        <TouchableOpacity onPress={() => {
+                                            navigation.navigate("Exchange");
+                                        }} key={item.id} style={styles.containerItem}>
+                                            <View style={styles.containerItemTop}>
+                                                <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                                    <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
+                                                    <Text style={{ color: '#000', fontSize: 16, marginLeft: 10, }}>{item.name}</Text>
+                                                </View>
                                             </View>
-                                        </View>
-                                        <View style={{ flex: 0.7, height: "100%", }}>
-                                            <View style={{ flex: 0.4, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
-                                                <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
-                                                <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.totalIncome)}</Text>
+                                            <View>
+                                                <Text style={{ color: '#000', fontSize: 16, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
                                             </View>
-                                            <View style={{ flex: 0.2, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
-                                                <Text style={{ color: '#000', fontSize: 16, }}>Khả dụng</Text>
-                                                <Text style={{ color: '#000', fontSize: 16, }}>{(item.totalIncome == 0 && item.totalSpending == 0) ? 0 : ((item.totalIncome - item.totalSpending) / item.totalIncome * 100).toFixed(2)} %</Text>
-                                            </View>
-                                            <View style={{ flex: 0.3, alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                <Text style={{ color: '#000', fontSize: 16, }}>Tiền khả dụng: </Text>
-                                                <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.totalIncome - item.totalSpending)}</Text>
-                                            </View>
-                                        </View>
-                                        <View style={{ flex: 0.1, height: "100%", justifyContent: 'center', alignItems: 'center' }}>
-                                            <AntDesign name="right" size={14} color="#000" />
-                                        </View>
-                                    </TouchableOpacity>
-                                );
-                            })
-                        }
-                    </View>
-                </View>
-                <View style={styles.containerListJar}>
-                    <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Báo cáo thu nhập của tháng {month}</Text>
-                    <View style={styles.containerListJars}>
-                        <ScrollView horizontal={true} style={{ marginTop: 20, marginBottom: 20 }}>
-                            <BarChart
-                                data={data}
-                                width={Dimensions.get('window').width + 200}
-                                height={250}
-                                yAxisLabel="VND "
-                                chartConfig={chartConfig}
-                                showBarTops={true}
-                                withHorizontalLabels={true}
-                                horizontalLabelRotation={-60}
-                                style={{ marginLeft: 10, marginRight: 10, borderRadius: 20, }}
-                            />
+                                        </TouchableOpacity>
+                                    );
+                                })
+                            }
                         </ScrollView>
-                    </View>
-                </View>
-                <View style={styles.containerListJar}>
-                    <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Báo cáo chi tiêu của tháng {month}</Text>
-                    <View style={styles.containerListJars}>
-                        <ScrollView horizontal={true} style={{ marginTop: 20, marginBottom: 20 }}>
-                            <BarChart
-                                data={data2}
-                                width={Dimensions.get('window').width + 200}
-                                height={250}
-                                yAxisLabel="VND "
-                                chartConfig={chartConfig}
-                                showBarTops={true}
-                                withHorizontalLabels={true}
-                                horizontalLabelRotation={-60}
-                                style={{ marginLeft: 10, marginRight: 10, borderRadius: 20, }}
-                            />
+                        <ScrollView scrollEnabled={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }} style={styles.containerInfoWallet}>
+
                         </ScrollView>
-                    </View>
-                </View>
-                <View style={styles.containerListJar}>
-                    <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Cơ cấu các lọ</Text>
-                    <View style={styles.containerListJars}>
-                        <PieChart
-                            data={dataPieChart}
-                            height={200}
-                            width={width}
-                            chartConfig={chartConfigPie}
-                            accessor="population"
-                            paddingLeft='10'
-                        />
-                    </View>
-                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <TouchableOpacity onPress={() => {
-                            navigation.navigate("SetPercentJar", {
-                                month: month,
-                                year: year
-                            });
-                        }} style={styles.buttonStyle}>
-                            <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Chỉnh sửa tỉ lệ, thêm lọ</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={{ marginTop: 20, }}></View>
-            </ScrollView>
-        </SafeAreaView>
+                        <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, }}>
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Tháng : {selectedDate.toLocaleDateString('VN', { month: '2-digit', year: 'numeric' })}</Text>
+                            <TouchableOpacity style={styles.buttom} onPress={() => setModalVisible(true)} >
+                                <Text>
+                                    Chọn tháng
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.containerListJar}>
+                            <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Danh sách lọ</Text>
+                            <View style={styles.containerListJarItem}>
+                                {
+                                    dataListJar.map((item, index) => {
+                                        return (
+                                            <TouchableOpacity onPress={() => {
+                                                navigation.navigate("DetailJar", { id: item.id, name: item.name, money: item.totalIncome - item.totalSpending, income: item.totalIncome, spending: item.totalSpending });
+                                            }} key={item.id} style={styles.containerListJarItem_Item}>
+                                                <View style={{ flex: 0.2, height: "100%", justifyContent: 'center', marginLeft: 10, }}>
+                                                    <View style={{ backgroundColor: colorJar[index], height: 50, width: 50, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
+                                                        <Image source={require('../../../assets/icons/jar.png')} style={{ tintColor: '#000' }} />
+                                                    </View>
+                                                </View>
+                                                <View style={{ flex: 0.7, height: "100%", }}>
+                                                    <View style={{ flex: 0.4, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
+                                                        <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
+                                                        <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.totalIncome)}</Text>
+                                                    </View>
+                                                    <View style={{ flex: 0.2, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
+                                                        <Text style={{ color: '#000', fontSize: 16, }}>Khả dụng</Text>
+                                                        <Text style={{ color: '#000', fontSize: 16, }}>{(item.totalIncome == 0 && item.totalSpending == 0) ? 0 : ((item.totalIncome - item.totalSpending) / item.totalIncome * 100).toFixed(2)} %</Text>
+                                                    </View>
+                                                    <View style={{ flex: 0.3, alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                        <Text style={{ color: '#000', fontSize: 16, }}>Tiền khả dụng: </Text>
+                                                        <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.totalIncome - item.totalSpending)}</Text>
+                                                    </View>
+                                                </View>
+                                                <View style={{ flex: 0.1, height: "100%", justifyContent: 'center', alignItems: 'center' }}>
+                                                    <AntDesign name="right" size={14} color="#000" />
+                                                </View>
+                                            </TouchableOpacity>
+                                        );
+                                    })
+                                }
+                            </View>
+                        </View>
+                        <View style={styles.containerListJar}>
+                            <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Báo cáo thu nhập của tháng {month}</Text>
+                            <View style={styles.containerListJars}>
+                                <ScrollView horizontal={true} style={{ marginTop: 20, marginBottom: 20 }}>
+                                    <BarChart
+                                        data={data}
+                                        width={Dimensions.get('window').width + 200}
+                                        height={250}
+                                        yAxisLabel="VND "
+                                        chartConfig={chartConfig}
+                                        showBarTops={true}
+                                        withHorizontalLabels={true}
+                                        horizontalLabelRotation={-60}
+                                        style={{ marginLeft: 10, marginRight: 10, borderRadius: 20, }}
+                                    />
+                                </ScrollView>
+                            </View>
+                        </View>
+                        <View style={styles.containerListJar}>
+                            <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Báo cáo chi tiêu của tháng {month}</Text>
+                            <View style={styles.containerListJars}>
+                                <ScrollView horizontal={true} style={{ marginTop: 20, marginBottom: 20 }}>
+                                    <BarChart
+                                        data={data2}
+                                        width={Dimensions.get('window').width + 200}
+                                        height={250}
+                                        yAxisLabel="VND "
+                                        chartConfig={chartConfig}
+                                        showBarTops={true}
+                                        withHorizontalLabels={true}
+                                        horizontalLabelRotation={-60}
+                                        style={{ marginLeft: 10, marginRight: 10, borderRadius: 20, }}
+                                    />
+                                </ScrollView>
+                            </View>
+                        </View>
+                        <View style={styles.containerListJar}>
+                            <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Cơ cấu các lọ</Text>
+                            <View style={styles.containerListJars}>
+                                <PieChart
+                                    data={dataPieChart}
+                                    height={200}
+                                    width={width}
+                                    chartConfig={chartConfigPie}
+                                    accessor="population"
+                                    paddingLeft='10'
+                                />
+                            </View>
+                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <TouchableOpacity onPress={() => {
+                                    navigation.navigate("SetPercentJar", {
+                                        month: month,
+                                        year: year
+                                    });
+                                }} style={styles.buttonStyle}>
+                                    <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Chỉnh sửa tỉ lệ, thêm lọ</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={{ marginTop: 20, }}></View>
+                    </ScrollView>
+                </SafeAreaView>
+            }
+        </>
     );
+
 }
 
 

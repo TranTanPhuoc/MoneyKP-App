@@ -208,8 +208,8 @@ function JarOther({ navigation, route }) {
             if (money == 0 || JarOther == "") {
                 Alert.alert("Thông báo", mess);
             }
-            if( money > 1000000000){
-                Alert.alert("Thông báo","Số tiền nhập phải dưới 1 tỷ")
+            if (money > 1000000000) {
+                Alert.alert("Thông báo", "Số tiền nhập phải dưới 1 tỷ")
             }
             else {
                 const date = new Date(dateGD);
@@ -253,7 +253,78 @@ function JarOther({ navigation, route }) {
             setdateNote(newDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' }));
         }
     }, [dateGD]);
+    const [wordsMoney, setWordsMoney] = useState("");
 
+    function convertVNDToWords(amount) {
+        const units = ["", "Một ", "Hai ", "Ba ", "Bốn ", "Năm ", "Sáu ", "Bảy ", "Tám ", "Chín "];
+        const teens = ["", "Mười một ", "Mười hai ", "Mười ba ", "Mười bốn ", "Mười lăm ", "Mười sáu ", "Mười bảy ", "Mười tám ", "Mười chín "];
+        const tens = ["", "Mười ", "Hai Mươi ", "Ba Mươi ", "Bốn Mươi ", "Năm Mươi ", "Sáu Mươi ", "Bảy Mươi ", "Tám Mươi ", "Chín Mươi "];
+        let words = "";
+        let remainingAmount = amount;
+        let unit = 0;
+        while (remainingAmount > 0) {
+            var divisor = Math.pow(1000, unit);
+            var quotient = Math.floor(remainingAmount / divisor);
+            remainingAmount -= quotient * divisor;
+            unit += 1;
+
+            if (quotient > 0) {
+                if (quotient > 999999999) {
+                    words += units[Math.floor(quotient / 1000000000)] + "Tỷ ";
+                    quotient = quotient % 1000000000;
+                }
+                if (quotient > 99999999) {
+                    words += units[Math.floor(quotient / 100000000)] + "Trăm  ";
+                    quotient = quotient % 100000000;
+                    if (quotient < 999999) {
+                        words += "Triệu "
+                    }
+                }
+                if (quotient > 9999999) {
+                    words += tens[Math.floor(quotient / 10000000)];
+                    quotient = quotient % 10000000;
+                    if (quotient < 999999) {
+                        words += "Triệu "
+                    }
+                }
+                if (quotient > 999999) {
+                    words += units[Math.floor(quotient / 1000000)] + "Triệu ";
+                    quotient = quotient % 1000000;
+                }
+                if (quotient > 99999) {
+                    words += units[Math.floor(quotient / 100000)] + "Trăm ";
+                    quotient = quotient % 100000;
+                    if (quotient < 999) {
+                        words += "Ngàn "
+                    }
+                }
+                if (quotient > 9999) {
+                    words += tens[Math.floor(quotient / 10000)];
+                    quotient = quotient % 10000;
+                    if (quotient < 999) {
+                        words += "Ngàn "
+                    }
+                }
+                if (quotient > 999) {
+                    words += units[Math.floor(quotient / 1000)] + "Ngàn ";
+                    quotient = quotient % 1000;
+                }
+                if (quotient > 99) {
+                    words += units[Math.floor(quotient / 100)] + "Trăm ";
+                    quotient = quotient % 100;
+                }
+                if (quotient > 10 && quotient < 20) {
+                    words += teens[quotient - 10];
+                    quotient = quotient % 10;
+                } else {
+                    words += tens[Math.floor(quotient / 10)];
+                    words += units[quotient % 10];
+                }
+                words += " ";
+            }
+        }
+        return words;
+    }
     const onDateChange = (date) => {
         setDate(date);
         setModalVisible(!modalVisible);
@@ -267,8 +338,10 @@ function JarOther({ navigation, route }) {
     };
     useEffect(() => {
         if (money > 0) {
+            setWordsMoney(convertVNDToWords(money) + "Đồng");
             setMoneyR(moneyFormat(parseInt(money)));
         } else {
+            setWordsMoney("");
             setMoneyR("");
         }
     }, [money]);
@@ -355,6 +428,11 @@ function JarOther({ navigation, route }) {
                             }} placeholderTextColor={'#000'} style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, fontSize: 16, }} placeholder='Nhập tiền'>{moneyR}</TextInput>
                         </View>
                     </View>
+                    {money != null &&
+                    <View style={styles.containerMoneyWords}>
+                        <Text style={{ fontSize: 16, fontStyle: 'italic', textAlign: 'center' }}>{wordsMoney}</Text>
+                    </View>
+                }
                 </>
             }
             {
