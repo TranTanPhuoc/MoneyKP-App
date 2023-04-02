@@ -198,10 +198,10 @@ function Exchange({ navigation }) {
         axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
             monthNumber: parseInt(month),
             yearNumber: parseInt(year)
-        }, 
-        {
-            headers: { authorization: accessToken },
-        })
+        },
+            {
+                headers: { authorization: accessToken },
+            })
             .then((res) => {
                 setDataJar(res.data.map((item, index) => {
                     var obj = item.name;
@@ -433,7 +433,15 @@ function Exchange({ navigation }) {
                 }}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <CalendarPicker  onDateChange={onDateChange}>
+                        <CalendarPicker
+                            onDateChange={onDateChange}
+                            months={["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"]}
+                            nextTitle='Trước'
+                            previousTitle='Sau'
+                            weekdays={["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"]}
+                            selectMonthTitle='Tháng '
+                            selectYearTitle='Năm '
+                        >
                         </CalendarPicker>
                     </View>
                 </View>
@@ -506,7 +514,7 @@ function Exchange({ navigation }) {
                     <View style={styles.containerJar}>
                         <SelectDropdown
                             data={dataJar}
-                            disabled= {isSelected ? true : false}
+                            disabled={isSelected ? true : false}
                             defaultButtonText={valuesDefaut}
                             buttonTextStyle={{ fontSize: 16, }}
                             onSelect={(selectedItem, index) => {
