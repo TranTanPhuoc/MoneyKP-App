@@ -299,7 +299,7 @@ function Exchange({ navigation }) {
                                     userId: idUser,
                                     name: nameJar,
                                     precent: precentJar,
-                                    availableBalances: availableBalancesI + income,
+                                    availableBalances: availableBalancesI + parseInt(money),
                                     totalSpending: totalSpending,
                                     totalIncome: income,
                                     type: 1,
@@ -328,7 +328,7 @@ function Exchange({ navigation }) {
                                     userId: idUser,
                                     name: nameJar,
                                     precent: precentJar,
-                                    availableBalances: availableBalancesI - spending,
+                                    availableBalances: availableBalancesI - parseInt(money),
                                     totalSpending: spending,
                                     totalIncome: totalIncome,
                                     monthNumber: month,
@@ -465,9 +465,9 @@ function Exchange({ navigation }) {
                             () => {
                                 navigation.navigate('CameraPic');
                             }
-                        } style={{ width: 130, borderWidth: 0.5, paddingTop: 10, paddingBottom: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 20, display: 'flex', flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 16 }}>Thêm nhanh</Text>
-                            <Entypo name="camera" size={24} color="black" style={{ marginLeft: 10 }} />
+                        } style={{ width: 50, borderWidth: 0.5, paddingTop: 10, paddingBottom: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 20, display: 'flex', flexDirection: 'row' }}>
+                            {/* <Text style={{ fontSize: 16 }}>Thêm nhanh</Text> */}
+                            <Entypo name="camera" size={24} color="black" style={{ }} />
                         </TouchableOpacity>
                     </View>
                 }

@@ -16,7 +16,7 @@ import { useEffect } from 'react';
 import { BarChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
 function DetailJar({ navigation, route }) {
-    const { id, name, money, income, spending } = route.params;
+    const { id, name, money, income, spending ,month ,year} = route.params;
     const moneyR = parseInt(money);
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
@@ -47,9 +47,6 @@ function DetailJar({ navigation, route }) {
             },
         ],
     });
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [month, setMonth] = useState(selectedDate.getMonth() + 1);
-    const [year, setYear] = useState(selectedDate.getFullYear());
     const [labels, setlabels] = useState([]);
     const [datasets, setdatasets] = useState([]);
     useEffect(() => {

@@ -1,4 +1,4 @@
-import { Text, SafeAreaView, ScrollView, View, Image, FlatList, Dimensions, TouchableOpacity, ActivityIndicator, } from 'react-native';
+import { Text, SafeAreaView, ScrollView, View, Image, FlatList, Dimensions, TouchableOpacity, ActivityIndicator, Alert, } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from "./styles/HomeStyles";
 import 'intl';
@@ -30,6 +30,7 @@ function Home({ navigation }) {
     const [name, setName] = useState("");
     const [dataListJar, setdataListJar] = useState([]);
     const dispatch = useDispatch();
+    const now = new Date(); // lấy thời gian hiện tại
     // Ngày hiện tại
     const [selectedDate, setSelectedDate] = useState(new Date());
     // Tháng hiện tại
@@ -52,10 +53,21 @@ function Home({ navigation }) {
 
     const onDateChange = (date) => {
         const newDate = new Date(date);
-        setSelectedDate(newDate);
-        setModalVisible(!modalVisible);
-        setMonth(newDate.getMonth() + 1);
-        setYear(newDate.getFullYear());
+        if (now < newDate) {
+            // setModalVisible(!modalVisible);
+            // để tạm
+            setSelectedDate(newDate);
+            setModalVisible(!modalVisible);
+            setMonth(newDate.getMonth() + 1);
+            setYear(newDate.getFullYear());
+        }
+        else {
+            setSelectedDate(newDate);
+            setModalVisible(!modalVisible);
+            setMonth(newDate.getMonth() + 1);
+            setYear(newDate.getFullYear());
+        }
+
     }
     // Data biểu đồ cột của chi tiêu
     const [datasets2, setdatasets2] = useState([]);
@@ -113,7 +125,8 @@ function Home({ navigation }) {
             headers: { authorization: accessToken },
         })
             .then((res) => {
-                if (res.data.length == 0) {
+                if (res.data.length == 0 && now > selectedDate) {
+                    console.log("Tạo hủ mới quá khứ")
                     const dataListJar = [
                         {
                             userId: idUser,
@@ -196,7 +209,132 @@ function Home({ navigation }) {
                         console.log(err);
                     });
                 }
-                else {
+                else if (res.data.length == 0) {
+                    if (month == 1) {
+                        axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
+                            monthNumber: 12,
+                            yearNumber: parseInt(year - 1)
+                        }, {
+                            headers: { authorization: accessToken },
+                        }).then((res) => {
+                            console.log("Tạo hủ mới tương lai tháng 1")
+                            const dataListJar = [
+                                {
+                                    userId: idUser,
+                                    name: "Cần thiết",
+                                    precent: 50,
+                                    availableBalances: 0,
+                                    totalSpending: 0,
+                                    totalIncome: 0,
+                                    type: 1,
+                                    monthNumber: month,
+                                    yearNumber: year,
+                                },
+                                {
+                                    userId: idUser,
+                                    name: "Giáo dục",
+                                    precent: 10,
+                                    availableBalances: 0,
+                                    totalSpending: 0,
+                                    totalIncome: 0,
+                                    type: 1,
+                                    monthNumber: month,
+                                    yearNumber: year,
+                                },
+                                {
+                                    userId: idUser,
+                                    name: "Tiết kiệm",
+                                    precent: 15,
+                                    availableBalances: 0,
+                                    totalSpending: 0,
+                                    totalIncome: 0,
+                                    type: 1,
+                                    monthNumber: month,
+                                    yearNumber: year,
+                                },
+                                {
+                                    userId: idUser,
+                                    name: "Hưởng thụ",
+                                    precent: 10,
+                                    availableBalances: 0,
+                                    totalSpending: 0,
+                                    totalIncome: 0,
+                                    type: 1,
+                                    monthNumber: month,
+                                    yearNumber: year,
+                                },
+                                {
+                                    userId: idUser,
+                                    name: "Đầu tư",
+                                    precent: 10,
+                                    availableBalances: 0,
+                                    totalSpending: 0,
+                                    totalIncome: 0,
+                                    type: 1,
+                                    monthNumber: month,
+                                    yearNumber: year,
+                                },
+                                {
+                                    userId: idUser,
+                                    name: "Từ thiện",
+                                    precent: 5,
+                                    availableBalances: 0,
+                                    totalSpending: 0,
+                                    totalIncome: 0,
+                                    type: 1,
+                                    monthNumber: month,
+                                    yearNumber: year,
+                                }
+                            ];
+                            axios({
+                                url: 'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
+                                method: 'POST',
+                                headers: {
+                                    authorization: accessToken
+                                },
+                                data: dataListJar
+                            }).then((res) => {
+                                setisLoading(false);
+                                dispatch(reload_IU(idReload + 1));
+                            }).catch((err) => {
+                                console.log(err);
+                            });
+                        }).catch((err) => {
+                            console.log(err);
+                        })
+                    }
+                    else {
+                        axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
+                            monthNumber: parseInt(month - 1),
+                            yearNumber: parseInt(year)
+                        }, {
+                            headers: { authorization: accessToken },
+                        }).then((res) => {
+                            const dataListJar = res.data.map((item, index) => {
+                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: 0, type: 1, monthNumber: month, yearNumber: year };
+                                return obj;
+                            });
+                            console.log("Tạo hủ mới tương lai khác tháng 1")
+                            axios({
+                                url: 'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
+                                method: 'POST',
+                                headers: {
+                                    authorization: accessToken
+                                },
+                                data: dataListJar
+                            }).then((res) => {
+                                setisLoading(false);
+                                dispatch(reload_IU(idReload + 1));
+                            }).catch((err) => {
+                                console.log(err);
+                            });
+                        }).catch((err) => {
+                            console.log(err);
+                        })
+                    }
+
+                }
+                if (res.data.length != 0) {
                     setdataListJar(res.data);
                     setdataPieChart(res.data.map((item, index) => {
                         let randomColor = colorJar[index]
@@ -405,8 +543,8 @@ function Home({ navigation }) {
                         <ScrollView scrollEnabled={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }} style={styles.containerInfoWallet}>
 
                         </ScrollView>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, }}>
-                            <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Tháng : {selectedDate.toLocaleDateString('VN', { month: '2-digit', year: 'numeric' })}</Text>
+                        <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', }}>{selectedDate.toLocaleDateString('VN', { month: '2-digit', year: 'numeric' })}</Text>
                             <TouchableOpacity style={styles.buttom} onPress={() => setModalVisible(true)} >
                                 <Text>
                                     Chọn tháng
@@ -420,26 +558,26 @@ function Home({ navigation }) {
                                     dataListJar.map((item, index) => {
                                         return (
                                             <TouchableOpacity onPress={() => {
-                                                navigation.navigate("DetailJar", { id: item.id, name: item.name, money: item.totalIncome - item.totalSpending, income: item.totalIncome, spending: item.totalSpending });
+                                                navigation.navigate("DetailJar", { id: item.id, name: item.name, money: item.availableBalances, income: item.totalIncome, spending: item.totalSpending,month:month,year:year });
                                             }} key={item.id} style={styles.containerListJarItem_Item}>
                                                 <View style={{ flex: 0.2, height: "100%", justifyContent: 'center', marginLeft: 10, }}>
                                                     <View style={{ backgroundColor: colorJar[index], height: 50, width: 50, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
                                                         <Image source={require('../../../assets/icons/jar.png')} style={{ tintColor: '#000' }} />
                                                     </View>
                                                 </View>
-                                                <View style={{ flex: 0.7, height: "100%", }}>
+                                                <View style={{ flex: 0.7, height: "100%", justifyContent:'center'}}>
                                                     <View style={{ flex: 0.4, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                                                         <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
-                                                        <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.totalIncome)}</Text>
+                                                        <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.availableBalances)}</Text>
                                                     </View>
-                                                    <View style={{ flex: 0.2, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
+                                                    {/* <View style={{ flex: 0.2, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                                                         <Text style={{ color: '#000', fontSize: 16, }}>Khả dụng</Text>
                                                         <Text style={{ color: '#000', fontSize: 16, }}>{(item.totalIncome == 0 && item.totalSpending == 0) ? 0 : ((item.totalIncome - item.totalSpending) / item.totalIncome * 100).toFixed(2)} %</Text>
-                                                    </View>
-                                                    <View style={{ flex: 0.3, alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                    </View> */}
+                                                    {/* <View style={{ flex: 0.3, alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                                         <Text style={{ color: '#000', fontSize: 16, }}>Tiền khả dụng: </Text>
                                                         <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.totalIncome - item.totalSpending)}</Text>
-                                                    </View>
+                                                    </View> */}
                                                 </View>
                                                 <View style={{ flex: 0.1, height: "100%", justifyContent: 'center', alignItems: 'center' }}>
                                                     <AntDesign name="right" size={14} color="#000" />

@@ -30,6 +30,7 @@ function Account({ navigation }) {
     const app = initializeApp(firebaseConfig);
     const auth = initializeAuth(app, {
     });
+    const [avt,setAvt] = useState("");
     const dispatch = useDispatch();
     const hanldPressExit = () => {
         // Connect FireBase
@@ -55,6 +56,7 @@ function Account({ navigation }) {
             headers: { authorization: accessToken },
         })
             .then((res) => {
+                setAvt(res.data.urlPic);
                 setName(res.data.name);
             }).catch((err) => {
                 console.log(err);
@@ -65,7 +67,7 @@ function Account({ navigation }) {
             <ScrollView style={styles.scrollview}>
                 <View style={styles.containerTop}>
                     <View style={styles.containerTopImage}>
-                        <Image source={{ uri: 'https://res.cloudinary.com/drljnqaai/image/upload/v1671783897/KhoaLuan/313270093_816356566288400_2893180884073968601_n.jpg_gufop7.jpg' }} style={{ height: 60, width: 60, borderRadius: 40, }} />
+                        <Image source={{ uri: avt }} style={{ height: 60, width: 60, borderRadius: 40, }} />
                     </View>
                     <View style={styles.containerTopName}>
                         <View style={{ flex: 0.8, justifyContent: 'center' }}>

@@ -342,7 +342,7 @@ function Chart({ navigation, route }) {
                 </View>
                 <View style={styles.containerheader_title}>
                     <Text style={styles.fontTitle}>
-                        Xem biểu đồ thống kê
+                        Xem biểu đồ thống kê {name}
                     </Text>
                 </View>
                 <View style={styles.containerheader_icon}>
