@@ -210,10 +210,18 @@ function ExchangeOther({ navigation }) {
     const [dataJar, setDataJar] = useState([]);
     const [dataJarTemp, setdataJarTemp] = useState([]);
     const [valuesDefaut, setvaluesDefaut] = useState("");
-
+    const now = new Date(); // lấy thời gian hiện tại
     const onDateChange = (date) => {
-        setDate(date);
-        setModalVisible(!modalVisible);
+        const newDate = new Date(date);
+        if (now < newDate) {
+            setModalVisible(!modalVisible);
+            setDate(now);
+            Alert.alert("Thông báo", "Không được chọn trước ngày hiện tại");
+        }
+        else{
+            setDate(date);
+            setModalVisible(!modalVisible);
+        }
     }
     const clearField = () => {
         setMoney(0);

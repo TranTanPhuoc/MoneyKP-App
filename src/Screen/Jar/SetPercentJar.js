@@ -61,7 +61,9 @@ function SetPercentJar({ navigation,route }) {
                 availableBalances: item.availableBalances,
                 totalSpending: item.totalSpending,
                 totalIncome: item.totalIncome,
-                type: item.type
+                type: item.type,
+                monthNumber: item.month,
+                yearNumber : item.year
             };
         });
         if (tong == 100) {
@@ -73,7 +75,7 @@ function SetPercentJar({ navigation,route }) {
                 },
                 data: listdata,
             }).then(() => {
-                Alert.alert("Thông báo", "Lưu thành công");
+                Alert.alert("Thông báo", "Cập nhật thành công");
                 dispatch(reload_IU(idReload + 1));
                 navigation.navigate("Tabs");
             }).catch((err) => {
@@ -101,6 +103,8 @@ function SetPercentJar({ navigation,route }) {
                             const newData = data.filter(i => i.id !== item.id);
                             setData(newData);
                             dispatch(reload_IU(idReload+1));
+                            navigation.navigate("Tabs");
+
                         }).catch((err) => {
                             console.log(err)
                         })
@@ -129,6 +133,7 @@ function SetPercentJar({ navigation,route }) {
                     var obj = { id: item.id, name: item.name, population: item.precent, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
                     return obj;
                 }));
+                console.log(res.data);
                 setData(res.data.map((item, index) => {
                     var objItem = {
                         id: item.id,
@@ -138,7 +143,9 @@ function SetPercentJar({ navigation,route }) {
                         availableBalances: item.availableBalances,
                         totalSpending: item.totalSpending,
                         totalIncome: item.totalIncome,
-                        type: item.type
+                        type: item.type,
+                        year : item.yearNumber,
+                        month: item.monthNumber,
                     };
                     return objItem;
                 }));
@@ -225,7 +232,7 @@ function SetPercentJar({ navigation,route }) {
                 <View style={{ display: 'flex', flexDirection: 'row', margin: 20, marginBottom: 20, justifyContent: 'center' }}>
                     <View style={styles.containerButton}>
                         <TouchableOpacity onPress={hanldSave} style={styles.buttonStyle}>
-                            <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Lưu tỉ lệ</Text>
+                            <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Cập nhật</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

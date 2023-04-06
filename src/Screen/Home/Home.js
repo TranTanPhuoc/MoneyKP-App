@@ -54,12 +54,8 @@ function Home({ navigation }) {
     const onDateChange = (date) => {
         const newDate = new Date(date);
         if (now < newDate) {
-            // setModalVisible(!modalVisible);
-            // để tạm
-            setSelectedDate(newDate);
             setModalVisible(!modalVisible);
-            setMonth(newDate.getMonth() + 1);
-            setYear(newDate.getFullYear());
+            Alert.alert("Thông báo","Không có dữ liệu");
         }
         else {
             setSelectedDate(newDate);
@@ -126,7 +122,6 @@ function Home({ navigation }) {
         })
             .then((res) => {
                 if (res.data.length == 0 && now > selectedDate) {
-                    console.log("Tạo hủ mới quá khứ")
                     const dataListJar = [
                         {
                             userId: idUser,
@@ -217,75 +212,10 @@ function Home({ navigation }) {
                         }, {
                             headers: { authorization: accessToken },
                         }).then((res) => {
-                            console.log("Tạo hủ mới tương lai tháng 1")
-                            const dataListJar = [
-                                {
-                                    userId: idUser,
-                                    name: "Cần thiết",
-                                    precent: 50,
-                                    availableBalances: 0,
-                                    totalSpending: 0,
-                                    totalIncome: 0,
-                                    type: 1,
-                                    monthNumber: month,
-                                    yearNumber: year,
-                                },
-                                {
-                                    userId: idUser,
-                                    name: "Giáo dục",
-                                    precent: 10,
-                                    availableBalances: 0,
-                                    totalSpending: 0,
-                                    totalIncome: 0,
-                                    type: 1,
-                                    monthNumber: month,
-                                    yearNumber: year,
-                                },
-                                {
-                                    userId: idUser,
-                                    name: "Tiết kiệm",
-                                    precent: 15,
-                                    availableBalances: 0,
-                                    totalSpending: 0,
-                                    totalIncome: 0,
-                                    type: 1,
-                                    monthNumber: month,
-                                    yearNumber: year,
-                                },
-                                {
-                                    userId: idUser,
-                                    name: "Hưởng thụ",
-                                    precent: 10,
-                                    availableBalances: 0,
-                                    totalSpending: 0,
-                                    totalIncome: 0,
-                                    type: 1,
-                                    monthNumber: month,
-                                    yearNumber: year,
-                                },
-                                {
-                                    userId: idUser,
-                                    name: "Đầu tư",
-                                    precent: 10,
-                                    availableBalances: 0,
-                                    totalSpending: 0,
-                                    totalIncome: 0,
-                                    type: 1,
-                                    monthNumber: month,
-                                    yearNumber: year,
-                                },
-                                {
-                                    userId: idUser,
-                                    name: "Từ thiện",
-                                    precent: 5,
-                                    availableBalances: 0,
-                                    totalSpending: 0,
-                                    totalIncome: 0,
-                                    type: 1,
-                                    monthNumber: month,
-                                    yearNumber: year,
-                                }
-                            ];
+                            const dataListJar = res.data.map((item, index) => {
+                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: item.availableBalances, type: 1, monthNumber: month, yearNumber: year };
+                                return obj;
+                            });
                             axios({
                                 url: 'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
                                 method: 'POST',
@@ -311,10 +241,9 @@ function Home({ navigation }) {
                             headers: { authorization: accessToken },
                         }).then((res) => {
                             const dataListJar = res.data.map((item, index) => {
-                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: 0, type: 1, monthNumber: month, yearNumber: year };
+                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: item.availableBalances, type: 1, monthNumber: month, yearNumber: year };
                                 return obj;
                             });
-                            console.log("Tạo hủ mới tương lai khác tháng 1")
                             axios({
                                 url: 'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
                                 method: 'POST',
@@ -558,14 +487,14 @@ function Home({ navigation }) {
                                     dataListJar.map((item, index) => {
                                         return (
                                             <TouchableOpacity onPress={() => {
-                                                navigation.navigate("DetailJar", { id: item.id, name: item.name, money: item.availableBalances, income: item.totalIncome, spending: item.totalSpending,month:month,year:year });
+                                                navigation.navigate("DetailJar", { id: item.id, name: item.name, money: item.availableBalances, income: item.totalIncome, spending: item.totalSpending, month: month, year: year });
                                             }} key={item.id} style={styles.containerListJarItem_Item}>
                                                 <View style={{ flex: 0.2, height: "100%", justifyContent: 'center', marginLeft: 10, }}>
                                                     <View style={{ backgroundColor: colorJar[index], height: 50, width: 50, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
                                                         <Image source={require('../../../assets/icons/jar.png')} style={{ tintColor: '#000' }} />
                                                     </View>
                                                 </View>
-                                                <View style={{ flex: 0.7, height: "100%", justifyContent:'center'}}>
+                                                <View style={{ flex: 0.7, height: "100%", justifyContent: 'center' }}>
                                                     <View style={{ flex: 0.4, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                                                         <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
                                                         <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.availableBalances)}</Text>

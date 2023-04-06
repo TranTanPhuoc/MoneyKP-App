@@ -30,7 +30,7 @@ function Account({ navigation }) {
     const app = initializeApp(firebaseConfig);
     const auth = initializeAuth(app, {
     });
-    const [avt,setAvt] = useState("");
+    const [avt,setAvt] = useState("https://res.cloudinary.com/drljnqaai/image/upload/v1676181723/KhoaLuan/images_dcewqt.png");
     const dispatch = useDispatch();
     const hanldPressExit = () => {
         // Connect FireBase

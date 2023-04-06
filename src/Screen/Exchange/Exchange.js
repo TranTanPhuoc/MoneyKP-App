@@ -233,9 +233,19 @@ function Exchange({ navigation }) {
                 console.log(err);
             })
     }, [idReload, month, year]);
+    const now = new Date(); // lấy thời gian hiện tại
     const onDateChange = (date) => {
-        setDate(date);
-        setModalVisible(!modalVisible);
+        const newDate = new Date(date);
+        if (now < newDate) {
+            setModalVisible(!modalVisible);
+            setDate(now);
+            Alert.alert("Thông báo", "Không được chọn trước ngày hiện tại");
+        }
+        else {
+            setDate(date);
+            setModalVisible(!modalVisible);
+        }
+        
     }
     const clearField = () => {
         setMoney(0);
@@ -467,7 +477,7 @@ function Exchange({ navigation }) {
                             }
                         } style={{ width: 50, borderWidth: 0.5, paddingTop: 10, paddingBottom: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 20, display: 'flex', flexDirection: 'row' }}>
                             {/* <Text style={{ fontSize: 16 }}>Thêm nhanh</Text> */}
-                            <Entypo name="camera" size={24} color="black" style={{ }} />
+                            <Entypo name="camera" size={24} color="black" style={{}} />
                         </TouchableOpacity>
                     </View>
                 }

@@ -322,13 +322,25 @@ function Chart({ navigation, route }) {
                 }}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <CalendarPicker
-                            scrollable={true}
-                            onMonthChange={onDateChange}
-                            initialView='months'
-                            months= {["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"]}
-                        >
-                        </CalendarPicker>
+                        {
+                            valuesDefaut == "Theo tháng" && 
+                            <CalendarPicker
+                                scrollable={true}
+                                onMonthChange={onDateChange}
+                                initialView='months'
+                                months={["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"]}
+                            >
+                            </CalendarPicker>
+                        }
+                        {
+                            valuesDefaut == "Theo năm" && 
+                            <CalendarPicker
+                                scrollable={true}
+                                onMonthChange={onDateChange}
+                                initialView='years'
+                            >
+                            </CalendarPicker>
+                        }
                     </View>
                 </View>
             </Modal>
@@ -397,10 +409,10 @@ function Chart({ navigation, route }) {
                     <View style={styles.containerItemSelect}>
                         <TouchableOpacity style={styles.buttom} onPress={() => setModalVisible(true)} >
                             <Text>
-                                Chọn tháng
+                                {valuesDefaut == "Theo tháng" ? 'Chọn tháng' : ' Chọn năm'}
                             </Text>
                         </TouchableOpacity>
-                        <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, }}>Tháng: {selectedDate.toLocaleDateString('VN', { month: 'long', year: 'numeric' })}</Text>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, }}>{selectedDate.toLocaleDateString('VN', { month: 'long', year: 'numeric' })}</Text>
                     </View>
                 }
                 <ScrollView horizontal={true}>
