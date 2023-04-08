@@ -28,10 +28,10 @@ function DetailJar({ navigation, route }) {
     const [dataHistory, setdataHistory] = useState([]);
     const [hidden, sethidden] = useState(false);
     const [hidden2, sethidden2] = useState(false);
-    const data = [
+    const [data,setDataTN] = useState([
         { id: 1, name: 'Thu nhập', price: income, color: '#03fc41', icon: require('../../../assets/icons/add.png') },
         { id: 2, name: 'Chi tiêu', price: spending, color: '#fc3030', icon: require('../../../assets/icons/minus.png') },
-    ];
+    ]);
     const idReload = useSelector(state => state.reload.idReload);
     // Connect FireBase
     const app = initializeApp(firebaseConfig);
@@ -53,7 +53,19 @@ function DetailJar({ navigation, route }) {
     const [labels, setlabels] = useState(["1", "2", "3", "4"]);
     const [datasets, setdatasets] = useState([0, 0, 0, 0,]);
     const [datasets2, setdatasets2] = useState([0, 0, 0, 0,]);
+    const [moneyReal,setMoneyReal] = useState(moneyR);
     useEffect(() => {
+        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${id}`, {
+            headers: { authorization: accessToken },
+        }).then((res) => {
+            setMoneyReal(res.data.availableBalances);
+            setDataTN([
+                { id: 1, name: 'Thu nhập', price: res.data.totalIncome, color: '#03fc41', icon: require('../../../assets/icons/add.png') },
+                { id: 2, name: 'Chi tiêu', price: res.data.totalSpending, color: '#fc3030', icon: require('../../../assets/icons/minus.png') },
+            ]);
+        }).catch((err) => {
+            console.log(err);
+        });
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-basketId/${idUser}/${id}`, {
             headers: { authorization: accessToken },
         }).then((res) => {
@@ -152,6 +164,7 @@ function DetailJar({ navigation, route }) {
         categoryPercentage: 0.8,
 
     };
+    const now = new Date(); // lấy thời gian hiện tại
     return (
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
@@ -177,34 +190,48 @@ function DetailJar({ navigation, route }) {
                         <Text style={{ fontSize: 16, fontWeight: '600' }}>Tổng số tiền còn lại</Text>
                     </View>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: 100 }}>
-                        <Text style={{ fontSize: 35, fontWeight: '700' }}>{moneyFormat(moneyR)}</Text>
+                        <Text style={{ fontSize: 35, fontWeight: '700' }}>{moneyFormat(moneyReal)}</Text>
                     </View>
                 </View>
                 <View style={{ marginTop: 20, }}>
                     <ScrollView scrollEnabled={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }} style={styles.containerInfoWallet}>
                         {
                             data.map((item,index) => {
-                                return (
-                                    <TouchableOpacity onPress={() => {
-                                        index == 0 ?
-                                            navigation.navigate("Exchange", {
-                                                typeXL: 1
-                                            }) :
-                                            navigation.navigate("Exchange", {
-                                                typeXL: -1
-                                            });
-                                    }} key={item.id} style={styles.containerItem}>
-                                        <View style={styles.containerItemTop}>
-                                            <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                                <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
-                                                <Text style={{ color: '#000', fontSize: 16, marginLeft: 10, }}>{item.name}</Text>
+                                if (now.getMonth() + 1 == month) {
+                                    return (
+                                        <TouchableOpacity onPress={() => {
+                                            index == 0 ?
+                                                navigation.navigate("Exchange", {
+                                                    typeXL: 1
+                                                }) :
+                                                navigation.navigate("Exchange", {
+                                                    typeXL: -1
+                                                });
+                                        }} key={item.id} style={styles.containerItem}>
+                                            <View style={styles.containerItemTop}>
+                                                <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                                    <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
+                                                    <Text style={{ color: '#000', fontSize: 16, marginLeft: 10, }}>{item.name}</Text>
+                                                </View>
                                             </View>
+                                            <View>
+                                                <Text style={{ color: '#000', fontSize: 16, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    );
+                                }
+                                return <View key={item.id} style={styles.containerItem}>
+                                    <View style={styles.containerItemTop}>
+                                        <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                            <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
+                                            <Text style={{ color: '#000', fontSize: 16, marginLeft: 10, }}>{item.name}</Text>
                                         </View>
-                                        <View>
-                                            <Text style={{ color: '#000', fontSize: 16, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                );
+                                    </View>
+                                    <View>
+                                        <Text style={{ color: '#000', fontSize: 16, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
+                                    </View>
+                                </View>
+
                             })
                         }
                     </ScrollView>
