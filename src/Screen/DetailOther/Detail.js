@@ -11,7 +11,7 @@ import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import { useDispatch, useSelector } from 'react-redux';
 import { colorJar } from '../../../assets/AppColors/AppColors';
-import { BarChart, PieChart } from 'react-native-chart-kit';
+import { BarChart, LineChart, PieChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
 import { Image } from 'react-native';
 import { Feather } from '@expo/vector-icons';
@@ -39,14 +39,18 @@ function Detail({ navigation, route }) {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [month, setMonth] = useState(selectedDate.getMonth() + 1);
     const [year, setYear] = useState(selectedDate.getFullYear());
-    const [labels, setlabels] = useState([]);
-    const [datasets, setdatasets] = useState([]);
+    const [labels, setlabels] = useState(["1", "2", "3", "4"]);
+    const [datasets, setdatasets] = useState([0, 0, 0, 0,]);
+    const [datasets2, setdatasets2] = useState([0, 0, 0, 0,]);
     const dispatch = useDispatch();
     const [dataChart, setdataChart] = useState({
-        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "16", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", ""],
+        labels: ["1", "2", "3", "4"],
         datasets: [
             {
-                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                data: [0, 0, 0, 0,],
+            },
+            {
+                data: [0, 0, 0, 0,],
             },
         ],
     });
@@ -76,10 +80,12 @@ function Detail({ navigation, route }) {
             {
                 type: 1,
                 userId: idUser,
-                basketId: idJar,
+                basketId: id,
                 year: year,
                 month: month,
-                typeBasket: 1
+                typeBasket: 1,
+                isDay: false,
+                isWeek: true,
             },
             {
                 headers: {
@@ -88,17 +94,41 @@ function Detail({ navigation, route }) {
             }).then((res) => {
                 setlabels(
                     res.data.map((item, index) => {
-                        return index + 1;
-                    }),
+                        return `${index + 1}`;
+                    })
                 );
                 setdatasets(
                     res.data.map((item) => {
-                        return item;
+                        return parseInt(item);
                     })
                 )
             }).catch((err) => {
                 console.log(err);
-            });
+            })
+        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+            {
+                type: -1,
+                userId: idUser,
+                basketId: id,
+                year: year,
+                month: month,
+                typeBasket: 1,
+                isDay: false,
+                isWeek: true,
+            },
+            {
+                headers: {
+                    authorization: accessToken
+                }
+            }).then((res) => {
+                setdatasets2(
+                    res.data.map((item) => {
+                        return parseInt(item);
+                    })
+                )
+            }).catch((err) => {
+                console.log(err);
+            })
     }, [idReload])
     const chartConfig = {
         backgroundGradientFrom: "#fff",
@@ -112,9 +142,18 @@ function Detail({ navigation, route }) {
     useEffect(() => {
         setdataChart({
             labels: labels,
-            datasets: [{ data: datasets }],
+            datasets: [
+                {
+                    data: datasets,
+                    color: (opacity = 1) => `rgba(0, 128, 0, ${opacity})`,
+                },
+                {
+                    data: datasets2,
+                    color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`
+                },
+            ],
         })
-    }, [datasets]);
+    }, [datasets, datasets2]);
 
     const deleteItem = () => {
         axios.delete(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`, {
@@ -218,7 +257,7 @@ function Detail({ navigation, route }) {
                     {
                         id == 4 && !isCash &&
                         <View style={{ justifyContent: 'center', alignItems: 'center', height: 100 }}>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold'}}> Số lượng cổ phiếu hiện có: {quantity}</Text>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold' }}> Số lượng cổ phiếu hiện có: {quantity}</Text>
                         </View>
                     }
                 </View>
@@ -287,18 +326,50 @@ function Detail({ navigation, route }) {
                             </View>
                             {
                                 !hidden2 &&
-                                <ScrollView horizontal={true}>
-                                    <BarChart
-                                        data={dataChart}
-                                        width={Dimensions.get('window').width + 160}
-                                        height={250}
-                                        yAxisLabel="VND "
-                                        chartConfig={chartConfig}
-                                        showBarTops={true}
-                                        withHorizontalLabels={true}
-                                        horizontalLabelRotation={-60}
-                                    />
-                                </ScrollView>
+                                <>
+                                    <ScrollView horizontal={true}>
+                                        <LineChart
+                                            data={dataChart}
+                                            width={Dimensions.get('window').width - 30}
+                                            height={250}
+                                            yAxisLabel="VND "
+                                            chartConfig={chartConfig}
+                                            showBarTops={true}
+                                            withHorizontalLabels={true}
+                                            horizontalLabelRotation={-60}
+                                            style={{ marginLeft: 10, marginRight: 10, borderRadius: 20, }}
+                                            bezier
+                                        />
+                                    </ScrollView>
+                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
+                                            <View
+                                                style={{
+                                                    width: 10,
+                                                    height: 10,
+                                                    borderRadius: 5,
+                                                    backgroundColor: 'green',
+                                                    alignSelf: 'center',
+                                                    marginVertical: 5,
+                                                }}
+                                            />
+                                            <Text style={{ color: '#000', fontSize: 16, }}> Thu nhập</Text>
+                                        </View>
+                                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                            <View
+                                                style={{
+                                                    width: 10,
+                                                    height: 10,
+                                                    borderRadius: 5,
+                                                    backgroundColor: 'red',
+                                                    alignSelf: 'center',
+                                                    marginVertical: 5,
+                                                }}
+                                            />
+                                            <Text style={{ color: '#000', fontSize: 16, }}> Chi tiêu</Text>
+                                        </View>
+                                    </View>
+                                </>
                             }
                             <View style={styles.containerBottom}>
                                 <TouchableOpacity onPress={() => {

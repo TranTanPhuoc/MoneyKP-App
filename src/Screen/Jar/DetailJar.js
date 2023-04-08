@@ -13,10 +13,10 @@ import { colorJar } from '../../../assets/AppColors/AppColors';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useEffect } from 'react';
-import { BarChart } from 'react-native-chart-kit';
+import { BarChart, LineChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
 function DetailJar({ navigation, route }) {
-    const { id, name, money, income, spending ,month ,year} = route.params;
+    const { id, name, money, income, spending, month, year } = route.params;
     const moneyR = parseInt(money);
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
@@ -40,15 +40,19 @@ function DetailJar({ navigation, route }) {
     const idUser = auth.currentUser.uid;
     const accessToken = `Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const [dataChart, setdataChart] = useState({
-        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "16", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", ""],
+        labels: ["1", "2", "3", "4"],
         datasets: [
             {
-                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                data: [0, 0, 0, 0,],
+            },
+            {
+                data: [0, 0, 0, 0,],
             },
         ],
     });
-    const [labels, setlabels] = useState([]);
-    const [datasets, setdatasets] = useState([]);
+    const [labels, setlabels] = useState(["1", "2", "3", "4"]);
+    const [datasets, setdatasets] = useState([0, 0, 0, 0,]);
+    const [datasets2, setdatasets2] = useState([0, 0, 0, 0,]);
     useEffect(() => {
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-basketId/${idUser}/${id}`, {
             headers: { authorization: accessToken },
@@ -74,10 +78,11 @@ function DetailJar({ navigation, route }) {
             {
                 type: 1,
                 userId: idUser,
-                basketId: id,
                 year: year,
                 month: month,
-                typeBasket: 1
+                typeBasket: 1,
+                isDay: false,
+                isWeek: true,
             },
             {
                 headers: {
@@ -86,12 +91,35 @@ function DetailJar({ navigation, route }) {
             }).then((res) => {
                 setlabels(
                     res.data.map((item, index) => {
-                        return index + 1;
-                    }),
+                        return `${index + 1}`;
+                    })
                 );
                 setdatasets(
                     res.data.map((item) => {
-                        return item;
+                        return parseInt(item);
+                    })
+                )
+            }).catch((err) => {
+                console.log(err);
+            })
+        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+            {
+                type: -1,
+                userId: idUser,
+                year: year,
+                month: month,
+                typeBasket: 1,
+                isDay: false,
+                isWeek: true,
+            },
+            {
+                headers: {
+                    authorization: accessToken
+                }
+            }).then((res) => {
+                setdatasets2(
+                    res.data.map((item) => {
+                        return parseInt(item);
                     })
                 )
             }).catch((err) => {
@@ -102,9 +130,20 @@ function DetailJar({ navigation, route }) {
     useEffect(() => {
         setdataChart({
             labels: labels,
-            datasets: [{ data: datasets }],
+            datasets: [
+                {
+                    data: datasets,
+                    color: (opacity = 1) => `rgba(0, 128, 0, ${opacity})`,
+                    strokeWidth: 2,
+                },
+                {
+                    data: datasets2,
+                    color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
+                    strokeWidth: 2,
+                },
+            ],
         })
-    }, [datasets]);
+    }, [datasets, datasets2]);
     const chartConfig = {
         backgroundGradientFrom: "#fff",
         backgroundGradientTo: "#fff",
@@ -228,18 +267,49 @@ function DetailJar({ navigation, route }) {
                         </View>
                         {
                             !hidden2 &&
-                            <ScrollView horizontal={true}>
-                                <BarChart
-                                    data={dataChart}
-                                    width={Dimensions.get('window').width + 160}
-                                    height={250}
-                                    yAxisLabel="VND "
-                                    chartConfig={chartConfig}
-                                    showBarTops={true}
-                                    withHorizontalLabels={true}
-                                    horizontalLabelRotation={-60}
-                                />
-                            </ScrollView>
+                            <>
+                                <ScrollView horizontal={true}>
+                                    <LineChart
+                                        data={dataChart}
+                                        width={Dimensions.get('window').width - 30}
+                                        height={250}
+                                        yAxisLabel="VND "
+                                        chartConfig={chartConfig}
+                                        showBarTops={true}
+                                        withHorizontalLabels={true}
+                                        horizontalLabelRotation={-60}
+                                        bezier
+                                    />
+                                </ScrollView>
+                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
+                                        <View
+                                            style={{
+                                                width: 10,
+                                                height: 10,
+                                                borderRadius: 5,
+                                                backgroundColor: 'green',
+                                                alignSelf: 'center',
+                                                marginVertical: 5,
+                                            }}
+                                        />
+                                        <Text style={{ color: '#000', fontSize: 16, }}> Thu nhập</Text>
+                                    </View>
+                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                        <View
+                                            style={{
+                                                width: 10,
+                                                height: 10,
+                                                borderRadius: 5,
+                                                backgroundColor: 'red',
+                                                alignSelf: 'center',
+                                                marginVertical: 5,
+                                            }}
+                                        />
+                                        <Text style={{ color: '#000', fontSize: 16, }}> Chi tiêu</Text>
+                                    </View>
+                                </View>
+                            </>
                         }
                         <View style={styles.containerBottom}>
                             <TouchableOpacity onPress={() => {

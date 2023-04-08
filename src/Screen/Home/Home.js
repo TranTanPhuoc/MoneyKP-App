@@ -5,7 +5,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/vi-VN';
 import 'intl/locale-data/jsonp/en';
 import { AntDesign } from '@expo/vector-icons';
-import { PieChart, BarChart } from "react-native-chart-kit";
+import { PieChart, BarChart, LineChart } from "react-native-chart-kit";
 // Import FireBase
 import { initializeAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
@@ -37,14 +37,17 @@ function Home({ navigation }) {
     const [month, setMonth] = useState(selectedDate.getMonth() + 1);
     // Năm hiện tại
     const [year, setYear] = useState(selectedDate.getFullYear());
-    const [labels, setlabels] = useState([]);
+    const [labels, setlabels] = useState([["1", "2", "3", "4"]]);
     // Data biểu đồ cột của thu nhập
-    const [datasets, setdatasets] = useState([]);
+    const [datasets, setdatasets] = useState([400000, 813880, 0, 0,]);
     const [data, setdata] = useState({
-        labels: [],
+        labels: ["1", "2", "3", "4"],
         datasets: [
             {
-                data: [],
+                data: [0, 0, 0, 0,],
+            },
+            {
+                data: [0, 0, 0, 0,],
             },
         ],
     });
@@ -55,7 +58,7 @@ function Home({ navigation }) {
         const newDate = new Date(date);
         if (now < newDate) {
             setModalVisible(!modalVisible);
-            Alert.alert("Thông báo","Không có dữ liệu");
+            Alert.alert("Thông báo", "Không có dữ liệu");
         }
         else {
             setSelectedDate(newDate);
@@ -66,15 +69,7 @@ function Home({ navigation }) {
 
     }
     // Data biểu đồ cột của chi tiêu
-    const [datasets2, setdatasets2] = useState([]);
-    const [data2, setdata2] = useState({
-        labels: [],
-        datasets: [
-            {
-                data: [],
-            },
-        ],
-    });
+    const [datasets2, setdatasets2] = useState([0, 0, 0, 0,]);
     // Data biểu đồ tròn % các lọ
     const [dataPieChart, setdataPieChart] = useState([]);
     // Định dạng tiền tệ VNĐ
@@ -308,7 +303,9 @@ function Home({ navigation }) {
                 userId: idUser,
                 year: year,
                 month: month,
-                typeBasket: 1
+                typeBasket: 1,
+                isDay: false,
+                isWeek: true,
             },
             {
                 headers: {
@@ -318,12 +315,12 @@ function Home({ navigation }) {
                 setisLoading(false);
                 setlabels(
                     res.data.map((item, index) => {
-                        return index + 1;
+                        return `${index + 1}`;
                     })
                 );
                 setdatasets(
                     res.data.map((item) => {
-                        return item;
+                        return parseInt(item);
                     })
                 )
             }).catch((err) => {
@@ -335,7 +332,9 @@ function Home({ navigation }) {
                 userId: idUser,
                 year: year,
                 month: month,
-                typeBasket: 1
+                typeBasket: 1,
+                isDay: false,
+                isWeek: true,
             },
             {
                 headers: {
@@ -345,7 +344,7 @@ function Home({ navigation }) {
                 setisLoading(false);
                 setdatasets2(
                     res.data.map((item) => {
-                        return item;
+                        return parseInt(item);
                     })
                 )
             }).catch((err) => {
@@ -358,25 +357,21 @@ function Home({ navigation }) {
             datasets: [
                 {
                     data: datasets,
+                    color: (opacity = 1) => `rgba(0, 128, 0, ${opacity})`,
                 },
-            ],
-        })
-        setdata2({
-            labels: labels,
-            datasets: [
                 {
                     data: datasets2,
+                    color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`
                 },
             ],
-        })
-    }, [datasets]);
+        });
+    }, [datasets, datasets2]);
     const chartConfig = {
         barPercentage: 0.5,
         categoryPercentage: 0.8,
         backgroundGradientFrom: "#fff",
         backgroundGradientTo: "#fff",
         color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-
 
     };
     const hanldMyContract = () => {
@@ -397,7 +392,6 @@ function Home({ navigation }) {
         }
     }, [vietnamTime.hour()]);
     const [modalVisible, setModalVisible] = useState(false);
-
     return (
         <>
             {loading &&
@@ -518,12 +512,12 @@ function Home({ navigation }) {
                             </View>
                         </View>
                         <View style={styles.containerListJar}>
-                            <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Báo cáo thu nhập của tháng {month}</Text>
+                            <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Thống kê thu - chi của các tuần trong tháng {month}</Text>
                             <View style={styles.containerListJars}>
                                 <ScrollView horizontal={true} style={{ marginTop: 20, marginBottom: 20 }}>
-                                    <BarChart
+                                    <LineChart
                                         data={data}
-                                        width={Dimensions.get('window').width + 200}
+                                        width={Dimensions.get('window').width - 30}
                                         height={250}
                                         yAxisLabel="VND "
                                         chartConfig={chartConfig}
@@ -531,28 +525,40 @@ function Home({ navigation }) {
                                         withHorizontalLabels={true}
                                         horizontalLabelRotation={-60}
                                         style={{ marginLeft: 10, marginRight: 10, borderRadius: 20, }}
+                                        bezier
                                     />
                                 </ScrollView>
+                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center',marginRight:20}}>
+                                        <View
+                                            style={{
+                                                width: 10,
+                                                height: 10,
+                                                borderRadius: 5,
+                                                backgroundColor: 'green',
+                                                alignSelf: 'center',
+                                                marginVertical: 5,
+                                            }}
+                                        />
+                                        <Text style={{ color: '#000', fontSize: 16, }}> Thu nhập</Text>
+                                    </View>
+                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                        <View
+                                            style={{
+                                                width: 10,
+                                                height: 10,
+                                                borderRadius: 5,
+                                                backgroundColor: 'red',
+                                                alignSelf: 'center',
+                                                marginVertical: 5,
+                                            }}
+                                        />
+                                        <Text style={{ color: '#000', fontSize: 16, }}> Chi tiêu</Text>
+                                    </View>
+                                </View>
                             </View>
                         </View>
-                        <View style={styles.containerListJar}>
-                            <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Báo cáo chi tiêu của tháng {month}</Text>
-                            <View style={styles.containerListJars}>
-                                <ScrollView horizontal={true} style={{ marginTop: 20, marginBottom: 20 }}>
-                                    <BarChart
-                                        data={data2}
-                                        width={Dimensions.get('window').width + 200}
-                                        height={250}
-                                        yAxisLabel="VND "
-                                        chartConfig={chartConfig}
-                                        showBarTops={true}
-                                        withHorizontalLabels={true}
-                                        horizontalLabelRotation={-60}
-                                        style={{ marginLeft: 10, marginRight: 10, borderRadius: 20, }}
-                                    />
-                                </ScrollView>
-                            </View>
-                        </View>
+
                         <View style={styles.containerListJar}>
                             <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Cơ cấu các lọ</Text>
                             <View style={styles.containerListJars}>
