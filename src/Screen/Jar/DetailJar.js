@@ -224,6 +224,7 @@ function DetailJar({ navigation, route }) {
                             <ScrollView style={{ marginTop: 20, marginLeft: 10, marginRight: 10, maxHeight: 320 }}>
                                 {
                                     dataHistory.map((item, index) => {
+                                        const date  = new Date(item.createDate);
                                         return (
                                             <View key={index} style={styles.containerItemR}>
                                                 <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center' }}>
@@ -239,12 +240,13 @@ function DetailJar({ navigation, route }) {
                                                         (item.type == 1) ? <Text>Thu nhập</Text> : <Text>Chi tiền</Text>
                                                     }
                                                 </View>
-                                                <View style={{ flex: 0.35, justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+                                                <View style={{ flex: 0.35, justifyContent: 'flex-end', alignItems: 'flex-end',}}>
                                                     {
                                                         (item.type == 1) ?
                                                             <Text style={{ color: '#339900', fontSize: 16, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
                                                             <Text style={{ color: '#EE0000', fontSize: 16, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
                                                     }
+                                                    <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold',marginTop: 10, }}>{date.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
                                                 </View>
                                             </View>
                                         );

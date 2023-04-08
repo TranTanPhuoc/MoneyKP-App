@@ -117,87 +117,10 @@ function Home({ navigation }) {
         })
             .then((res) => {
                 if (res.data.length == 0 && now > selectedDate) {
-                    const dataListJar = [
-                        {
-                            userId: idUser,
-                            name: "Cần thiết",
-                            precent: 50,
-                            availableBalances: 0,
-                            totalSpending: 0,
-                            totalIncome: 0,
-                            type: 1,
-                            monthNumber: month,
-                            yearNumber: year,
-                        },
-                        {
-                            userId: idUser,
-                            name: "Giáo dục",
-                            precent: 10,
-                            availableBalances: 0,
-                            totalSpending: 0,
-                            totalIncome: 0,
-                            type: 1,
-                            monthNumber: month,
-                            yearNumber: year,
-                        },
-                        {
-                            userId: idUser,
-                            name: "Tiết kiệm",
-                            precent: 15,
-                            availableBalances: 0,
-                            totalSpending: 0,
-                            totalIncome: 0,
-                            type: 1,
-                            monthNumber: month,
-                            yearNumber: year,
-                        },
-                        {
-                            userId: idUser,
-                            name: "Hưởng thụ",
-                            precent: 10,
-                            availableBalances: 0,
-                            totalSpending: 0,
-                            totalIncome: 0,
-                            type: 1,
-                            monthNumber: month,
-                            yearNumber: year,
-                        },
-                        {
-                            userId: idUser,
-                            name: "Đầu tư",
-                            precent: 10,
-                            availableBalances: 0,
-                            totalSpending: 0,
-                            totalIncome: 0,
-                            type: 1,
-                            monthNumber: month,
-                            yearNumber: year,
-                        },
-                        {
-                            userId: idUser,
-                            name: "Từ thiện",
-                            precent: 5,
-                            availableBalances: 0,
-                            totalSpending: 0,
-                            totalIncome: 0,
-                            type: 1,
-                            monthNumber: month,
-                            yearNumber: year,
-                        }
-                    ]
-                    axios({
-                        url: 'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
-                        method: 'POST',
-                        headers: {
-                            authorization: accessToken
-                        },
-                        data: dataListJar
-                    }).then((res) => {
-                        setisLoading(false);
-                        dispatch(reload_IU(idReload + 1));
-                    }).catch((err) => {
-                        console.log(err);
-                    });
+                    Alert.alert("Thông báo", "Dữ liệu không tồn tại");
+                    setSelectedDate(now);
+                    setMonth(now.getMonth() + 1);
+                    setYear(now.getFullYear());
                 }
                 else if (res.data.length == 0) {
                     if (month == 1) {
@@ -208,7 +131,13 @@ function Home({ navigation }) {
                             headers: { authorization: accessToken },
                         }).then((res) => {
                             const dataListJar = res.data.map((item, index) => {
-                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: item.availableBalances, type: 1, monthNumber: month, yearNumber: year };
+                                var obj;
+                                if (item.availableBalances >= 0) {
+                                    var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: item.availableBalances, type: 1, monthNumber: month, yearNumber: year };
+                                }
+                                else {
+                                    var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: item.availableBalances, totalIncome: 0, type: 1, monthNumber: month, yearNumber: year };
+                                }
                                 return obj;
                             });
                             axios({
@@ -444,28 +373,42 @@ function Home({ navigation }) {
                         </View>
                         <ScrollView scrollEnabled={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }} style={styles.containerInfoWallet}>
                             {
-                                dataIncomeAndSpending.map((item,index) => {
-                                    return (
-                                        <TouchableOpacity onPress={() => {
-                                            index == 0 ? 
-                                            navigation.navigate("Exchange",{
-                                                typeXL: 1
-                                            }) :
-                                            navigation.navigate("Exchange",{
-                                                typeXL: -1
-                                            });
-                                        }} key={item.id} style={styles.containerItem}>
-                                            <View style={styles.containerItemTop}>
-                                                <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                                    <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
-                                                    <Text style={{ color: '#000', fontSize: 16, marginLeft: 10, }}>{item.name}</Text>
+                                dataIncomeAndSpending.map((item, index) => {
+                                    if (now.getMonth() + 1 == month) {
+                                        return (
+                                            <TouchableOpacity onPress={() => {
+                                                index == 0 ?
+                                                    navigation.navigate("Exchange", {
+                                                        typeXL: 1
+                                                    }) :
+                                                    navigation.navigate("Exchange", {
+                                                        typeXL: -1
+                                                    });
+                                            }} key={item.id} style={styles.containerItem}>
+                                                <View style={styles.containerItemTop}>
+                                                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                                        <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
+                                                        <Text style={{ color: '#000', fontSize: 16, marginLeft: 10, }}>{item.name}</Text>
+                                                    </View>
                                                 </View>
+                                                <View>
+                                                    <Text style={{ color: '#000', fontSize: 16, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        );
+                                    }
+                                    return <View key={item.id} style={styles.containerItem}>
+                                        <View style={styles.containerItemTop}>
+                                            <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                                <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
+                                                <Text style={{ color: '#000', fontSize: 16, marginLeft: 10, }}>{item.name}</Text>
                                             </View>
-                                            <View>
-                                                <Text style={{ color: '#000', fontSize: 16, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                    );
+                                        </View>
+                                        <View>
+                                            <Text style={{ color: '#000', fontSize: 16, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
+                                        </View>
+                                    </View>
+
                                 })
                             }
                         </ScrollView>
@@ -497,16 +440,21 @@ function Home({ navigation }) {
                                                 <View style={{ flex: 0.7, height: "100%", justifyContent: 'center' }}>
                                                     <View style={{ flex: 0.4, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                                                         <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
-                                                        <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.availableBalances)}</Text>
+                                                        <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.totalIncome)}</Text>
                                                     </View>
-                                                    {/* <View style={{ flex: 0.2, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
+                                                    <View style={{ flex: 0.2, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                                                         <Text style={{ color: '#000', fontSize: 16, }}>Khả dụng</Text>
                                                         <Text style={{ color: '#000', fontSize: 16, }}>{(item.totalIncome == 0 && item.totalSpending == 0) ? 0 : ((item.totalIncome - item.totalSpending) / item.totalIncome * 100).toFixed(2)} %</Text>
-                                                    </View> */}
-                                                    {/* <View style={{ flex: 0.3, alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                    </View>
+                                                    <View style={{ flex: 0.3, alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                                         <Text style={{ color: '#000', fontSize: 16, }}>Tiền khả dụng: </Text>
-                                                        <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.totalIncome - item.totalSpending)}</Text>
-                                                    </View> */}
+                                                        {
+                                                            item.availableBalances >= 0 ?
+                                                                <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.availableBalances)}</Text>
+                                                                : <Text style={{ color: 'red', fontSize: 16, }}>{moneyFormat(item.availableBalances)}</Text>
+                                                        }
+
+                                                    </View>
                                                 </View>
                                                 <View style={{ flex: 0.1, height: "100%", justifyContent: 'center', alignItems: 'center' }}>
                                                     <AntDesign name="right" size={14} color="#000" />
@@ -534,8 +482,8 @@ function Home({ navigation }) {
                                         bezier
                                     />
                                 </ScrollView>
-                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center',marginRight:20}}>
+                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
                                         <View
                                             style={{
                                                 width: 10,
@@ -577,16 +525,22 @@ function Home({ navigation }) {
                                     paddingLeft='10'
                                 />
                             </View>
-                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => {
-                                    navigation.navigate("SetPercentJar", {
-                                        month: month,
-                                        year: year
-                                    });
-                                }} style={styles.buttonStyle}>
-                                    <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Chỉnh sửa tỉ lệ, thêm lọ</Text>
-                                </TouchableOpacity>
-                            </View>
+                            {
+                                now.getMonth() + 1 == month ?
+                                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                        <TouchableOpacity onPress={() => {
+                                            navigation.navigate("SetPercentJar", {
+                                                month: month,
+                                                year: year
+                                            });
+                                        }} style={styles.buttonStyle}>
+                                            <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Cập nhật, Thêm lọ</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    :
+                                    <View>
+                                    </View>
+                            }
                         </View>
                         <View style={{ marginTop: 20, }}></View>
                     </ScrollView>

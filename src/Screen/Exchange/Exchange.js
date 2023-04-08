@@ -244,7 +244,7 @@ function Exchange({ navigation, route }) {
             Alert.alert("Thông báo", "Không được chọn trước ngày hiện tại");
         }
         else {
-            setDate(date);
+            setDate(newDate);
             setModalVisible(!modalVisible);
         }
 
@@ -281,10 +281,13 @@ function Exchange({ navigation, route }) {
         if (noteGD == "") {
             mess += "\nGhi chú giao dịch không được rỗng ";
         }
-        if (money == 0 || noteGD == "" || dateGD == "") {
+        if (now.getMonth() + 1 != dateGD.getMonth() + 1) {
+            mess += "\n Chỉ phát sinh giao dịch trong tháng hiện tại!";
+        }
+        if (money == 0 || noteGD == "" || dateGD == "" || now.getMonth() + 1 != dateGD.getMonth() + 1) {
             Alert.alert("Thông báo", mess);
         }
-        if (money != 0 && noteGD != "" && dateGD != "") {
+        if (money != 0 && noteGD != "" && dateGD != "" && now.getMonth() + 1 == dateGD.getMonth() + 1) {
             if (type != 2 && !isSelected) {
                 axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
                     {
@@ -717,6 +720,7 @@ function Exchange({ navigation, route }) {
                 <View style={styles.containerButton}>
                     <TouchableOpacity onPress={() => {
                         navigation.goBack();
+                        clearField();
                     }} style={styles.buttonStyle}>
                         <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Hủy</Text>
                     </TouchableOpacity>

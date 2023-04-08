@@ -74,6 +74,7 @@ function History({ navigation, route }) {
             <ScrollView style={styles.viewBody}>
                 {
                     dataHistory.map((item, index) => {
+                        const date  = new Date(item.createDate);
                         return (
                             <View key={index} style={styles.containerItem}>
                                 <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center' }}>
@@ -89,12 +90,13 @@ function History({ navigation, route }) {
                                         (item.type == 1) ? <Text>Thu nhập</Text> : <Text>Chi tiền</Text>
                                     }
                                 </View>
-                                <View style={{ flex: 0.35 }}>
+                                <View style={{ flex: 0.35,justifyContent:'center',alignItems:'center' }}>
                                     {
                                         (item.type == 1) ?
                                             <Text style={{ color: '#339900', fontSize: 16, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
                                             <Text style={{ color: '#EE0000', fontSize: 16, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
                                     }
+                                    <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold',marginTop: 10, }}>{date.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
                                 </View>
                             </View>
                         );
