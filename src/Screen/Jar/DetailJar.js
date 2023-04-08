@@ -183,9 +183,17 @@ function DetailJar({ navigation, route }) {
                 <View style={{ marginTop: 20, }}>
                     <ScrollView scrollEnabled={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }} style={styles.containerInfoWallet}>
                         {
-                            data.map((item) => {
+                            data.map((item,index) => {
                                 return (
-                                    <View key={item.id} style={styles.containerItem}>
+                                    <TouchableOpacity onPress={() => {
+                                        index == 0 ?
+                                            navigation.navigate("Exchange", {
+                                                typeXL: 1
+                                            }) :
+                                            navigation.navigate("Exchange", {
+                                                typeXL: -1
+                                            });
+                                    }} key={item.id} style={styles.containerItem}>
                                         <View style={styles.containerItemTop}>
                                             <View style={{ display: 'flex', flexDirection: 'row' }}>
                                                 <Image source={require('../../../assets/icons/wallet.png')} style={{ height: 20, width: 20, tintColor: item.color }} />
@@ -195,7 +203,7 @@ function DetailJar({ navigation, route }) {
                                         <View>
                                             <Text style={{ color: '#000', fontSize: 16, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
                                         </View>
-                                    </View>
+                                    </TouchableOpacity>
                                 );
                             })
                         }

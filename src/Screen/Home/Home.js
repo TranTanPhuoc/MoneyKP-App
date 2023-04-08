@@ -444,10 +444,16 @@ function Home({ navigation }) {
                         </View>
                         <ScrollView scrollEnabled={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }} style={styles.containerInfoWallet}>
                             {
-                                dataIncomeAndSpending.map((item) => {
+                                dataIncomeAndSpending.map((item,index) => {
                                     return (
                                         <TouchableOpacity onPress={() => {
-                                            navigation.navigate("Exchange");
+                                            index == 0 ? 
+                                            navigation.navigate("Exchange",{
+                                                typeXL: 1
+                                            }) :
+                                            navigation.navigate("Exchange",{
+                                                typeXL: -1
+                                            });
                                         }} key={item.id} style={styles.containerItem}>
                                             <View style={styles.containerItemTop}>
                                                 <View style={{ display: 'flex', flexDirection: 'row' }}>

@@ -22,7 +22,8 @@ import { reload_IU, send_Photo_Success } from '../../redux/action/ActionRedux';
 import { Entypo } from '@expo/vector-icons';
 import CheckBox from 'expo-checkbox';
 
-function Exchange({ navigation }) {
+function Exchange({ navigation, route }) {
+
     const [colorThuNhap, setcolorThuNhap] = useState("#F9B79C");
     const [colorChiTieu, setcolorChiTieu] = useState(""); // "#91D8E5"
     const [colorChuyenTien, setcolorChuyenTien] = useState(""); // "#fedcba"
@@ -61,6 +62,7 @@ function Exchange({ navigation }) {
         setcolorChuyenTien("#E6E6FA");
         setType(1);
     }
+
     const hanldChiTieu = () => {
         setcolorThuNhap("#E6E6FA");
         setcolorChiTieu("#91D8E5");
@@ -245,7 +247,7 @@ function Exchange({ navigation }) {
             setDate(date);
             setModalVisible(!modalVisible);
         }
-        
+
     }
     const clearField = () => {
         setMoney(0);
@@ -430,7 +432,24 @@ function Exchange({ navigation }) {
             }
         }
     }
-
+    useEffect(() => {
+        if (route.params != undefined) {
+            const { typeXL } = route.params;
+            if (typeXL == 1) {
+                setcolorThuNhap("#F9B79C");
+                setcolorChiTieu("#E6E6FA");
+                setcolorChuyenTien("#E6E6FA");
+                setType(1);
+            }
+            else if (typeXL == -1) {
+                setcolorThuNhap("#E6E6FA");
+                setcolorChiTieu("#91D8E5");
+                setcolorChuyenTien("#E6E6FA");
+                setType(-1);
+                setSelection(false);
+            }
+        }
+    }, [route.params])
     return (
         <SafeAreaView style={styles.container} >
             <Modal
