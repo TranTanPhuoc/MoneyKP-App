@@ -133,7 +133,6 @@ function SetPercentJar({ navigation,route }) {
                     var obj = { id: item.id, name: item.name, population: item.precent, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
                     return obj;
                 }));
-                console.log(res.data);
                 setData(res.data.map((item, index) => {
                     var objItem = {
                         id: item.id,
@@ -154,7 +153,7 @@ function SetPercentJar({ navigation,route }) {
             })
     }, [idReload]);
     const hanldhanldAddJar = () => {
-        navigation.navigate("Jar");
+        navigation.navigate("Jar",{ month : month , year : year});
     }
     return (
         <SafeAreaView style={styles.container} >
@@ -187,7 +186,7 @@ function SetPercentJar({ navigation,route }) {
                 </View>
                 <View style={styles.containerButton}>
                     <TouchableOpacity onPress={hanldhanldAddJar} style={styles.buttonStyle}>
-                        <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Thêm hủ mới</Text>
+                        <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Thêm lọ mới</Text>
                     </TouchableOpacity>
                 </View>
             </View>

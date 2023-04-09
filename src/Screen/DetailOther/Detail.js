@@ -94,7 +94,7 @@ function Detail({ navigation, route }) {
             }).then((res) => {
                 setlabels(
                     res.data.map((item, index) => {
-                        return `${index + 1}`;
+                        return `Tuần ${index + 1}`;
                     })
                 );
                 setdatasets(

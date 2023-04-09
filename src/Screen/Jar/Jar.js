@@ -13,7 +13,8 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { reload_IU } from '../../redux/action/ActionRedux';
 
-function Jar({ navigation }) {
+function Jar({ navigation, route }) {
+    const { month, year } = route.params;
     const [jar, setJar] = useState("");
     const idReload = useSelector(state => state.reload.idReload);
     // Connect FireBase
@@ -32,7 +33,9 @@ function Jar({ navigation }) {
                 availableBalances: 0,
                 totalSpending: 0,
                 totalIncome: 0,
-                type: 1
+                type: 1,
+                monthNumber: month,
+                yearNumber: year
             },
             {
                 headers: {

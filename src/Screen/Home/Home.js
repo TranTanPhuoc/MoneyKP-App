@@ -80,7 +80,7 @@ function Home({ navigation }) {
             maximumFractionDigits: 3,
         });
     };
-
+    const [dataHistory, setdataHistory] = useState([]);
     // Biểu đồ tròn
     const chartConfigPie = {
         backgroundColor: '#e26a00',
@@ -244,7 +244,7 @@ function Home({ navigation }) {
                 setisLoading(false);
                 setlabels(
                     res.data.map((item, index) => {
-                        return `${index + 1}`;
+                        return `Tuần ${index + 1}`;
                     })
                 );
                 setdatasets(
@@ -278,7 +278,28 @@ function Home({ navigation }) {
                 )
             }).catch((err) => {
                 console.log(err);
-            })
+            });
+        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/${idUser}`, {
+            headers: { authorization: accessToken },
+        }).then((res) => {
+            console.log(res.data);
+            // setdataHistory(res.data.map((item, index) => {
+            //     var obj = {
+            //         basketId: item.basketId,
+            //         createDate: item.createDate,
+            //         id: item.id,
+            //         moneyTransaction: item.moneyTransaction,
+            //         note: item.note,
+            //         type: item.type,
+            //         userId: item.userId,
+            //         color: colorJar[0],
+            //         name: name
+            //     };
+            //     return obj;
+            // }));
+        }).catch((err) => {
+            console.log(err);
+        });
     }, [idReload, month, year]);
     useEffect(() => {
         setdata({
@@ -438,15 +459,15 @@ function Home({ navigation }) {
                                                     </View>
                                                 </View>
                                                 <View style={{ flex: 0.7, height: "100%", justifyContent: 'center' }}>
-                                                    <View style={{ flex: 0.4, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
+                                                    <View style={{ flex: 0.3333, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                                                         <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
                                                         <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.totalIncome)}</Text>
                                                     </View>
-                                                    <View style={{ flex: 0.2, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
+                                                    <View style={{ flex: 0.3333, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                                                         <Text style={{ color: '#000', fontSize: 16, }}>Khả dụng</Text>
                                                         <Text style={{ color: '#000', fontSize: 16, }}>{(item.totalIncome == 0 && item.totalSpending == 0) ? 0 : ((item.totalIncome - item.totalSpending) / item.totalIncome * 100).toFixed(2)} %</Text>
                                                     </View>
-                                                    <View style={{ flex: 0.3, alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                    <View style={{ flex: 0.3333, alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                                         <Text style={{ color: '#000', fontSize: 16, }}>Tiền khả dụng: </Text>
                                                         {
                                                             item.availableBalances >= 0 ?
@@ -512,7 +533,54 @@ function Home({ navigation }) {
                                 </View>
                             </View>
                         </View>
-
+                        <View style={{ marginTop: 20, }}>
+                            <View style={styles.containerBody}>
+                                <View style={{ marginTop: 20, marginLeft: 20, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Text style={{ fontSize: 16, fontWeight: '600' }}>Lịch sử giao dịch </Text>
+                                </View>
+                                <ScrollView style={{ marginTop: 20, marginLeft: 10, marginRight: 10, maxHeight: 320 }}>
+                                    {
+                                        dataHistory.map((item, index) => {
+                                            const date = new Date(item.createDate);
+                                            return (
+                                                <View key={index} style={styles.containerItemR}>
+                                                    <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center' }}>
+                                                        <View style={{ backgroundColor: item.color, height: 50, width: 50, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
+                                                            <Image source={require('../../../assets/icons/jar.png')} style={{ tintColor: '#000' }} />
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ flex: 0.45, }}>
+                                                        <View style={{ marginBottom: 10, }}>
+                                                            <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.note}</Text>
+                                                        </View>
+                                                        {
+                                                            (item.type == 1) ? <Text>Thu nhập</Text> : <Text>Chi tiền</Text>
+                                                        }
+                                                    </View>
+                                                    <View style={{ flex: 0.35, justifyContent: 'flex-end', alignItems: 'flex-end', }}>
+                                                        {
+                                                            (item.type == 1) ?
+                                                                <Text style={{ color: '#339900', fontSize: 16, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
+                                                                <Text style={{ color: '#EE0000', fontSize: 16, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
+                                                        }
+                                                        <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold', marginTop: 10, }}>{date.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
+                                                    </View>
+                                                </View>
+                                            );
+                                        })
+                                    }
+                                </ScrollView>
+                                <View style={styles.containerBottom}>
+                                    <TouchableOpacity onPress={() => {
+                                        navigation.navigate("History", { id: null, name: null });
+                                    }} style={styles.bottom} >
+                                        <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ marginTop: 20, marginLeft: 20, }}>
+                                </View>
+                            </View>
+                        </View>
                         <View style={styles.containerListJar}>
                             <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Cơ cấu các lọ</Text>
                             <View style={styles.containerListJars}>

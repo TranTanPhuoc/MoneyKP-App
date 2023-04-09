@@ -260,7 +260,7 @@ function Exchange({ navigation, route }) {
             setNoteGD(`Chuyển tiền từ lọ ${valuesDefaut} sang ${valuesDefautTo}`)
             : (isSelected) ?
                 setNoteGD('Tiền phân bố đều cho tất cả các lọ') : setNoteGD("")
-    }, [type, isSelected]);
+    }, [type, isSelected,money]);
     useEffect(() => {
         if (dateGD != "") {
             const newDate = new Date(dateGD);
@@ -377,32 +377,37 @@ function Exchange({ navigation, route }) {
                 })
             }
             else if (type == 2) {
-                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/transfer-money',
-                    {
-                        userId: idUser,
-                        sentBasketId: idJar,
-                        receiveBasketId: idJarTo,
-                        money: parseFloat(money),
-                        createdDate: dateGD,
-                        note: noteGD
-                    },
-                    {
-                        headers: {
-                            authorization: accessToken
-                        }
-                    }).then((res) => {
-                        (res.status == 200) ? console.log('Lưu chi tiêu thành công') : null;
-                        setidIU(idReload + 1);
-                        const item = idReload + 1;
-                        dispatch(reload_IU(item));
-                        setColorSelect("#FF9999");
-                        setColorSelectTo("#FF9999");
-                    }).catch((err) => {
-                        console.log(err);
-                    })
-                Alert.alert("Thông báo", "Lưu thành công")
-                clearField();
-                navigation.goBack();
+                if (idJar == idJarTo) {
+                    Alert.alert("Thông báo", "Không được chọn lọ trùng nhau")
+                }
+                else {
+                    axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/transfer-money',
+                        {
+                            userId: idUser,
+                            sentBasketId: idJar,
+                            receiveBasketId: idJarTo,
+                            money: parseFloat(money),
+                            createdDate: dateGD,
+                            note: noteGD
+                        },
+                        {
+                            headers: {
+                                authorization: accessToken
+                            }
+                        }).then((res) => {
+                            (res.status == 200) ? console.log('Lưu chi tiêu thành công') : null;
+                            setidIU(idReload + 1);
+                            const item = idReload + 1;
+                            dispatch(reload_IU(item));
+                            setColorSelect("#FF9999");
+                            setColorSelectTo("#FF9999");
+                        }).catch((err) => {
+                            console.log(err);
+                        })
+                    Alert.alert("Thông báo", "Lưu thành công")
+                    clearField();
+                    navigation.goBack();
+                }
             }
             else if (type == 1 && isSelected) {
                 axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/distribute-money',
@@ -709,7 +714,7 @@ function Exchange({ navigation, route }) {
                                 (type == 2) ?
                                     `Chuyển tiền từ lọ ${valuesDefaut} sang ${valuesDefautTo}`
                                     : (isSelected) ?
-                                        'Tiền phân bố đều cho tất cả các lọ' : noteGD
+                                        'Tiền phân bổ tất cả các lọ' : noteGD
                             } onChangeText={x => setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{ fontSize: 16, marginLeft: 10, marginRight: 20, }} />
                         </View>
                     </View>

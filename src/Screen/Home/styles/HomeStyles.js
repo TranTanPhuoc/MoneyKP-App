@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         borderRadius: 40,
     },
     containerListJarItem_Item: {
-        height: 80,
+        height: 90,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -162,6 +162,32 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         marginLeft: 20,
     },
+    containerBottom: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingRight: 10,
+        marginTop: 40,
+      },
+      bottom: {
+        flex: 1,
+        backgroundColor: '#FF8247',
+        borderRadius: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 20,
+        marginLeft: 20,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        paddingTop: 15,
+        paddingBottom: 15,
+      },
 });
 
 export default styles;
