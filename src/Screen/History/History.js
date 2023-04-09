@@ -11,6 +11,7 @@ import { firebaseConfig } from "../../../firebase/ConnectFirebase";
 import { colorJar } from '../../../assets/AppColors/AppColors';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import SelectDropdown from 'react-native-select-dropdown';
 
 function History({ navigation, route }) {
     const { id, name,year,month } = route.params;
@@ -23,6 +24,9 @@ function History({ navigation, route }) {
             maximumFractionDigits: 3,
         });
     };
+    const dataTK = ['Tất cả', 'Thu nhập','Chi tiêu'];
+    const [valuesDefaut, setvaluesDefaut] = useState("Tất cả");
+    const [typeID, settypeID] = useState(null);
     const idReload = useSelector(state => state.reload.idReload);
     // Connect FireBase
     const app = initializeApp(firebaseConfig);
@@ -37,7 +41,7 @@ function History({ navigation, route }) {
                 year: year,
                 basketId: id,
                 month: month,
-                type: null,
+                type: typeID,
                 typeBasket: 1,
                 pageSize: 1000,
                 pageNumber: 0,
@@ -71,7 +75,7 @@ function History({ navigation, route }) {
             }).catch((err) => {
                 console.log(err);
             })
-    }, [idReload])
+    }, [idReload,typeID])
     return (
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
@@ -92,6 +96,30 @@ function History({ navigation, route }) {
                 </View>
             </View>
             <ScrollView style={styles.viewBody}>
+                <View style={styles.containerItem}>
+                    <SelectDropdown
+                        data={dataTK}
+                        defaultButtonText={valuesDefaut}
+                        buttonTextStyle={{ fontSize: 16, }}
+                        onSelect={(selectedItem, index) => {
+                            setvaluesDefaut(selectedItem);
+                            index == 0 ? settypeID (null) :
+                            index == 1 ? settypeID(1) : settypeID(-1);
+                        }}
+                        renderDropdownIcon={isOpened => {
+                            return <AntDesign name={isOpened ? 'filter' : 'filter'} color={'black'} size={16} />;
+                        }}
+                        renderCustomizedButtonChild={value => {
+                            return (
+                                <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
+                                    <Text style={{ fontSize: 16 }}>{valuesDefaut}</Text>
+                                </View>
+                            );
+                        }}
+                        buttonStyle={styles.containerSelectDropDown}
+                    />
+
+                </View>
                 
                 {
                     dataHistory.map((item, index) => {
