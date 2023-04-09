@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 function History({ navigation, route }) {
-    const { id, name } = route.params;
+    const { id, name,year,month } = route.params;
 
     const [dataHistory, setdataHistory] = useState([]);
     const moneyFormat = (amount) => {
@@ -31,26 +31,46 @@ function History({ navigation, route }) {
     const idUser = auth.currentUser.uid;
     const accessToken = `Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     useEffect(() => {
-        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-basketId/${idUser}/${id}`, {
-            headers: { authorization: accessToken },
-        }).then((res) => {
-            setdataHistory(res.data.map((item, index) => {
-                var obj = {
-                    basketId: item.basketId,
-                    createDate: item.createDate,
-                    id: item.id,
-                    moneyTransaction: item.moneyTransaction,
-                    note: item.note,
-                    type: item.type,
-                    userId: item.userId,
-                    color: colorJar[0],
-                    name: name
-                };
-                return obj;
-            }));
-        }).catch((err) => {
-            console.log(err);
-        })
+        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-type-and-type-basket',
+            {
+                userId: idUser,
+                year: year,
+                basketId: id,
+                month: month,
+                type: null,
+                typeBasket: 1,
+                pageSize: 1000,
+                pageNumber: 0,
+                sort: [
+                    {
+                        key: "createDate", // sort theo createDate
+                        asc: false // thứ tự lớn trước nhỏ sau
+                    }
+                ]
+
+            },
+            {
+                headers: {
+                    authorization: accessToken
+                }
+            }).then((res) => {
+                setdataHistory(res.data.map((item, index) => {
+                    var obj = {
+                        basketId: item.basketId,
+                        createDate: item.createDate,
+                        id: item.id,
+                        moneyTransaction: item.moneyTransaction,
+                        note: item.note,
+                        type: item.type,
+                        userId: item.userId,
+                        color: colorJar[0],
+                        name: name
+                    };
+                    return obj;
+                }));
+            }).catch((err) => {
+                console.log(err);
+            })
     }, [idReload])
     return (
         <SafeAreaView style={styles.container} >
@@ -72,9 +92,10 @@ function History({ navigation, route }) {
                 </View>
             </View>
             <ScrollView style={styles.viewBody}>
+                
                 {
                     dataHistory.map((item, index) => {
-                        const date  = new Date(item.createDate);
+                        const date = new Date(item.createDate);
                         return (
                             <View key={index} style={styles.containerItem}>
                                 <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center' }}>
@@ -90,13 +111,13 @@ function History({ navigation, route }) {
                                         (item.type == 1) ? <Text>Thu nhập</Text> : <Text>Chi tiền</Text>
                                     }
                                 </View>
-                                <View style={{ flex: 0.35,justifyContent:'center',alignItems:'center' }}>
+                                <View style={{ flex: 0.35, justifyContent: 'center', alignItems: 'flex-end' }}>
                                     {
                                         (item.type == 1) ?
                                             <Text style={{ color: '#339900', fontSize: 16, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
                                             <Text style={{ color: '#EE0000', fontSize: 16, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
                                     }
-                                    <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold',marginTop: 10, }}>{date.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
+                                    <Text style={{ color: '#000', fontSize: 13, marginTop: 10, }}>{date.toLocaleDateString('VN', { second: '2-digit', minute: '2-digit', hour: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
                                 </View>
                             </View>
                         );

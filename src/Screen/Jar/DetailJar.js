@@ -28,7 +28,7 @@ function DetailJar({ navigation, route }) {
     const [dataHistory, setdataHistory] = useState([]);
     const [hidden, sethidden] = useState(false);
     const [hidden2, sethidden2] = useState(false);
-    const [data,setDataTN] = useState([
+    const [data, setDataTN] = useState([
         { id: 1, name: 'Thu nhập', price: income, color: '#03fc41', icon: require('../../../assets/icons/add.png') },
         { id: 2, name: 'Chi tiêu', price: spending, color: '#fc3030', icon: require('../../../assets/icons/minus.png') },
     ]);
@@ -53,7 +53,7 @@ function DetailJar({ navigation, route }) {
     const [labels, setlabels] = useState(["1", "2", "3", "4"]);
     const [datasets, setdatasets] = useState([0, 0, 0, 0,]);
     const [datasets2, setdatasets2] = useState([0, 0, 0, 0,]);
-    const [moneyReal,setMoneyReal] = useState(moneyR);
+    const [moneyReal, setMoneyReal] = useState(moneyR);
     useEffect(() => {
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${id}`, {
             headers: { authorization: accessToken },
@@ -66,26 +66,13 @@ function DetailJar({ navigation, route }) {
         }).catch((err) => {
             console.log(err);
         });
-        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-basketId/${idUser}/${id}`, {
-            headers: { authorization: accessToken },
-        }).then((res) => {
-            setdataHistory(res.data.map((item, index) => {
-                var obj = {
-                    basketId: item.basketId,
-                    createDate: item.createDate,
-                    id: item.id,
-                    moneyTransaction: item.moneyTransaction,
-                    note: item.note,
-                    type: item.type,
-                    userId: item.userId,
-                    color: colorJar[0],
-                    name: name
-                };
-                return obj;
-            }));
-        }).catch((err) => {
-            console.log(err);
-        });
+        // axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-basketId/${idUser}/${id}`, {
+        //     headers: { authorization: accessToken },
+        // }).then((res) => {
+            
+        // }).catch((err) => {
+        //     console.log(err);
+        // });
         axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
             {
                 type: 1,
@@ -134,6 +121,46 @@ function DetailJar({ navigation, route }) {
                         return parseInt(item);
                     })
                 )
+            }).catch((err) => {
+                console.log(err);
+            })
+        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-type-and-type-basket',
+            {
+                userId: idUser,
+                year: year,
+                basketId: id,
+                month: month,
+                type: null,
+                typeBasket: 1,
+                pageSize: 5,
+                pageNumber: 0,
+                sort: [
+                    {
+                        key: "createDate", // sort theo createDate
+                        asc: false // thứ tự lớn trước nhỏ sau
+                    }
+                ]
+            
+            },
+            {
+                headers: {
+                    authorization: accessToken
+                }
+            }).then((res) => {
+                setdataHistory(res.data.map((item, index) => {
+                    var obj = {
+                        basketId: item.basketId,
+                        createDate: item.createDate,
+                        id: item.id,
+                        moneyTransaction: item.moneyTransaction,
+                        note: item.note,
+                        type: item.type,
+                        userId: item.userId,
+                        color: colorJar[0],
+                        name: name
+                    };
+                    return obj;containerBody
+                }));
             }).catch((err) => {
                 console.log(err);
             })
@@ -196,7 +223,7 @@ function DetailJar({ navigation, route }) {
                 <View style={{ marginTop: 20, }}>
                     <ScrollView scrollEnabled={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }} style={styles.containerInfoWallet}>
                         {
-                            data.map((item,index) => {
+                            data.map((item, index) => {
                                 if (now.getMonth() + 1 == month) {
                                     return (
                                         <TouchableOpacity onPress={() => {
@@ -251,7 +278,7 @@ function DetailJar({ navigation, route }) {
                             <ScrollView style={{ marginTop: 20, marginLeft: 10, marginRight: 10, maxHeight: 320 }}>
                                 {
                                     dataHistory.map((item, index) => {
-                                        const date  = new Date(item.createDate);
+                                        const date = new Date(item.createDate);
                                         return (
                                             <View key={index} style={styles.containerItemR}>
                                                 <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center' }}>
@@ -267,13 +294,13 @@ function DetailJar({ navigation, route }) {
                                                         (item.type == 1) ? <Text>Thu nhập</Text> : <Text>Chi tiền</Text>
                                                     }
                                                 </View>
-                                                <View style={{ flex: 0.35, justifyContent: 'flex-end', alignItems: 'flex-end',}}>
+                                                <View style={{ flex: 0.35, justifyContent: 'flex-end', alignItems: 'flex-end', }}>
                                                     {
                                                         (item.type == 1) ?
                                                             <Text style={{ color: '#339900', fontSize: 16, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
                                                             <Text style={{ color: '#EE0000', fontSize: 16, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
                                                     }
-                                                    <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold',marginTop: 10, }}>{date.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
+                                                    <Text style={{ color: '#000', fontSize: 13, marginTop: 10, }}>{date.toLocaleDateString('VN', {second: '2-digit',minute: '2-digit', hour: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
                                                 </View>
                                             </View>
                                         );
@@ -283,7 +310,7 @@ function DetailJar({ navigation, route }) {
                         }
                         <View style={styles.containerBottom}>
                             <TouchableOpacity onPress={() => {
-                                navigation.navigate("History", { id: id, name: name });
+                                navigation.navigate("History", { id: id, name: name, year : year , month : month});
                             }} style={styles.bottom} >
                                 <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
                             </TouchableOpacity>

@@ -47,12 +47,11 @@ function Exchange({ navigation, route }) {
             hanldChiTieu();
             setMoney(parseInt(moneyPic));
             setNoteGD(notePic);
-            setDate(datePic);
             const newDate = new Date(datePic);
+            setDate(newDate);
             setdateNote(newDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' }));
-
         }
-    }, [noteGD, moneyPic, datePic]);
+    }, [idReload]);
     const dispatch = useDispatch();
     const [idIU, setidIU] = useState(idReload);
     const [dateNote, setdateNote] = useState(selectedDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' }));
@@ -254,13 +253,14 @@ function Exchange({ navigation, route }) {
         setDate(selectedDate);
         setNoteGD("");
         setTagGD("");
+        setWordsMoney("");
     }
     useEffect(() => {
         (type == 2) ?
             setNoteGD(`Chuyển tiền từ lọ ${valuesDefaut} sang ${valuesDefautTo}`)
             : (isSelected) ?
                 setNoteGD('Tiền phân bố đều cho tất cả các lọ') : setNoteGD("")
-    }, [type, isSelected,money]);
+    }, [type, isSelected,idJarTo]);
     useEffect(() => {
         if (dateGD != "") {
             const newDate = new Date(dateGD);
@@ -528,6 +528,7 @@ function Exchange({ navigation, route }) {
                             else {
                                 setMoney(x)
                             }
+                            
 
                         }} placeholder="0" placeholderTextColor={'#000'} style={{ fontSize: 30, flex: 1, }}>{moneyR}</TextInput>
                     </View>

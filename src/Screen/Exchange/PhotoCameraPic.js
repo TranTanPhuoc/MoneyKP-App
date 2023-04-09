@@ -5,7 +5,7 @@ import styles from './styles/PhotoStyles'
 import { AntDesign } from '@expo/vector-icons';
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { send_Photo_Success } from "../../redux/action/ActionRedux";
+import { reload_IU, send_Photo_Success } from "../../redux/action/ActionRedux";
 function PhotoCameraPic({ navigation, route }) {
     const { photo } = route.params;
     const dispatch = useDispatch();
@@ -35,6 +35,8 @@ function PhotoCameraPic({ navigation, route }) {
             const note = response.data.document.inference.pages[0].prediction.supplier.value;
             const date = response.data.document.inference.started_at;
             dispatch(send_Photo_Success(money, note, date));
+            let randomNumber = Math.floor(Math.random() * 90000) + 10000;
+            dispatch(reload_IU(randomNumber));
             navigation.navigate("Tabs");
         })
             .catch((error) => {

@@ -188,6 +188,49 @@ const styles = StyleSheet.create({
         paddingTop: 15,
         paddingBottom: 15,
       },
+      containerBody: {
+    backgroundColor: '#fff',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowColor: '#999999',
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+  },
+  containerItem: {
+    flex: 0.5,
+    backgroundColor: '#E6E6FA',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowColor: '#999999',
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    height: 80,
+    margin: 5,
+    borderRadius: 10,
+    justifyContent: 'center',
+  },
+  containerItemTop: {
+    marginLeft: 10,
+    marginRight: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  containerItemR: {
+    height: 70,
+    margin: 5,
+    borderRadius: 10,
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-between',
+  },
 });
 
 export default styles;

@@ -300,6 +300,46 @@ function Home({ navigation }) {
         }).catch((err) => {
             console.log(err);
         });
+        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-type-and-type-basket',
+            {
+                userId: idUser,
+                year: year,
+                basketId: null,
+                month: month,
+                type: null,
+                typeBasket: 1,
+                pageSize: 5,
+                pageNumber: 0,
+                sort: [
+                    {
+                        key: "createDate", // sort theo createDate
+                        asc: false // thứ tự lớn trước nhỏ sau
+                    }
+                ]
+
+            },
+            {
+                headers: {
+                    authorization: accessToken
+                }
+            }).then((res) => {
+                setdataHistory(res.data.map((item, index) => {
+                    var obj = {
+                        basketId: item.basketId,
+                        createDate: item.createDate,
+                        id: item.id,
+                        moneyTransaction: item.moneyTransaction,
+                        note: item.note,
+                        type: item.type,
+                        userId: item.userId,
+                        color: colorJar[0],
+                        name: name
+                    };
+                    return obj;
+                }));
+            }).catch((err) => {
+                console.log(err);
+            })
     }, [idReload, month, year]);
     useEffect(() => {
         setdata({
@@ -536,9 +576,9 @@ function Home({ navigation }) {
                         <View style={{ marginTop: 20, }}>
                             <View style={styles.containerBody}>
                                 <View style={{ marginTop: 20, marginLeft: 20, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 16, fontWeight: '600' }}>Lịch sử giao dịch </Text>
+                                    <Text style={{ fontSize: 20, fontWeight: '600' }}>Lịch sử giao dịch </Text>
                                 </View>
-                                <ScrollView style={{ marginTop: 20, marginLeft: 10, marginRight: 10, maxHeight: 320 }}>
+                                <ScrollView style={{ marginTop: 20, marginRight: 10, maxHeight: 320 }}>
                                     {
                                         dataHistory.map((item, index) => {
                                             const date = new Date(item.createDate);
@@ -563,7 +603,8 @@ function Home({ navigation }) {
                                                                 <Text style={{ color: '#339900', fontSize: 16, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
                                                                 <Text style={{ color: '#EE0000', fontSize: 16, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
                                                         }
-                                                        <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold', marginTop: 10, }}>{date.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
+                                                        <Text style={{ color: '#000', fontSize: 13, marginTop: 10, }}>{date.toLocaleDateString('VN', { second: '2-digit', minute: '2-digit', hour: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
+
                                                     </View>
                                                 </View>
                                             );
@@ -572,7 +613,7 @@ function Home({ navigation }) {
                                 </ScrollView>
                                 <View style={styles.containerBottom}>
                                     <TouchableOpacity onPress={() => {
-                                        navigation.navigate("History", { id: null, name: null });
+                                        navigation.navigate("History", { id: null, name: null, year: year, month: month });
                                     }} style={styles.bottom} >
                                         <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
                                     </TouchableOpacity>
