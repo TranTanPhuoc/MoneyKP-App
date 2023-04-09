@@ -260,7 +260,7 @@ function Exchange({ navigation, route }) {
             setNoteGD(`Chuyển tiền từ lọ ${valuesDefaut} sang ${valuesDefautTo}`)
             : (isSelected) ?
                 setNoteGD('Tiền phân bố đều cho tất cả các lọ') : setNoteGD("")
-    }, [type, isSelected,idJarTo]);
+    }, [type, isSelected, idJarTo]);
     useEffect(() => {
         if (dateGD != "") {
             const newDate = new Date(dateGD);
@@ -296,7 +296,7 @@ function Exchange({ navigation, route }) {
                         createDate: dateGD,
                         moneyTransaction: parseFloat(money),
                         type: type,
-                        note: noteGD,
+                        note: `${noteGD}(${valuesDefaut})`,
                         typeBasket: typeBasket,
                     },
                     {
@@ -528,7 +528,7 @@ function Exchange({ navigation, route }) {
                             else {
                                 setMoney(x)
                             }
-                            
+
 
                         }} placeholder="0" placeholderTextColor={'#000'} style={{ fontSize: 30, flex: 1, }}>{moneyR}</TextInput>
                     </View>
