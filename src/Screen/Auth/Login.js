@@ -76,8 +76,8 @@ function Login() {
             {(loading == false) &&
                 <SafeAreaView style={styles.container} >
                     <View style={styles.containerTop}>
-                        <TouchableOpacity onPress={hanldPressRegister} style={{ flex: 0.2, justifyContent: 'center', }}>
-                            <AntDesign name="arrowleft" size={24} color="black" />
+                        <TouchableOpacity style={{ flex: 0.2, justifyContent: 'center', }}>
+                            {/* <AntDesign name="arrowleft" size={24} color="black" /> */}
                         </TouchableOpacity>
                         <View style={{ flex: 0.6, justifyContent: 'center', alignItems: 'center' }}>
                             <Text style={{ fontSize: 24, }}>Đăng nhập</Text>

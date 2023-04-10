@@ -48,6 +48,9 @@ function Account({ navigation }) {
             year : year
         });
     }
+    const hanldChangePassword = () => {
+        navigation.navigate("ChangePassword");
+    }
     const idUser = auth.currentUser.uid;
     const idReload = useSelector(state => state.reload.idReload);
     const accessToken = `Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
@@ -89,7 +92,7 @@ function Account({ navigation }) {
                 </TouchableOpacity>
                 <View style={{ borderWidth: 0.5, marginTop: 10, borderColor: "grey", borderRadius: 10, }}></View>
                 <View style={styles.containerPrInfo}>
-                    <TouchableOpacity style={styles.containerPrInfoItem}>
+                    <TouchableOpacity onPress={hanldChangePassword} style={styles.containerPrInfoItem}>
                         <View style={{ flex: 0.2, height: "100%", justifyContent: 'center', alignItems: 'center', }}>
                             <View style={{ height: 40, width: 40, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
                                 <Image source={require('../../../assets/icons/usericon.png')} style={{ tintColor: '#000', height: 30, width: 30 }} />

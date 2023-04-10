@@ -7,7 +7,6 @@ import Tabs from './src/BottomTabBar/Tabs';
 import User from './src/Screen/Account/User';
 import ForgotPassword from './src/Screen/Auth/ForgotPassword';
 import Login from './src/Screen/Auth/Login';
-import Register from './src/Screen/Auth/Register';
 import Exchange from './src/Screen/Exchange/Exchange';
 import History from './src/Screen/History/History';
 import Home from './src/Screen/Home/Home';
@@ -24,6 +23,8 @@ import HistoryOther from './src/Screen/History/HistoryOther';
 import Detail from './src/Screen/DetailOther/Detail';
 import CameraPic from './src/Screen/Exchange/CameraPic';
 import PhotoCameraPic from './src/Screen/Exchange/PhotoCameraPic';
+import Register from './src/Screen/Auth/Register';
+import ChangePassword from './src/Screen/Auth/ChangePassword';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -50,6 +51,7 @@ export default function App() {
           <Stack.Screen name='Detail' component={Detail} />
           <Stack.Screen name='CameraPic' component={CameraPic} />
           <Stack.Screen name='PhotoCameraPic' component={PhotoCameraPic} />
+          <Stack.Screen name='ChangePassword' component={ChangePassword} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
