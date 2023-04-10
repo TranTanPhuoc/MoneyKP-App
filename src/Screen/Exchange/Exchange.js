@@ -289,92 +289,175 @@ function Exchange({ navigation, route }) {
         }
         if (money != 0 && noteGD != "" && dateGD != "" && now.getMonth() + 1 == dateGD.getMonth() + 1) {
             if (type != 2 && !isSelected) {
-                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
-                    {
-                        userId: idUser,
-                        basketId: idJar,
-                        createDate: dateGD,
-                        moneyTransaction: parseFloat(money),
-                        type: type,
-                        note: `${noteGD}(${valuesDefaut})`,
-                        typeBasket: typeBasket,
-                    },
-                    {
-                        headers: {
-                            authorization: accessToken
-                        }
+                if (type == 1) {
+                    const income = parseInt(totalIncome) + parseInt(money);
+                    axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
+                        {
+                            id: idJar,
+                            userId: idUser,
+                            name: nameJar,
+                            precent: precentJar,
+                            availableBalances: availableBalancesI + parseInt(money),
+                            totalSpending: totalSpending,
+                            totalIncome: income,
+                            type: 1,
+                            monthNumber: month,
+                            yearNumber: year,
+                        },
+                        {
+                            headers: {
+                                authorization: accessToken
+                            }
+                        }).then((res) => {
+                            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
+                                {
+                                    userId: idUser,
+                                    basketId: idJar,
+                                    createDate: dateGD,
+                                    moneyTransaction: parseFloat(money),
+                                    type: type,
+                                    note: `${noteGD}(${valuesDefaut})`,
+                                    typeBasket: typeBasket,
+                                },
+                                {
+                                    headers: {
+                                        authorization: accessToken
+                                    }
+                                }
+                            ).then((res) => {
+                                setidIU(idReload + 1);
+                                const item = idReload + 1;
+                                dispatch(reload_IU(item));
+                                Alert.alert("Thông báo", "Lưu thành công")
+                                clearField();
+                                navigation.goBack();
+                                clearField();
+                            }).catch((err) => {
+                                console.log(err);
+                            });
+                        }).catch((err) => {
+                            console.log(err);
+                        })
+
+                }
+
+
+                if (type == -1) {
+                    const spending = parseInt(totalSpending) + parseInt(money);
+                    if (availableBalancesI > 0 && availableBalancesI - parseInt(money) < 0) {
+                        Alert.alert("Thông báo", "Số tiền chi tiêu vượt quá số tiền khả dụng\nBạn có muốn tiếp tục chi tiêu", [
+                            { text: "Thoát", onPress: () => { }, style: 'cancel' },
+                            {
+                                text: "Tiếp tục", onPress: () => {
+                                    axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
+                                        {
+                                            id: idJar,
+                                            userId: idUser,
+                                            name: nameJar,
+                                            precent: precentJar,
+                                            availableBalances: availableBalancesI - parseInt(money),
+                                            totalSpending: spending,
+                                            totalIncome: totalIncome,
+                                            monthNumber: month,
+                                            yearNumber: year,
+                                            type: 1,
+                                        },
+                                        {
+                                            headers: {
+                                                authorization: accessToken
+                                            }
+                                        }).then((res) => {
+                                            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
+                                                {
+                                                    userId: idUser,
+                                                    basketId: idJar,
+                                                    createDate: dateGD,
+                                                    moneyTransaction: parseFloat(money),
+                                                    type: type,
+                                                    note: `${noteGD}(${valuesDefaut})`,
+                                                    typeBasket: typeBasket,
+                                                },
+                                                {
+                                                    headers: {
+                                                        authorization: accessToken
+                                                    }
+                                                }
+                                            ).then((res) => {
+                                                (res.status == 200) ? console.log('Lưu chi tiêu thành công') : null;
+                                                setidIU(idReload + 1);
+                                                const item = idReload + 1;
+                                                dispatch(reload_IU(item));
+                                                setColorSelect("#FF9999");
+                                                dispatch(send_Photo_Success(undefined, undefined, undefined));
+                                                Alert.alert("Thông báo", "Lưu thành công")
+                                                clearField();
+                                                navigation.goBack();
+                                            });
+
+                                        }).catch((err) => {
+                                            console.log(err);
+                                        })
+                                }
+                            }
+                        ]);
+
                     }
-                ).then((res) => {
-                    if (res.status == 200) {
-                        if (type == 1) {
-                            const income = parseInt(totalIncome) + parseInt(money);
-                            axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
-                                {
-                                    id: idJar,
-                                    userId: idUser,
-                                    name: nameJar,
-                                    precent: precentJar,
-                                    availableBalances: availableBalancesI + parseInt(money),
-                                    totalSpending: totalSpending,
-                                    totalIncome: income,
-                                    type: 1,
-                                    monthNumber: month,
-                                    yearNumber: year,
-                                },
-                                {
-                                    headers: {
-                                        authorization: accessToken
+                    else {
+                        axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
+                            {
+                                id: idJar,
+                                userId: idUser,
+                                name: nameJar,
+                                precent: precentJar,
+                                availableBalances: availableBalancesI - parseInt(money),
+                                totalSpending: spending,
+                                totalIncome: totalIncome,
+                                monthNumber: month,
+                                yearNumber: year,
+                                type: 1,
+                            },
+                            {
+                                headers: {
+                                    authorization: accessToken
+                                }
+                            }).then((res) => {
+                                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
+                                    {
+                                        userId: idUser,
+                                        basketId: idJar,
+                                        createDate: dateGD,
+                                        moneyTransaction: parseFloat(money),
+                                        type: type,
+                                        note: `${noteGD}(${valuesDefaut})`,
+                                        typeBasket: typeBasket,
+                                    },
+                                    {
+                                        headers: {
+                                            authorization: accessToken
+                                        }
                                     }
-                                }).then((res) => {
-                                    // (res.status == 200)? console.log('Lưu thu nhập thành công') : null;
-                                    setidIU(idReload + 1);
-                                    const item = idReload + 1;
-                                    dispatch(reload_IU(item));
-                                    clearField();
-                                }).catch((err) => {
-                                    console.log(err);
-                                })
-                        }
-                        else if (type == -1) {
-                            const spending = parseInt(totalSpending) + parseInt(money);
-                            axios.put(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${idJar}`,
-                                {
-                                    id: idJar,
-                                    userId: idUser,
-                                    name: nameJar,
-                                    precent: precentJar,
-                                    availableBalances: availableBalancesI - parseInt(money),
-                                    totalSpending: spending,
-                                    totalIncome: totalIncome,
-                                    monthNumber: month,
-                                    yearNumber: year,
-                                    type: 1,
-                                },
-                                {
-                                    headers: {
-                                        authorization: accessToken
-                                    }
-                                }).then((res) => {
+                                ).then((res) => {
                                     (res.status == 200) ? console.log('Lưu chi tiêu thành công') : null;
                                     setidIU(idReload + 1);
                                     const item = idReload + 1;
                                     dispatch(reload_IU(item));
                                     setColorSelect("#FF9999");
                                     dispatch(send_Photo_Success(undefined, undefined, undefined));
+                                    Alert.alert("Thông báo", "Lưu thành công")
                                     clearField();
-                                }).catch((err) => {
-                                    console.log(err);
-                                })
-                        }
-                        Alert.alert("Thông báo", "Lưu thành công")
-                        clearField();
-                        navigation.goBack();
+                                    navigation.goBack();
+                                });
+
+                            }).catch((err) => {
+                                console.log(err);
+                            })
                     }
 
-                }).catch((err) => {
-                    Alert.alert("Thông báo", "Lưu giao dịch lỗi")
-                    console.log(err)
-                })
+
+                }
+
+
+
             }
             else if (type == 2) {
                 if (idJar == idJarTo) {

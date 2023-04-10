@@ -174,6 +174,7 @@ function Home({ navigation }) {
                                 }
                                 return obj;
                             });
+
                             axios({
                                 url: 'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
                                 method: 'POST',
@@ -181,7 +182,49 @@ function Home({ navigation }) {
                                     authorization: accessToken
                                 },
                                 data: dataListJar
-                            }).then((res) => {
+                            }).then((res2) => {
+                                res2.data.map((item, index) => {
+                                    if (item.availableBalances > 0) {
+                                        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
+                                            {
+                                                userId: idUser,
+                                                basketId: item.id,
+                                                createDate: now,
+                                                moneyTransaction: parseFloat(dataListJar[index].availableBalances),
+                                                type: 1,
+                                                note: `Tiền dư của lọ ${item.name} tháng cũ sang tháng mới`,
+                                                typeBasket: 1,
+                                            },
+                                            {
+                                                headers: {
+                                                    authorization: accessToken
+                                                }
+                                            }).then((res3) => {
+                                                console.log("vào");
+                                            })
+                                    }
+                                    else if (item.availableBalances < 0) {
+                                        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
+                                            {
+                                                userId: idUser,
+                                                basketId: item.id,
+                                                createDate: now,
+                                                moneyTransaction: parseFloat(dataListJar[index].availableBalances),
+                                                type: -1,
+                                                note: `Tiền thiếu của lọ ${item.name} tháng cũ sang tháng mới`,
+                                                typeBasket: 1,
+                                            },
+                                            {
+                                                headers: {
+                                                    authorization: accessToken
+                                                }
+                                            }).then((res3) => {
+                                                return;
+                                            })
+                                    }
+                                    return;
+
+                                });
                                 setisLoading(false);
                                 dispatch(reload_IU(idReload + 1));
                             }).catch((err) => {
@@ -285,27 +328,6 @@ function Home({ navigation }) {
             }).catch((err) => {
                 console.log(err);
             });
-        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/${idUser}`, {
-            headers: { authorization: accessToken },
-        }).then((res) => {
-            console.log(res.data);
-            // setdataHistory(res.data.map((item, index) => {
-            //     var obj = {
-            //         basketId: item.basketId,
-            //         createDate: item.createDate,
-            //         id: item.id,
-            //         moneyTransaction: item.moneyTransaction,
-            //         note: item.note,
-            //         type: item.type,
-            //         userId: item.userId,
-            //         color: colorJar[0],
-            //         name: name
-            //     };
-            //     return obj;
-            // }));
-        }).catch((err) => {
-            console.log(err);
-        });
         axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-type-and-type-basket',
             {
                 userId: idUser,

@@ -58,6 +58,7 @@ function ExchangeOther({ navigation }) {
         setcolorNo("#E6E6FA");
         setcolorMoUoc("#E6E6FA");
         settypeBasket(4);
+        hanldTaiSanNap();
     }
     const hanldTaiSanNap = () => {
         setcolorTSNap(colorJar[8]);
@@ -77,6 +78,7 @@ function ExchangeOther({ navigation }) {
         setcolorNo("#E6E6FA");
         setcolorLo("#E6E6FA");
         settypeBasket(3);
+        hanldMoUocThem();
     }
     const hanldMoUocThem = () => {
         setcolorMoUocThem(colorJar[5]);
@@ -96,6 +98,7 @@ function ExchangeOther({ navigation }) {
         setcolorLo("#E6E6FA");
         setcolorMoUoc("#E6E6FA");
         settypeBasket(2);
+        hanldNoThem();
     }
     const hanldNoThem = () => {
         setcolorNoThem(colorJar[5]);
@@ -218,7 +221,7 @@ function ExchangeOther({ navigation }) {
             setDate(now);
             Alert.alert("Thông báo", "Không được chọn trước ngày hiện tại");
         }
-        else{
+        else {
             setDate(date);
             setModalVisible(!modalVisible);
         }
@@ -403,31 +406,41 @@ function ExchangeOther({ navigation }) {
 
             }
             else if (type == 2) {
-                axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/transfer-money',
-                    {
-                        userId: idUser,
-                        sentBasketId: idJar,
-                        receiveBasketId: idJarTo,
-                        money: parseFloat(money),
-                        createdDate: dateGD,
-                        note: noteGD
-                    },
-                    {
-                        headers: {
-                            authorization: accessToken
-                        }
-                    }).then((res) => {
-                        (res.status == 200) ? console.log('Lưu chi tiêu thành công') : null;
-                        setidIU(idReload + 1);
-                        const item = idReload + 1;
-                        dispatch(reload_IU(item));
-                        setColorSelect("#FF9999");
-                    }).catch((err) => {
-                        console.log(err);
-                    })
-                Alert.alert("Thông báo", "Lưu thành công")
-                clearField();
-                navigation.goBack();
+                if (idJar == idJarTo) {
+                    Alert.alert("Thông báo", "Không được chọn lọ trùng nhau");
+                }
+                else {
+                    if (idJar != null && idJarTo != null) {
+                        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/transfer-money',
+                            {
+                                userId: idUser,
+                                sentBasketId: idJar,
+                                receiveBasketId: idJarTo,
+                                money: parseFloat(money),
+                                createdDate: dateGD,
+                                note: noteGD
+                            },
+                            {
+                                headers: {
+                                    authorization: accessToken
+                                }
+                            }).then((res) => {
+                                (res.status == 200) ? console.log('Lưu chi tiêu thành công') : null;
+                                setidIU(idReload + 1);
+                                const item = idReload + 1;
+                                dispatch(reload_IU(item));
+                                setColorSelect("#FF9999");
+                            }).catch((err) => {
+                                console.log(err);
+                            })
+                        Alert.alert("Thông báo", "Lưu thành công")
+                        clearField();
+                        navigation.goBack();
+                    }
+                    else{
+                        Alert.alert("Thông báo","Mời bạn chọn lọ để chuyển tiền");
+                    }
+                }
             }
         }
     }
@@ -489,9 +502,11 @@ function ExchangeOther({ navigation }) {
                     }));
                 }
                 else {
+                    setdataJarTo([]);
                     setDataJar([]);
                     setdataJarTemp([]);
                     setvaluesDefaut("");
+                    setvaluesDefautTo("");
                     setisJar()
                     settotalIncome();
                     settotalSpending();

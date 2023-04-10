@@ -71,7 +71,7 @@ function Chart({ navigation, route }) {
             }).then((res) => {
                 setlabels(
                     res.data.map((item, index) => {
-                        return `Tuần ${index + 1}`;
+                        return `Ngày ${index + 1}`;
                     })
                 );
                 setdatasets(
@@ -219,7 +219,7 @@ function Chart({ navigation, route }) {
                 <ScrollView horizontal={true}>
                     <LineChart
                         data={data}
-                        width={Dimensions.get('window').width + 160}
+                        width={Dimensions.get('window').width + 1400}
                         height={250}
                         yAxisLabel="VND "
                         chartConfig={chartConfig}
