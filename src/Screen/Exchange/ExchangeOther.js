@@ -230,6 +230,7 @@ function ExchangeOther({ navigation }) {
         setMoney(0);
         setDate(selectedDate);
         setNoteGD(selectedDate);
+        hanldMoUoc();
     }
     const onHanldSave = () => {
         var mess = "";
@@ -567,13 +568,13 @@ function ExchangeOther({ navigation }) {
             </Modal>
             <ScrollView style={styles.scrollview}>
                 <View style={styles.containerTop}>
-                    <TouchableOpacity onPress={hanldTaiSan} style={{ flex: 0.33333, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorTS }}>
+                    {/* <TouchableOpacity onPress={hanldTaiSan} style={{ flex: 0.33333, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorTS }}>
                         <Text style={{ fontSize: 16 }}>Tài sản</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={hanldMoUoc} style={{ flex: 0.33333, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorMoUoc }}>
+                    </TouchableOpacity> */}
+                    <TouchableOpacity onPress={hanldMoUoc} style={{ flex: 0.5, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorMoUoc }}>
                         <Text style={{ fontSize: 16 }}>Mơ ước</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={hanldNo} style={{ flex: 0.33333, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorNo }}>
+                    <TouchableOpacity onPress={hanldNo} style={{ flex: 0.5, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorNo }}>
                         <Text style={{ fontSize: 16 }}>Nợ</Text>
                     </TouchableOpacity>
                 </View>
@@ -773,6 +774,7 @@ function ExchangeOther({ navigation }) {
                 <View style={styles.containerButton}>
                     <TouchableOpacity onPress={() => {
                         navigation.goBack();
+                        clearField();
                     }} style={styles.buttonStyle}>
                         <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Hủy</Text>
                     </TouchableOpacity>

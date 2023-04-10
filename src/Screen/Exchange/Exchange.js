@@ -254,6 +254,7 @@ function Exchange({ navigation, route }) {
         setNoteGD("");
         setTagGD("");
         setWordsMoney("");
+        hanldThuNhap();
     }
     useEffect(() => {
         (type == 2) ?

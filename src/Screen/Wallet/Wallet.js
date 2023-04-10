@@ -36,7 +36,7 @@ function Wallet({ navigation }) {
     const [totalIncome, settotalIncome] = useState(10);
     const [totalSpending, settotalSpending] = useState(5);
     const [dataDS, setdataDS] = useState([
-        { id: 4, name: "Tài sản", money: 0 },
+        // { id: 4, name: "Tài sản", money: 0 },
         { id: 3, name: "Mơ ước", money: 0 },
         { id: 1, name: "6 Lọ", money: 0 },
         { id: 2, name: "Nợ", money: 0 },
@@ -128,7 +128,7 @@ function Wallet({ navigation }) {
                 })
                 setdataDS(
                     [
-                        { id: 4, name: "Tài sản", money: listdata[0] },
+                        // { id: 4, name: "Tài sản", money: listdata[0] },
                         { id: 3, name: "Mơ ước", money: listdata[1] },
                         { id: 1, name: "6 Lọ", money: listdata[2] },
                         { id: 2, name: "Nợ", money: listdata[3] },

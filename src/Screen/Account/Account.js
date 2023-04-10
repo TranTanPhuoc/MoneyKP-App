@@ -97,23 +97,7 @@ function Account({ navigation }) {
                         </View>
                         <View style={{ flex: 0.7, height: "100%", }}>
                             <View style={{ justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row', flex: 1 }}>
-                                <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>Mã của bạn</Text>
-                                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>VK3XRC</Text>
-                            </View>
-                        </View>
-                        <View style={{ flex: 0.1, height: "100%", justifyContent: 'center', alignItems: 'center' }}>
-                            <AntDesign name="right" size={14} color="#000" />
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.containerPrInfoItem}>
-                        <View style={{ flex: 0.2, height: "100%", justifyContent: 'center', alignItems: 'center' }}>
-                            <View style={{ height: 40, width: 40, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
-                                <Image source={require('../../../assets/icons/share.png')} style={{ tintColor: '#000', height: 25, width: 25 }} />
-                            </View>
-                        </View>
-                        <View style={{ flex: 0.7, height: "100%", }}>
-                            <View style={{ justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row', flex: 1 }}>
-                                <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>Nhập mã giới thiệu</Text>
+                                <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>Đổi mật khẩu</Text>
                             </View>
                         </View>
                         <View style={{ flex: 0.1, height: "100%", justifyContent: 'center', alignItems: 'center' }}>
@@ -122,36 +106,6 @@ function Account({ navigation }) {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.containerPrInfo1}>
-                    <TouchableOpacity style={styles.containerPrInfoItem}>
-                        <View style={{ flex: 0.2, height: "100%", justifyContent: 'center', alignItems: 'center', }}>
-                            <View style={{ height: 40, width: 40, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
-                                <Image source={require('../../../assets/icons/grid_view.png')} style={{ tintColor: '#000', height: 25, width: 25 }} />
-                            </View>
-                        </View>
-                        <View style={{ flex: 0.7, height: "100%", }}>
-                            <View style={{ justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row', flex: 1 }}>
-                                <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>Cài đặt chung</Text>
-                            </View>
-                        </View>
-                        <View style={{ flex: 0.1, height: "100%", justifyContent: 'center', alignItems: 'center' }}>
-                            <AntDesign name="right" size={14} color="#000" />
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.containerPrInfoItem}>
-                        <View style={{ flex: 0.2, height: "100%", justifyContent: 'center', alignItems: 'center', }}>
-                            <View style={{ height: 40, width: 40, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
-                                <Image source={require('../../../assets/icons/currency.png')} style={{ tintColor: '#000', height: 25, width: 25 }} />
-                            </View>
-                        </View>
-                        <View style={{ flex: 0.7, height: "100%", }}>
-                            <View style={{ justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row', flex: 1 }}>
-                                <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>Giao dịch định kỳ</Text>
-                            </View>
-                        </View>
-                        <View style={{ flex: 0.1, height: "100%", justifyContent: 'center', alignItems: 'center' }}>
-                            <AntDesign name="right" size={14} color="#000" />
-                        </View>
-                    </TouchableOpacity>
                     <TouchableOpacity onPress={handSetPercentJar} style={styles.containerPrInfoItem}>
                         <View style={{ flex: 0.2, height: "100%", justifyContent: 'center', alignItems: 'center', }}>
                             <View style={{ height: 40, width: 40, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>

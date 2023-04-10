@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
     },
     containerPrInfo:{
         marginTop:20,
-        height:120,
         backgroundColor:"#E6E6FA",
         borderRadius:20,
     },
@@ -57,7 +56,6 @@ const styles = StyleSheet.create({
     },
     containerPrInfo1:{
         marginTop:20,
-        height:180,
         backgroundColor:"#E6E6FA",
         borderRadius:20,
     },
