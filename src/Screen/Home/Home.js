@@ -519,7 +519,7 @@ function Home({ navigation }) {
                                     dataListJar.map((item, index) => {
                                         return (
                                             <TouchableOpacity onPress={() => {
-                                                navigation.navigate("DetailJar", { id: item.id, name: item.name, money: item.availableBalances, income: item.totalIncome, spending: item.totalSpending, month: month, year: year });
+                                                navigation.navigate("DetailJar", { id: item.id, name: item.name, money: item.availableBalances, income: item.totalIncome, spending: item.totalSpending, month: month, year: year,typeBasket : 1 });
                                             }} key={item.id} style={styles.containerListJarItem_Item}>
                                                 <View style={{ flex: 0.2, height: "100%", justifyContent: 'center', marginLeft: 10, }}>
                                                     <View style={{ backgroundColor: colorJar[index], height: 50, width: 50, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
@@ -641,7 +641,7 @@ function Home({ navigation }) {
                                 </ScrollView>
                                 <View style={styles.containerBottom}>
                                     <TouchableOpacity onPress={() => {
-                                        navigation.navigate("History", { id: null, name: null, year: year, month: month });
+                                        navigation.navigate("History", { id: null, name: null, year: year, month: month, typeBasket : 1});
                                     }} style={styles.bottom} >
                                         <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
                                     </TouchableOpacity>

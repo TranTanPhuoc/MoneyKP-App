@@ -16,7 +16,7 @@ import { useEffect } from 'react';
 import { BarChart, LineChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
 function DetailJar({ navigation, route }) {
-    const { id, name, money, income, spending, month, year } = route.params;
+    const { id, name, money, income, spending, month, year,typeBasket } = route.params;
     const moneyR = parseInt(money);
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
@@ -310,7 +310,7 @@ function DetailJar({ navigation, route }) {
                         }
                         <View style={styles.containerBottom}>
                             <TouchableOpacity onPress={() => {
-                                navigation.navigate("History", { id: id, name: name, year : year , month : month});
+                                navigation.navigate("History", { id: id, name: name, year : year , month : month, typeBasket: typeBasket});
                             }} style={styles.bottom} >
                                 <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
                             </TouchableOpacity>

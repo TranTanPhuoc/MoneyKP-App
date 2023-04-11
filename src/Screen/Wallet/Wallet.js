@@ -128,7 +128,6 @@ function Wallet({ navigation }) {
                 })
                 setdataDS(
                     [
-                        // { id: 4, name: "Tài sản", money: listdata[0] },
                         { id: 3, name: "Mơ ước", money: listdata[1] },
                         { id: 1, name: "6 Lọ", money: listdata[2] },
                         { id: 2, name: "Nợ", money: listdata[3] },
