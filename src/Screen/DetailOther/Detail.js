@@ -56,26 +56,46 @@ function Detail({ navigation, route }) {
     });
 
     useEffect(() => {
-        axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-basketId/${idUser}/${idJar}`, {
-            headers: { authorization: accessToken },
-        }).then((res) => {
-            setdataHistory(res.data.map((item, index) => {
-                var obj = {
-                    basketId: item.basketId,
-                    createDate: item.createDate,
-                    id: item.id,
-                    moneyTransaction: item.moneyTransaction,
-                    note: item.note,
-                    type: item.type,
-                    userId: item.userId,
-                    color: colorJar[0],
-                    name: name
-                };
-                return obj;
-            }));
-        }).catch((err) => {
-            console.log(err);
-        });
+        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-type-and-type-basket',
+            {
+                userId: idUser,
+                year: year,
+                basketId: idJar,
+                month: month,
+                type: null,
+                typeBasket: id,
+                pageSize: 5,
+                pageNumber: 0,
+                sort: [
+                    {
+                        key: "createDate", // sort theo createDate
+                        asc: false // thứ tự lớn trước nhỏ sau
+                    }
+                ]
+
+            },
+            {
+                headers: {
+                    authorization: accessToken
+                }
+            }).then((res) => {
+                setdataHistory(res.data.map((item, index) => {
+                    var obj = {
+                        basketId: item.basketId,
+                        createDate: item.createDate,
+                        id: item.id,
+                        moneyTransaction: item.moneyTransaction,
+                        note: item.note,
+                        type: item.type,
+                        userId: item.userId,
+                        color: colorJar[0],
+                        name: name
+                    };
+                    return obj;
+                }));
+            }).catch((err) => {
+                console.log(err);
+            });
         axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
             {
                 type: 1,
@@ -195,7 +215,7 @@ function Detail({ navigation, route }) {
                 </View>
                 <View style={styles.containerheader_title}>
                     <Text style={styles.fontTitle}>
-                        Chi tiết
+                        Chi tiết {itemName} ({name})
                     </Text>
                 </View>
                 <View style={styles.containerheader_icon}>
@@ -307,7 +327,7 @@ function Detail({ navigation, route }) {
                         }
                         <View style={styles.containerBottom}>
                             <TouchableOpacity onPress={() => {
-                                navigation.navigate("History", { id: idJar, name: itemName });
+                                navigation.navigate("History", { id: idJar, name: itemName, typeBasket: id, year: year, month: month,});
                             }} style={styles.bottom} >
                                 <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
                             </TouchableOpacity>

@@ -63,7 +63,13 @@ function DetailOther({ navigation, route }) {
             .then((res) => {
                 if (res.data.length !== 0 && res.data.length > 1) {
                     setdataPieChart(res.data.map((item, index) => {
-                        const precent = parseInt(item.availableBalances) / parseInt(moneyR);
+                        var precent = 0;
+                        if(parseInt(moneyR) == 0){
+                             precent = 100;
+                        }
+                        else{
+                            precent = parseInt(item.availableBalances) / parseInt(moneyR);
+                        }
                         let randomColor = colorJar[index]
                         var obj = { id: item.id, name: item.name, population: precent, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
                         return obj;

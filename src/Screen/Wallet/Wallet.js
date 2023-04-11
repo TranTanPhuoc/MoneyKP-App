@@ -188,7 +188,7 @@ function Wallet({ navigation }) {
                             dataDS.map((item, index) => {
                                 return (
                                     <TouchableOpacity onPress={() => {
-                                        (index == 2) ?
+                                        (index == 1) ?
                                             navigation.goBack()
                                             :
                                             navigation.navigate("DetailOther", { name: item.name, id: item.id, money: item.money });
