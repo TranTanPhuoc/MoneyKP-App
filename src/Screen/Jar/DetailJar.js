@@ -16,7 +16,7 @@ import { useEffect } from 'react';
 import { BarChart, LineChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
 function DetailJar({ navigation, route }) {
-    const { id, name, money, income, spending, month, year,typeBasket } = route.params;
+    const { id, name, money, income, spending, month, year, typeBasket } = route.params;
     const moneyR = parseInt(money);
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
@@ -58,10 +58,14 @@ function DetailJar({ navigation, route }) {
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${id}`, {
             headers: { authorization: accessToken },
         }).then((res) => {
+            console.log(res.data);
             setMoneyReal(res.data.availableBalances);
             setDataTN([
-                { id: 1, name: 'Thu nhập', price: res.data.totalIncome, color: '#03fc41', icon: require('../../../assets/icons/add.png') },
-                { id: 2, name: 'Chi tiêu', price: res.data.totalSpending, color: '#fc3030', icon: require('../../../assets/icons/minus.png') },
+                {
+                    id: 1, name: 'Thu nhập', price: res.data.totalIncome, color: '#03fc41', icon: require('../../../assets/icons/add.png'),
+                    idJar: res.data.id, availableBalances: res.data.availableBalances, precent: res.data.precent, totalIncome: res.data.totalIncome, totalSpending: res.data.totalSpending
+                },
+                { id: 2, name: 'Chi tiêu', price: res.data.totalSpending, color: '#fc3030', icon: require('../../../assets/icons/minus.png'), idJar: res.data.id, availableBalances: res.data.availableBalances, precent: res.data.precent, totalIncome: res.data.totalIncome, totalSpending: res.data.totalSpending },
             ]);
         }).catch((err) => {
             console.log(err);
@@ -69,7 +73,7 @@ function DetailJar({ navigation, route }) {
         // axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-basketId/${idUser}/${id}`, {
         //     headers: { authorization: accessToken },
         // }).then((res) => {
-            
+
         // }).catch((err) => {
         //     console.log(err);
         // });
@@ -140,7 +144,7 @@ function DetailJar({ navigation, route }) {
                         asc: false // thứ tự lớn trước nhỏ sau
                     }
                 ]
-            
+
             },
             {
                 headers: {
@@ -159,7 +163,7 @@ function DetailJar({ navigation, route }) {
                         color: colorJar[0],
                         name: name
                     };
-                    return obj;containerBody
+                    return obj; containerBody
                 }));
             }).catch((err) => {
                 console.log(err);
@@ -228,11 +232,23 @@ function DetailJar({ navigation, route }) {
                                     return (
                                         <TouchableOpacity onPress={() => {
                                             index == 0 ?
-                                                navigation.navigate("Exchange", {
-                                                    typeXL: 1
+                                                navigation.navigate("ExchangeItem", {
+                                                    typeXL: 1,
+                                                    name: name,
+                                                    idJar: id,
+                                                    availableBalances: item.availableBalances,
+                                                    precent: item.precent,
+                                                    totalIncome: item.totalIncome,
+                                                    totalSpending: item.totalSpending
                                                 }) :
-                                                navigation.navigate("Exchange", {
-                                                    typeXL: -1
+                                                navigation.navigate("ExchangeItem", {
+                                                    typeXL: -1,
+                                                    name: name,
+                                                    idJar: id,
+                                                    availableBalances: item.availableBalances,
+                                                    precent: item.precent,
+                                                    totalIncome: item.totalIncome,
+                                                    totalSpending: item.totalSpending
                                                 });
                                         }} key={item.id} style={styles.containerItem}>
                                             <View style={styles.containerItemTop}>
@@ -300,7 +316,7 @@ function DetailJar({ navigation, route }) {
                                                             <Text style={{ color: '#339900', fontSize: 16, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
                                                             <Text style={{ color: '#EE0000', fontSize: 16, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
                                                     }
-                                                    <Text style={{ color: '#000', fontSize: 13, marginTop: 10, }}>{date.toLocaleDateString('VN', {second: '2-digit',minute: '2-digit', hour: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
+                                                    <Text style={{ color: '#000', fontSize: 13, marginTop: 10, }}>{date.toLocaleDateString('VN', { second: '2-digit', minute: '2-digit', hour: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
                                                 </View>
                                             </View>
                                         );
@@ -310,7 +326,7 @@ function DetailJar({ navigation, route }) {
                         }
                         <View style={styles.containerBottom}>
                             <TouchableOpacity onPress={() => {
-                                navigation.navigate("History", { id: id, name: name, year : year , month : month, typeBasket: typeBasket});
+                                navigation.navigate("History", { id: id, name: name, year: year, month: month, typeBasket: typeBasket });
                             }} style={styles.bottom} >
                                 <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
                             </TouchableOpacity>

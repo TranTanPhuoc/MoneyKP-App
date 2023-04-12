@@ -25,6 +25,9 @@ import CameraPic from './src/Screen/Exchange/CameraPic';
 import PhotoCameraPic from './src/Screen/Exchange/PhotoCameraPic';
 import Register from './src/Screen/Auth/Register';
 import ChangePassword from './src/Screen/Auth/ChangePassword';
+import ExchangeItem from './src/Screen/Exchange/ExchangeItem';
+import CameraPicItem from './src/Screen/Exchange/CameraPicItem';
+import PhotoCameraPicItem from './src/Screen/Exchange/PhotoCameraPicItem';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -50,8 +53,11 @@ export default function App() {
           <Stack.Screen name='HistoryOther' component={HistoryOther} />
           <Stack.Screen name='Detail' component={Detail} />
           <Stack.Screen name='CameraPic' component={CameraPic} />
+          <Stack.Screen name='CameraPicItem' component={CameraPicItem} />
           <Stack.Screen name='PhotoCameraPic' component={PhotoCameraPic} />
+          <Stack.Screen name='PhotoCameraPicItem' component={PhotoCameraPicItem} />
           <Stack.Screen name='ChangePassword' component={ChangePassword} />
+          <Stack.Screen name='ExchangeItem' component={ExchangeItem} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
