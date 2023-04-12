@@ -25,7 +25,7 @@ function History({ navigation, route }) {
         });
     };
     const dataTK = ['Tất cả', 'Thu nhập', 'Chi tiêu'];
-    const [valuesDefaut, setvaluesDefaut] = useState("Tất cả");
+    const [valuesDefaut, setvaluesDefaut] = useState("Hình thức");
     const [typeID, settypeID] = useState(null);
     const idReload = useSelector(state => state.reload.idReload);
     // Connect FireBase
@@ -104,7 +104,7 @@ function History({ navigation, route }) {
                     return objtemp;
                 }));
                 setIdJar(null);
-                setvaluesDefautJar("Tất cả");
+                setvaluesDefautJar("Chọn lọ");
             });
     }, [idReload])
     return (

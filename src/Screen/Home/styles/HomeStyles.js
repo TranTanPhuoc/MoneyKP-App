@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         shadowColor: '#999999',
         shadowOpacity: 0.5,
         shadowRadius: 2,
-        borderRadius: 40,
+        borderRadius: 10,
     },
     containerListJarItem_Item: {
         height: 90,
@@ -168,8 +168,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingRight: 10,
         marginTop: 40,
-      },
-      bottom: {
+    },
+    bottom: {
         flex: 1,
         backgroundColor: '#FF8247',
         borderRadius: 100,
@@ -179,58 +179,59 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 2,
+            width: 0,
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
         paddingTop: 15,
         paddingBottom: 15,
-      },
-      containerBody: {
-    backgroundColor: '#fff',
-    shadowOffset: {
-      width: 0,
-      height: 1,
     },
-    shadowColor: '#999999',
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-  },
-  containerItem: {
-    flex: 0.5,
-    backgroundColor: '#E6E6FA',
-    shadowOffset: {
-      width: 0,
-      height: 1,
+    containerBody: {
+        backgroundColor: '#fff',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowColor: '#999999',
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+        borderRadius:10,
     },
-    shadowColor: '#999999',
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    height: 80,
-    margin: 5,
-    borderRadius: 10,
-    justifyContent: 'center',
-  },
-  containerItemTop: {
-    marginLeft: 10,
-    marginRight: 10,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  containerItemR: {
-    height: 70,
-    margin: 5,
-    borderRadius: 10,
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-between',
-  },
+    containerItem: {
+        flex: 0.5,
+        backgroundColor: '#E6E6FA',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowColor: '#999999',
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+        height: 80,
+        margin: 5,
+        borderRadius: 10,
+        justifyContent: 'center',
+    },
+    containerItemTop: {
+        marginLeft: 10,
+        marginRight: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    containerItemR: {
+        height: 70,
+        margin: 5,
+        borderRadius: 10,
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: 'space-between',
+    },
 });
 
 export default styles;

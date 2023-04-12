@@ -197,7 +197,7 @@ function SetPercentJar({ navigation,route }) {
                         <View key={item.id} style={styles.containerItem}>
                             <View style={{ flex: 0.7, alignItems: 'center', height: "100%", display: 'flex', flexDirection: 'row' }}>
                                 <Text style={{ fontSize: 16, fontWeight: '500', marginRight: 10, }}>{index + 1}.</Text>
-                                <TextInput onChangeText={x => updateItemName(item, x)} style={{ fontSize: 16, fontWeight: '500' }}>{item.name}</TextInput>
+                                <TextInput onChangeText={x => updateItemName(item, x)} style={{ fontSize: 16, fontWeight: '500',borderWidth:0.5,flex:1,height:40,marginHorizontal:10,paddingHorizontal:10,borderRadius:5}}>{item.name}</TextInput>
                             </View>
                             <View style={{ flex: 0.3, justifyContent: 'center', height: "100%", alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                                 <View style={{ flex: 0.75, borderWidth: 0.3, marginRight: 20, paddingTop: 5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center' }}>

@@ -58,7 +58,6 @@ function DetailJar({ navigation, route }) {
         axios.get(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/${id}`, {
             headers: { authorization: accessToken },
         }).then((res) => {
-            console.log(res.data);
             setMoneyReal(res.data.availableBalances);
             setDataTN([
                 {

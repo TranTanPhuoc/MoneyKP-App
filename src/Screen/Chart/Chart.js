@@ -27,6 +27,9 @@ function Chart({ navigation, route }) {
     const [labels, setlabels] = useState(["1", "2", "3", "4"]);
     const [datasets, setdatasets] = useState([0, 0, 0, 0,]);
     const [datasets2, setdatasets2] = useState([0, 0, 0, 0,]);
+    const [labels1, setlabels1] = useState(["1", "2", "3", "4"]);
+    const [datasets3, setdatasets3] = useState([0, 0, 0, 0,]);
+    const [datasets4, setdatasets4] = useState([0, 0, 0, 0,]);
     const onDateChange = (date) => {
         const newDate = new Date(date);
         setSelectedDate(newDate);
@@ -42,6 +45,17 @@ function Chart({ navigation, route }) {
     const accessToken = `Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const idReload = useSelector(state => state.reload.idReload);
     const [data, setdata] = useState({
+        labels: ["1", "2", "3", "4"],
+        datasets: [
+            {
+                data: [0, 0, 0, 0,],
+            },
+            {
+                data: [0, 0, 0, 0,],
+            },
+        ],
+    });
+    const [data1, setdata1] = useState({
         labels: ["1", "2", "3", "4"],
         datasets: [
             {
@@ -106,6 +120,60 @@ function Chart({ navigation, route }) {
             }).catch((err) => {
                 console.log(err);
             })
+        // Tuần
+        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+            {
+                type: 1,
+                userId: idUser,
+                basketId: id,
+                year: year,
+                month: month,
+                typeBasket: 1,
+                isDay: false,
+                isWeek: true,
+            },
+            {
+                headers: {
+                    authorization: accessToken
+                }
+            }).then((res) => {
+                setlabels1(
+                    res.data.map((item, index) => {
+                        return `Tuần ${index + 1}`;
+                    })
+                );
+                setdatasets3(
+                    res.data.map((item) => {
+                        return parseInt(item);
+                    })
+                )
+            }).catch((err) => {
+                console.log(err);
+            })
+        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
+            {
+                type: -1,
+                userId: idUser,
+                basketId: id,
+                year: year,
+                month: month,
+                typeBasket: 1,
+                isDay: false,
+                isWeek: true,
+            },
+            {
+                headers: {
+                    authorization: accessToken
+                }
+            }).then((res) => {
+                setdatasets4(
+                    res.data.map((item) => {
+                        return parseInt(item);
+                    })
+                )
+            }).catch((err) => {
+                console.log(err);
+            })
     }, [idReload, month, year]);
     useEffect(() => {
         setdata({
@@ -122,7 +190,21 @@ function Chart({ navigation, route }) {
             ],
         });
     }, [datasets, datasets2]);
-
+    useEffect(() => {
+        setdata1({
+            labels: labels1,
+            datasets: [
+                {
+                    data: datasets3,
+                    color: (opacity = 1) => `rgba(0, 128, 0, ${opacity})`,
+                },
+                {
+                    data: datasets4,
+                    color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`
+                },
+            ],
+        });
+    }, [datasets3, datasets4]);
     const chartConfig = {
         backgroundGradientFrom: "#fff",
         backgroundGradientTo: "#fff",
@@ -226,6 +308,48 @@ function Chart({ navigation, route }) {
                         showBarTops={true}
                         withHorizontalLabels={true}
                         horizontalLabelRotation={-60}
+                        bezier
+                    />
+                </ScrollView>
+                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
+                        <View
+                            style={{
+                                width: 10,
+                                height: 10,
+                                borderRadius: 5,
+                                backgroundColor: 'green',
+                                alignSelf: 'center',
+                                marginVertical: 5,
+                            }}
+                        />
+                        <Text style={{ color: '#000', fontSize: 16, }}> Thu nhập</Text>
+                    </View>
+                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                        <View
+                            style={{
+                                width: 10,
+                                height: 10,
+                                borderRadius: 5,
+                                backgroundColor: 'red',
+                                alignSelf: 'center',
+                                marginVertical: 5,
+                            }}
+                        />
+                        <Text style={{ color: '#000', fontSize: 16, }}> Chi tiêu</Text>
+                    </View>
+                </View>
+                <ScrollView horizontal={true} style={{ marginTop: 20, marginBottom: 20 }}>
+                    <LineChart
+                        data={data1}
+                        width={Dimensions.get('window').width - 30}
+                        height={250}
+                        yAxisLabel="VND "
+                        chartConfig={chartConfig}
+                        showBarTops={true}
+                        withHorizontalLabels={true}
+                        horizontalLabelRotation={-60}
+                        style={{ marginLeft: 10, marginRight: 10, borderRadius: 20, }}
                         bezier
                     />
                 </ScrollView>

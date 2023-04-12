@@ -519,7 +519,7 @@ function Home({ navigation }) {
                                     dataListJar.map((item, index) => {
                                         return (
                                             <TouchableOpacity onPress={() => {
-                                                navigation.navigate("DetailJar", { id: item.id, name: item.name, money: item.availableBalances, income: item.totalIncome, spending: item.totalSpending, month: month, year: year,typeBasket : 1 });
+                                                navigation.navigate("DetailJar", { id: item.id, name: item.name, money: item.availableBalances, income: item.totalIncome, spending: item.totalSpending, month: month, year: year, typeBasket: 1 });
                                             }} key={item.id} style={styles.containerListJarItem_Item}>
                                                 <View style={{ flex: 0.2, height: "100%", justifyContent: 'center', marginLeft: 10, }}>
                                                     <View style={{ backgroundColor: colorJar[index], height: 50, width: 50, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
@@ -554,49 +554,62 @@ function Home({ navigation }) {
                                 }
                             </View>
                         </View>
-                        <View style={styles.containerListJar}>
-                            <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Thống kê thu - chi của các tuần trong tháng {month}</Text>
-                            <View style={styles.containerListJars}>
-                                <ScrollView horizontal={true} style={{ marginTop: 20, marginBottom: 20 }}>
-                                    <LineChart
-                                        data={data}
-                                        width={Dimensions.get('window').width - 30}
-                                        height={250}
-                                        yAxisLabel="VND "
-                                        chartConfig={chartConfig}
-                                        showBarTops={true}
-                                        withHorizontalLabels={true}
-                                        horizontalLabelRotation={-60}
-                                        style={{ marginLeft: 10, marginRight: 10, borderRadius: 20, }}
-                                        bezier
-                                    />
-                                </ScrollView>
-                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
-                                        <View
-                                            style={{
-                                                width: 10,
-                                                height: 10,
-                                                borderRadius: 5,
-                                                backgroundColor: 'green',
-                                                alignSelf: 'center',
-                                                marginVertical: 5,
-                                            }}
-                                        />
-                                        <Text style={{ color: '#000', fontSize: 16, }}> Thu nhập</Text>
-                                    </View>
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                        <View
-                                            style={{
-                                                width: 10,
-                                                height: 10,
-                                                borderRadius: 5,
-                                                backgroundColor: 'red',
-                                                alignSelf: 'center',
-                                                marginVertical: 5,
-                                            }}
-                                        />
-                                        <Text style={{ color: '#000', fontSize: 16, }}> Chi tiêu</Text>
+                        <View style={{ marginTop: 20 }}>
+                            <View style={styles.containerBody}>
+                                <View style={styles.containerListJar}>
+                                    <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Thống kê thu - chi của các tuần trong tháng {month}</Text>
+                                    <View style={styles.containerListJars}>
+                                        <ScrollView horizontal={true} style={{ marginTop: 20, marginBottom: 20 }}>
+                                            <LineChart
+                                                data={data}
+                                                width={Dimensions.get('window').width - 30}
+                                                height={250}
+                                                yAxisLabel="VND "
+                                                chartConfig={chartConfig}
+                                                showBarTops={true}
+                                                withHorizontalLabels={true}
+                                                horizontalLabelRotation={-60}
+                                                style={{ marginLeft: 10, marginRight: 10, borderRadius: 20, }}
+                                                bezier
+                                            />
+                                        </ScrollView>
+                                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
+                                                <View
+                                                    style={{
+                                                        width: 10,
+                                                        height: 10,
+                                                        borderRadius: 5,
+                                                        backgroundColor: 'green',
+                                                        alignSelf: 'center',
+                                                        marginVertical: 5,
+                                                    }}
+                                                />
+                                                <Text style={{ color: '#000', fontSize: 16, }}> Thu nhập</Text>
+                                            </View>
+                                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                                <View
+                                                    style={{
+                                                        width: 10,
+                                                        height: 10,
+                                                        borderRadius: 5,
+                                                        backgroundColor: 'red',
+                                                        alignSelf: 'center',
+                                                        marginVertical: 5,
+                                                    }}
+                                                />
+                                                <Text style={{ color: '#000', fontSize: 16, }}> Chi tiêu</Text>
+                                            </View>
+                                        </View>
+                                        <View style={styles.containerBottom}>
+                                            <TouchableOpacity onPress={() => {
+                                                navigation.navigate("Chart", { id: null, name: null });
+                                            }} style={styles.bottom} >
+                                                <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}> Xem chi tiết</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={{ marginTop: 20, marginLeft: 20, }}>
+                                        </View>
                                     </View>
                                 </View>
                             </View>
@@ -641,7 +654,7 @@ function Home({ navigation }) {
                                 </ScrollView>
                                 <View style={styles.containerBottom}>
                                     <TouchableOpacity onPress={() => {
-                                        navigation.navigate("History", { id: null, name: null, year: year, month: month, typeBasket : 1});
+                                        navigation.navigate("History", { id: null, name: null, year: year, month: month, typeBasket: 1 });
                                     }} style={styles.bottom} >
                                         <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}> Xem tất cả</Text>
                                     </TouchableOpacity>
