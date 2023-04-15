@@ -463,6 +463,7 @@ function ExchangeOther({ navigation }) {
         })
             .then((res) => {
                 if (res.data.length != 0) {
+                    hanldMoUoc();
                     setDataJar(res.data.map((item, index) => {
                         var obj = item.name;
                         if (index == 0) {

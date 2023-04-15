@@ -86,26 +86,28 @@ function History({ navigation, route }) {
     }, [idReload, typeID, idJar])
 
     useEffect(() => {
-        axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
-            monthNumber: parseInt(month),
-            yearNumber: parseInt(year)
-        },
-            {
-                headers: { authorization: accessToken },
-            })
-            .then((res) => {
-                const listall = ["Tất cả"];
-                setDataJar([...listall, ...res.data.map((item, index) => {
-                    var obj = item.name;
-                    return obj;
-                })]);
-                setdataJarTemp(res.data.map((item) => {
-                    var objtemp = { id: item.id, name: item.name, population: item.precent, userId: item.userId, precent: item.precent, totalIncome: item.totalIncome, totalSpending: item.totalSpending, availableBalances: item.availableBalances };
-                    return objtemp;
-                }));
-                setIdJar(null);
-                setvaluesDefautJar("Chọn lọ");
-            });
+        if (idJar == null) {
+            axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
+                monthNumber: parseInt(month),
+                yearNumber: parseInt(year)
+            },
+                {
+                    headers: { authorization: accessToken },
+                })
+                .then((res) => {
+                    const listall = ["Tất cả"];
+                    setDataJar([...listall, ...res.data.map((item, index) => {
+                        var obj = item.name;
+                        return obj;
+                    })]);
+                    setdataJarTemp(res.data.map((item) => {
+                        var objtemp = { id: item.id, name: item.name, population: item.precent, userId: item.userId, precent: item.precent, totalIncome: item.totalIncome, totalSpending: item.totalSpending, availableBalances: item.availableBalances };
+                        return objtemp;
+                    }));
+                    setIdJar(null);
+                    setvaluesDefautJar("Chọn lọ");
+                });
+        }
     }, [idReload])
     return (
         <SafeAreaView style={styles.container} >

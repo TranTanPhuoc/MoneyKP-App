@@ -317,8 +317,9 @@ function Exchange({ navigation, route }) {
                                     createDate: dateGD,
                                     moneyTransaction: parseFloat(money),
                                     type: type,
-                                    note: `${noteGD}(${valuesDefaut})`,
+                                    note: noteGD,
                                     typeBasket: typeBasket,
+                                    name : valuesDefaut
                                 },
                                 {
                                     headers: {
@@ -375,7 +376,7 @@ function Exchange({ navigation, route }) {
                                                     createDate: dateGD,
                                                     moneyTransaction: parseFloat(money),
                                                     type: type,
-                                                    note: `${noteGD}(${valuesDefaut})`,
+                                                    note: noteGD,
                                                     typeBasket: typeBasket,
                                                 },
                                                 {
@@ -429,8 +430,9 @@ function Exchange({ navigation, route }) {
                                         createDate: dateGD,
                                         moneyTransaction: parseFloat(money),
                                         type: type,
-                                        note: `${noteGD}(${valuesDefaut})`,
+                                        note: noteGD,
                                         typeBasket: typeBasket,
+                                        name : valuesDefaut
                                     },
                                     {
                                         headers: {

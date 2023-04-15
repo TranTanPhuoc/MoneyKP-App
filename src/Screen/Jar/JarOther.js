@@ -207,9 +207,11 @@ function JarOther({ navigation, route }) {
             }
             if (money == 0 || JarOther == "") {
                 Alert.alert("Thông báo", mess);
+                return;
             }
             if (money > 1000000000) {
                 Alert.alert("Thông báo", "Số tiền nhập phải dưới 1 tỷ")
+                return;
             }
             else {
                 const date = new Date(dateGD);

@@ -263,7 +263,7 @@ function Detail({ navigation, route }) {
                             <Text style={{ fontSize: 25, fontWeight: '700' }}>{moneyFormat(moneyPurpose)}</Text>
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center', height: 50, display: 'flex', flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 16, fontWeight: '700' }}>Mức độ hoàn thành : {moneyR / moneyPurpose * 100} %</Text>
+                            <Text style={{ fontSize: 16, fontWeight: '700' }}>Mức độ hoàn thành : {(moneyR / moneyPurpose * 100).toFixed(2)} %</Text>
                         </View>
                     </View>
                 }

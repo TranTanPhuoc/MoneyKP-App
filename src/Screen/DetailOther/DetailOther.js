@@ -17,6 +17,7 @@ function DetailOther({ navigation, route }) {
     // Định dạng tiền tệ VNĐ
     const { id, name, } = route.params;
     const [moneyR, setmoneyR] = useState(1);
+    const [moneyChart, setMoneyChart] = useState(1);
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
             style: "currency",
@@ -43,15 +44,18 @@ function DetailOther({ navigation, route }) {
         })
             .then((res) => {
                 var moneyI = 0;
+                var moneyT = 0;
                 setData(res.data.map((item) => {
                     var objtemp = {
                         id: item.id, name: item.name, population: item.precent, userId: item.userId, precent: item.precent, totalIncome: item.totalIncome,
                         totalSpending: item.totalSpending, availableBalances: item.availableBalances, moneyPurpose: item.moneyPurpose, isCash: item.isCash, quantity: item.quantity
                     };
                     moneyI += item.availableBalances;
+                    moneyT += item.moneyPurpose;
                     return objtemp;
                 }));
                 setmoneyR(moneyI);
+                setMoneyChart(moneyT);
             }).catch((err) => {
                 console.log(err);
             });
@@ -61,14 +65,15 @@ function DetailOther({ navigation, route }) {
             headers: { authorization: accessToken },
         })
             .then((res) => {
+                console.log(res.data);
                 if (res.data.length !== 0 && res.data.length > 1) {
                     setdataPieChart(res.data.map((item, index) => {
                         var precent = 0;
-                        if(parseInt(moneyR) == 0){
+                        if(parseInt(moneyChart) == 0){
                              precent = 100;
                         }
                         else{
-                            precent = parseInt(item.availableBalances) / parseInt(moneyR);
+                            precent = parseInt(item.moneyPurpose) / parseInt(moneyChart);
                         }
                         let randomColor = colorJar[index]
                         var obj = { id: item.id, name: item.name, population: precent, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
@@ -85,7 +90,7 @@ function DetailOther({ navigation, route }) {
             }).catch((err) => {
                 console.log(err);
             })
-    }, [moneyR]);
+    }, [moneyChart]);
     // Biểu đồ tròn
     const chartConfigPie = {
         backgroundColor: '#e26a00',
@@ -179,7 +184,7 @@ function DetailOther({ navigation, route }) {
                                                             }
                                                             {
                                                                 id != 4 &&
-                                                                <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}>({item.availableBalances / item.moneyPurpose * 100} %)</Text>
+                                                                <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}>({(item.availableBalances / item.moneyPurpose * 100).toFixed(2)} %)</Text>
                                                             }
                                                             {
                                                                 id != 4 && (item.status == 1 || item.moneyPurpose == item.availableBalances) &&

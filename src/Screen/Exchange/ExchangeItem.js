@@ -302,8 +302,9 @@ function ExchangeItem({ navigation, route }) {
                                     createDate: dateGD,
                                     moneyTransaction: parseFloat(money),
                                     type: type,
-                                    note: `${noteGD}(${nameJar})`,
+                                    note: noteGD,
                                     typeBasket: typeBasket,
+                                    name: nameJar
                                 },
                                 {
                                     headers: {
@@ -360,8 +361,9 @@ function ExchangeItem({ navigation, route }) {
                                                     createDate: dateGD,
                                                     moneyTransaction: parseFloat(money),
                                                     type: type,
-                                                    note: `${noteGD}(${nameJar})`,
+                                                    note: noteGD,
                                                     typeBasket: typeBasket,
+                                                    name: nameJar
                                                 },
                                                 {
                                                     headers: {
@@ -414,8 +416,9 @@ function ExchangeItem({ navigation, route }) {
                                         createDate: dateGD,
                                         moneyTransaction: parseFloat(money),
                                         type: type,
-                                        note: `${noteGD}(${nameJar})`,
+                                        note: noteGD,
                                         typeBasket: typeBasket,
+                                        name: nameJar
                                     },
                                     {
                                         headers: {

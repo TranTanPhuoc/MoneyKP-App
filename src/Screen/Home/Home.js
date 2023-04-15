@@ -351,6 +351,7 @@ function Home({ navigation }) {
                     authorization: accessToken
                 }
             }).then((res) => {
+                console.log(res.data);
                 setdataHistory(res.data.map((item, index) => {
                     var obj = {
                         basketId: item.basketId,

@@ -265,28 +265,6 @@ function Chart({ navigation, route }) {
                 </View>
             </View>
             <ScrollView style={styles.viewBody}>
-                {/* <View style={styles.containerItem}>
-                    <SelectDropdown
-                        data={dataTK}
-                        defaultButtonText={valuesDefaut}
-                        buttonTextStyle={{ fontSize: 16, }}
-                        onSelect={(selectedItem, index) => {
-                            setvaluesDefaut(selectedItem);
-                        }}
-                        renderDropdownIcon={isOpened => {
-                            return <AntDesign name={isOpened ? 'filter' : 'filter'} color={'black'} size={16} />;
-                        }}
-                        renderCustomizedButtonChild={value => {
-                            return (
-                                <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
-                                    <Text style={{ fontSize: 16 }}>{valuesDefaut}</Text>
-                                </View>
-                            );
-                        }}
-                        buttonStyle={styles.containerSelectDropDown}
-                    />
-
-                </View> */}
                 {
                     (valuesDefaut == "Theo tháng" || valuesDefaut == "Theo năm") &&
                     <View style={styles.containerItemSelect}>
@@ -298,6 +276,7 @@ function Chart({ navigation, route }) {
                         <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, }}>{selectedDate.toLocaleDateString('VN', { month: 'long', year: 'numeric' })}</Text>
                     </View>
                 }
+                <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, }}>Biểu đồ ngày trong tháng</Text>
                 <ScrollView horizontal={true}>
                     <LineChart
                         data={data}
@@ -339,6 +318,7 @@ function Chart({ navigation, route }) {
                         <Text style={{ color: '#000', fontSize: 16, }}> Chi tiêu</Text>
                     </View>
                 </View>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, }}>Biểu đồ tuần trong tháng</Text>
                 <ScrollView horizontal={true} style={{ marginTop: 20, marginBottom: 20 }}>
                     <LineChart
                         data={data1}
