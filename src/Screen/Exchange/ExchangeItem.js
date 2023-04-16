@@ -258,8 +258,8 @@ function ExchangeItem({ navigation, route }) {
     const accessToken = `Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const onHanldSave = () => {
         var mess = "";
-        if (money == 0) {
-            mess += "Số tiền phát sinh giao dịch không được bằng 0";
+        if (money <= 0) {
+            mess += "Số tiền phát sinh giao dịch không được bằng 0 hoặc nhỏ hơn 0";
         }
         if (dateGD == "") {
             mess += "\nNgày giao dịch không được rỗng ";
@@ -270,10 +270,11 @@ function ExchangeItem({ navigation, route }) {
         if (now.getMonth() + 1 != dateGD.getMonth() + 1) {
             mess += "\n Chỉ phát sinh giao dịch trong tháng hiện tại!";
         }
-        if (money == 0 || noteGD == "" || dateGD == "" || now.getMonth() + 1 != dateGD.getMonth() + 1) {
+        if (money <= 0 || noteGD == "" || dateGD == "" || now.getMonth() + 1 != dateGD.getMonth() + 1) {
             Alert.alert("Thông báo", mess);
         }
-        if (money != 0 && noteGD != "" && dateGD != "" && now.getMonth() + 1 == dateGD.getMonth() + 1) {
+        
+        if (money > 0 && noteGD != "" && dateGD != "" && now.getMonth() + 1 == dateGD.getMonth() + 1) {
             if (type != 2 && !isSelected) {
                 if (type == 1) {
                     const income = parseInt(totalIncome) + parseInt(money);

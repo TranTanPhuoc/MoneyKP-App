@@ -235,8 +235,8 @@ function ExchangeOtherItem({ navigation,route }) {
     }
     const onHanldSave = () => {
         var mess = "";
-        if (money == 0) {
-            mess += "Số tiền phát sinh giao dịch không được bằng 0";
+        if (money <= 0) {
+            mess += "Số tiền phát sinh giao dịch không được bằng 0 hoặc nhỏ hơn 0";
         }
         if (dateGD == "") {
             mess += "\nNgày giao dịch không được rỗng ";
@@ -244,10 +244,10 @@ function ExchangeOtherItem({ navigation,route }) {
         if (noteGD == "") {
             mess += "\nGhi chú giao dịch không được rỗng ";
         }
-        if (money == 0 || noteGD == "" || dateGD == "") {
+        if (money <= 0 || noteGD == "" || dateGD == "") {
             Alert.alert("Thông báo", mess);
         }
-        if (money != 0 && noteGD != "" && dateGD != "") {
+        if (money > 0 && noteGD != "" && dateGD != "") {
             if (type != 2) {
                 if (type == 1) {
                     if (availableBalancesI + parseInt(money) > moneyPurpose) {
