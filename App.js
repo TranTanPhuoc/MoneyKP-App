@@ -28,6 +28,7 @@ import ChangePassword from './src/Screen/Auth/ChangePassword';
 import ExchangeItem from './src/Screen/Exchange/ExchangeItem';
 import CameraPicItem from './src/Screen/Exchange/CameraPicItem';
 import PhotoCameraPicItem from './src/Screen/Exchange/PhotoCameraPicItem';
+import ExchangeOtherItem from './src/Screen/Exchange/ExchangeOtherItem';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -58,6 +59,7 @@ export default function App() {
           <Stack.Screen name='PhotoCameraPicItem' component={PhotoCameraPicItem} />
           <Stack.Screen name='ChangePassword' component={ChangePassword} />
           <Stack.Screen name='ExchangeItem' component={ExchangeItem} />
+          <Stack.Screen name='ExchangeOtherItem' component={ExchangeOtherItem} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

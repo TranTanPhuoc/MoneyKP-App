@@ -49,11 +49,9 @@ function HistoryOther({ navigation, route }) {
             .then((res) => {
                 setdataHistory(res.data.map((item) => {
                     var objtemp = {
-                        id: item.id, name: item.name, population: item.precent, userId: item.userId,
-                        precent: item.precent, totalIncome: item.totalIncome, totalSpending: item.totalSpending,
-                        availableBalances: item.availableBalances, moneyPurpose: item.moneyPurpose,
-                        datedComplete: item.datedComplete, createdDate: item.createdDate, status: item.status,
-                        isCash: item.isCash, quantity :item.quantity
+                        id: item.id, name: item.name, population: item.precent, userId: item.userId, precent: item.precent, totalIncome: item.totalIncome,
+                        totalSpending: item.totalSpending, availableBalances: item.availableBalances, moneyPurpose: item.moneyPurpose, isCash: item.isCash, quantity: item.quantity,
+                        type : item.type,code : item.code , createdDate : item.createdDate, datedComplete : item.datedComplete,status: item.status
                     };
                     return objtemp;
                 }));
@@ -101,7 +99,7 @@ function HistoryOther({ navigation, route }) {
                                         navigation.navigate("Detail", {
                                             id: id, name: name, itemName: item.name, money: item.availableBalances, idJar: item.id,
                                             moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status,
-                                            isCash : item.isCash,quantity :item.quantity
+                                            isCash: item.isCash, quantity: item.quantity, item: item
                                         });
                                     }} style={styles.buttomItem}>
                                     <View
@@ -123,8 +121,8 @@ function HistoryOther({ navigation, route }) {
                                             </View>
                                             <Text style={{ fontSize: 16, marginLeft: 15, fontWeight: 'bold', marginRight: 15, }}> {item.name}</Text>
                                             {
-                                                    id == 4 && !item.isCash &&
-                                                    <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}> Số lượng: {item.quantity}</Text>
+                                                id == 4 && !item.isCash &&
+                                                <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}> Số lượng: {item.quantity}</Text>
                                             }
                                             {
                                                 id != 4 &&
@@ -134,7 +132,7 @@ function HistoryOther({ navigation, route }) {
                                                 id != 4 && (item.status == 1 || item.moneyPurpose == item.availableBalances) &&
                                                 <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/checked.png')} />
                                             }
-                                            
+
                                         </View>
                                         <Text style={{ fontSize: 16, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
                                     </View>

@@ -194,13 +194,14 @@ function Home({ navigation }) {
                                                 type: 1,
                                                 note: `Tiền dư của lọ ${item.name} tháng cũ sang tháng mới`,
                                                 typeBasket: 1,
+                                                nameBasket : item.name
                                             },
                                             {
                                                 headers: {
                                                     authorization: accessToken
                                                 }
                                             }).then((res3) => {
-                                                console.log("vào");
+                                                return;
                                             })
                                     }
                                     else if (item.availableBalances < 0) {
@@ -213,6 +214,7 @@ function Home({ navigation }) {
                                                 type: -1,
                                                 note: `Tiền thiếu của lọ ${item.name} tháng cũ sang tháng mới`,
                                                 typeBasket: 1,
+                                                nameBasket : item.name
                                             },
                                             {
                                                 headers: {
@@ -351,7 +353,6 @@ function Home({ navigation }) {
                     authorization: accessToken
                 }
             }).then((res) => {
-                console.log(res.data);
                 setdataHistory(res.data.map((item, index) => {
                     var obj = {
                         basketId: item.basketId,

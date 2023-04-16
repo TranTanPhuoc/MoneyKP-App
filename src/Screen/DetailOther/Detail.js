@@ -17,7 +17,7 @@ import { Image } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { reload_IU } from '../../redux/action/ActionRedux';
 function Detail({ navigation, route }) {
-    const { id, name, itemName, money, idJar, moneyPurpose, status, availableBalances, isCash, quantity } = route.params;
+    const { id, name, itemName, money, idJar, moneyPurpose, status, availableBalances, isCash, quantity, item} = route.params;
     const [moneyR, setMoneyR] = useState(parseInt(money));
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
@@ -244,7 +244,7 @@ function Detail({ navigation, route }) {
                                 <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/checked.png')} />
                             }
                             <TouchableOpacity onPress={() => {
-                                navigation.navigate("ExchangeOther");
+                                navigation.navigate("ExchangeOtherItem",{item:item});
                             }}>
                                 <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/add.png')} />
                             </TouchableOpacity>

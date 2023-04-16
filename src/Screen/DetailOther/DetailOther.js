@@ -48,7 +48,8 @@ function DetailOther({ navigation, route }) {
                 setData(res.data.map((item) => {
                     var objtemp = {
                         id: item.id, name: item.name, population: item.precent, userId: item.userId, precent: item.precent, totalIncome: item.totalIncome,
-                        totalSpending: item.totalSpending, availableBalances: item.availableBalances, moneyPurpose: item.moneyPurpose, isCash: item.isCash, quantity: item.quantity
+                        totalSpending: item.totalSpending, availableBalances: item.availableBalances, moneyPurpose: item.moneyPurpose, isCash: item.isCash, quantity: item.quantity,
+                        type : item.type,code : item.code , createdDate : item.createdDate, datedComplete : item.datedComplete,status: item.status
                     };
                     moneyI += item.availableBalances;
                     moneyT += item.moneyPurpose;
@@ -65,14 +66,13 @@ function DetailOther({ navigation, route }) {
             headers: { authorization: accessToken },
         })
             .then((res) => {
-                console.log(res.data);
                 if (res.data.length !== 0 && res.data.length > 1) {
                     setdataPieChart(res.data.map((item, index) => {
                         var precent = 0;
-                        if(parseInt(moneyChart) == 0){
-                             precent = 100;
+                        if (parseInt(moneyChart) == 0) {
+                            precent = 100;
                         }
-                        else{
+                        else {
                             precent = parseInt(item.moneyPurpose) / parseInt(moneyChart);
                         }
                         let randomColor = colorJar[index]
@@ -157,7 +157,7 @@ function DetailOther({ navigation, route }) {
                                                     () => {
                                                         navigation.navigate("Detail", {
                                                             id: id, name: name, itemName: item.name, money: item.availableBalances, idJar: item.id,
-                                                            moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status, isCash: item.isCash, quantity: item.quantity
+                                                            moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status, isCash: item.isCash, quantity: item.quantity, item: item
                                                         });
                                                     }} style={styles.buttomItem}>
                                                     <View

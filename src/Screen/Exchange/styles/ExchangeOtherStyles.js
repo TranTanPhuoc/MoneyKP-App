@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     shadowColor: '#999999',
     shadowOpacity: 0.5,
     shadowRadius: 2,
-    borderRadius:20,
+    borderRadius: 20,
     flex: 1,
     display: 'flex',
     flexDirection: 'row'
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     display: 'flex',
     flexDirection: 'row',
-    alignItems:'center',
+    alignItems: 'center',
     backgroundColor: '#E6E6FA',
     shadowOffset: {
       width: 0,
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     shadowColor: '#999999',
     shadowOpacity: 0.5,
     shadowRadius: 2,
-    borderRadius:20,
+    borderRadius: 20,
   },
   containerMoneyWords: {
     height: 60,
@@ -153,6 +153,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  containerheader: {
+    height: 50,
+    backgroundColor: '#fff',
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  containerheader_icon: {
+    flex: 0.2,
+    justifyContent: 'center',
+  },
+  containerheader_title: {
+    flex: 0.6,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  fontTitle: {
+    fontSize: 18,
+    fontWeight: '500'
   },
 });
 
