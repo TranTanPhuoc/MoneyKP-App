@@ -26,13 +26,13 @@ const Tabs = ({ navigation }) => {
                 headerShown: false, tabBarIcon: ({ focused }) => (
                     <Image source={require('../../assets/icons/home.png')} resizeMode="contain" style={{ width: 22, height: 22, tintColor: focused ? '#000' : '#748c94' }} />
                 ),
-                title:"Trang chủ"
+                title:"Trang chủ",headerTitleAlign:'center'
             }} />
             <Tab.Screen name='Wallet' component={Wallet} options={{
                 tabBarIcon: ({ focused }) => (
                     <Image source={require('../../assets/icons/wallet.png')} resizeMode="contain" style={{ width: 22, height: 22, tintColor: focused ? '#000' : '#748c94' }} />
                 ),
-                title:'Ví',
+                title:'Ví',headerTitleAlign:'center'
             }} />
             <Tab.Screen name='Exchange' component={Exchange} options={{
                 tabBarIcon: ({ focused }) => (
@@ -40,18 +40,18 @@ const Tabs = ({ navigation }) => {
                         <Image source={require('../../assets/icons/plus.png')} resizeMode="contain" style={{ width: 25, height: 25, tintColor: '#fff' }} />
                     </LinearGradient>
                 ),
-                title: "Thêm giao dịch",
+                title: "Thêm giao dịch",headerTitleAlign:'center'
 
             }} />
             <Tab.Screen name='ExchangeOther' component={ExchangeOther} options={{
                 tabBarIcon: ({ focused }) => (
                     <Image source={require('../../assets/icons/transaction.png')} resizeMode="contain" style={{ width: 22, height: 22, tintColor: focused ? '#000' : '#748c94' }} />
-                ), headerTitle: "Thông tin"
+                ), title: "Giao dịch ước mơ, nợ",headerTitleAlign:'center'
             }} />
             <Tab.Screen name='Settings' component={Account} options={{
                 tabBarIcon: ({ focused }) => (
                     <Image source={require('../../assets/icons/user.png')} resizeMode="contain" style={{ width: 22, height: 22, tintColor: focused ? '#000' : '#748c94' }} />
-                ),  headerTitle: "Cài đặt"
+                ),  title: "Cài đặt",headerTitleAlign:'center'
             }} />
         </Tab.Navigator>
     );

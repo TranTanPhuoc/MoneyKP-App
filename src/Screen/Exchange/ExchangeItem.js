@@ -363,7 +363,7 @@ function ExchangeItem({ navigation, route }) {
                                                     type: type,
                                                     note: noteGD,
                                                     typeBasket: typeBasket,
-                                                    name: nameJar
+                                                    nameBasket: nameJar
                                                 },
                                                 {
                                                     headers: {
@@ -418,7 +418,7 @@ function ExchangeItem({ navigation, route }) {
                                         type: type,
                                         note: noteGD,
                                         typeBasket: typeBasket,
-                                        name: nameJar
+                                        nameBasket: nameJar
                                     },
                                     {
                                         headers: {

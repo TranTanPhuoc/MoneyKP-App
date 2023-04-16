@@ -319,7 +319,7 @@ function Exchange({ navigation, route }) {
                                     type: type,
                                     note: noteGD,
                                     typeBasket: typeBasket,
-                                    name : valuesDefaut
+                                    nameBasket : valuesDefaut
                                 },
                                 {
                                     headers: {
@@ -432,7 +432,7 @@ function Exchange({ navigation, route }) {
                                         type: type,
                                         note: noteGD,
                                         typeBasket: typeBasket,
-                                        name : valuesDefaut
+                                        nameBasket : valuesDefaut
                                     },
                                     {
                                         headers: {

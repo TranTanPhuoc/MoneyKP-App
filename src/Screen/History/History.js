@@ -72,7 +72,8 @@ function History({ navigation, route }) {
                             type: item.type,
                             userId: item.userId,
                             color: colorJar[0],
-                            name: name
+                            name: name,
+                            nameBasket : item.nameBasket
                         };
                         return obj;
                     }));
@@ -197,9 +198,7 @@ function History({ navigation, route }) {
                                     <View style={{ marginBottom: 10, }}>
                                         <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.note}</Text>
                                     </View>
-                                    {
-                                        (item.type == 1) ? <Text>Thu nhập</Text> : <Text>Chi tiền</Text>
-                                    }
+                                    <Text> {item.nameBasket}</Text>
                                 </View>
                                 <View style={{ flex: 0.35, justifyContent: 'center', alignItems: 'flex-end' }}>
                                     {
