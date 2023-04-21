@@ -531,7 +531,7 @@ function JarOther({ navigation, route }) {
                             }} placeholderTextColor={'#000'} style={{ height: 50, borderRadius: 20, borderWidth: 0.5, paddingLeft: 15, fontSize: 16, }} placeholder='Nhập tiền'>{moneyR}</TextInput>
                         </View>
                     </View>
-                    <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.viewBody}>
+                    {/* <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.viewBody}>
                         <View style={{ flex: 0.15, justifyContent: 'center', alignItems: 'center' }}>
                             <Image source={require('../../../assets/icons/calendar.png')} />
                         </View>
@@ -545,7 +545,7 @@ function JarOther({ navigation, route }) {
                                 </View>
                             </View>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </>
             }
             <View style={styles.containerButton}>

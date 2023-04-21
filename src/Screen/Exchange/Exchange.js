@@ -261,7 +261,7 @@ function Exchange({ navigation, route }) {
             setNoteGD(`Chuyển tiền từ lọ ${valuesDefaut} sang ${valuesDefautTo}`)
             : (isSelected) ?
                 setNoteGD('Tiền phân bố đều cho tất cả các lọ') : setNoteGD("")
-    }, [type, isSelected, idJarTo]);
+    }, [type, valuesDefaut, valuesDefautTo,isSelected]);
     useEffect(() => {
         if (dateGD != "") {
             const newDate = new Date(dateGD);
@@ -288,7 +288,7 @@ function Exchange({ navigation, route }) {
         if (money <= 0 || noteGD == "" || dateGD == "" || now.getMonth() + 1 != dateGD.getMonth() + 1) {
             Alert.alert("Thông báo", mess);
         }
-        
+
         if (money > 0 && noteGD != "" && dateGD != "" && now.getMonth() + 1 == dateGD.getMonth() + 1) {
             if (type != 2 && !isSelected) {
                 if (type == 1) {
@@ -320,7 +320,7 @@ function Exchange({ navigation, route }) {
                                     type: type,
                                     note: noteGD,
                                     typeBasket: typeBasket,
-                                    nameBasket : valuesDefaut
+                                    nameBasket: valuesDefaut
                                 },
                                 {
                                     headers: {
@@ -433,7 +433,7 @@ function Exchange({ navigation, route }) {
                                         type: type,
                                         note: noteGD,
                                         typeBasket: typeBasket,
-                                        nameBasket : valuesDefaut
+                                        nameBasket: valuesDefaut
                                     },
                                     {
                                         headers: {
@@ -798,12 +798,7 @@ function Exchange({ navigation, route }) {
                             <Image source={require('../../../assets/icons/note.png')} />
                         </View>
                         <View style={{ flex: 0.8, justifyContent: 'center', borderBottomWidth: 1 }}>
-                            <TextInput value={
-                                (type == 2) ?
-                                    `Chuyển tiền từ lọ ${valuesDefaut} sang ${valuesDefautTo}`
-                                    : (isSelected) ?
-                                        'Tiền phân bổ tất cả các lọ' : noteGD
-                            } onChangeText={x => setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{ fontSize: 16, marginLeft: 10, marginRight: 20, }} />
+                            <TextInput value={noteGD} onChangeText={x => setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{ fontSize: 16, marginLeft: 10, marginRight: 20, }} />
                         </View>
                     </View>
                     <View style={{ marginBottom: 20 }}>

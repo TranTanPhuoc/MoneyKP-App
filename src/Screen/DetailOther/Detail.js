@@ -19,7 +19,9 @@ import { reload_IU } from '../../redux/action/ActionRedux';
 function Detail({ navigation, route }) {
     const { id, name, itemName, money, idJar, moneyPurpose, status, availableBalances, isCash, quantity, item } = route.params;
     const moneyR = parseInt(money);
+    const statusR = parseInt(status);
     const [moneyReal, setMoneyReal] = useState(moneyR);
+    const [statusReal,setStatusReal] = useState(statusR)
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
             style: "currency",
@@ -154,6 +156,8 @@ function Detail({ navigation, route }) {
             headers: { authorization: accessToken },
         }).then((res) => {
             setMoneyReal(res.data.availableBalances);
+            setStatusReal(res.data.status);
+
         })
         }, [idReload])
         const chartConfig = {
@@ -246,10 +250,10 @@ function Detail({ navigation, route }) {
                                 }
                                 <Text style={{ color: '#000', fontSize: 16, fontWeight: '500', marginLeft: 15, marginRight: 15 }}>{name}</Text>
                                 {
-                                    id != 4 && (status == 1 || moneyPurpose == availableBalances) &&
-                                    <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/checked.png')} />
+                                    id != 4 && (statusReal == 1 || moneyPurpose == moneyReal) &&
+                                    <Image style={{ height: 20, width: 20,marginRight:15 }} source={require('../../../assets/icons/checked.png')} />
                                 }
-                                <TouchableOpacity onPress={() => {
+                                <TouchableOpacity  onPress={() => {
                                     navigation.navigate("ExchangeOtherItem", { item: item });
                                 }}>
                                     <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/add.png')} />
@@ -409,7 +413,7 @@ function Detail({ navigation, route }) {
                             </View>
                         </View>
                         {
-                            id != 4 && money - moneyPurpose == 0 && status == 0
+                            id != 4 && moneyReal - moneyPurpose == 0 && statusReal == 0
                             &&
                             <View style={{ marginTop: 10 }}>
                                 <TouchableOpacity style={styles.button} onPress={updateStatus} >

@@ -140,7 +140,7 @@ function History({ navigation, route }) {
                 </View>
             </View>
             <View style={styles.viewBody}>
-                <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, alignItems: 'center',marginLeft:10,marginRight:10}}>
+                <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, alignItems: 'center', marginLeft: 10, marginRight: 10 }}>
                     <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Tháng: </Text>
                     <SelectDropdown
                         data={dataMonth}
@@ -148,13 +148,8 @@ function History({ navigation, route }) {
                         buttonTextStyle={{ fontSize: 16, }}
                         onSelect={(selectedItem, index) => {
                             const newDate = new Date(year, parseInt(selectedItem) - 1, 2);
-                            if (now < newDate) {
-                                Alert.alert("Thông báo", "Không có dữ liệu");
-                            }
-                            else {
-                                setSelectedDate(newDate);
-                                setMonth(parseInt(selectedItem));
-                            }
+                            setSelectedDate(newDate);
+                            setMonth(parseInt(selectedItem));
                         }}
                         renderDropdownIcon={isOpened => {
                             return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
@@ -175,13 +170,8 @@ function History({ navigation, route }) {
                         buttonTextStyle={{ fontSize: 16, }}
                         onSelect={(selectedItem, index) => {
                             const newDate = new Date(parseInt(selectedItem), month, 2);
-                            if (now < newDate) {
-                                Alert.alert("Thông báo", "Không có dữ liệu");
-                            }
-                            else {
-                                setSelectedDate(newDate);
-                                setYear(parseInt(selectedItem));
-                            }
+                            setSelectedDate(newDate);
+                            setYear(parseInt(selectedItem));
                         }}
                         renderDropdownIcon={isOpened => {
                             return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
@@ -280,7 +270,7 @@ function History({ navigation, route }) {
                     }
                     {
                         dataHistory.length == 0 &&
-                        <View style={{ justifyContent:'center',alignItems:'center',flex:1,marginTop:100}}>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, marginTop: 100 }}>
                             <Text style={{ color: 'grey', fontSize: 20, fontWeight: 'bold' }}>Không có dữ liệu</Text>
                         </View>
                     }

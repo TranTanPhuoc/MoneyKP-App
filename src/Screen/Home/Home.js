@@ -39,7 +39,7 @@ function Home({ navigation }) {
     const [dataMonth, setDataMonth] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     // Năm hiện tại
     const [year, setYear] = useState(selectedDate.getFullYear());
-    const [dataYear, setDataYear] = useState([selectedDate.getFullYear() - 2,selectedDate.getFullYear() - 1, selectedDate.getFullYear()]);
+    const [dataYear, setDataYear] = useState([selectedDate.getFullYear() - 2, selectedDate.getFullYear() - 1, selectedDate.getFullYear()]);
     const [labels, setlabels] = useState([["1", "2", "3", "4"]]);
     // Data biểu đồ cột của thu nhập
     const [datasets, setdatasets] = useState([400000, 813880, 0, 0,]);
@@ -518,7 +518,7 @@ function Home({ navigation }) {
                                 defaultButtonText={month}
                                 buttonTextStyle={{ fontSize: 16, }}
                                 onSelect={(selectedItem, index) => {
-                                    const newDate = new Date(year, parseInt(selectedItem)-1, 2);
+                                    const newDate = new Date(year, parseInt(selectedItem) - 1, 2);
                                     if (now < newDate) {
                                         Alert.alert("Thông báo", "Không có dữ liệu");
                                     }
@@ -546,13 +546,8 @@ function Home({ navigation }) {
                                 buttonTextStyle={{ fontSize: 16, }}
                                 onSelect={(selectedItem, index) => {
                                     const newDate = new Date(parseInt(selectedItem), month, 2);
-                                    if (now < newDate) {
-                                        Alert.alert("Thông báo", "Không có dữ liệu");
-                                    }
-                                    else {
-                                        setSelectedDate(newDate);
-                                        setYear(parseInt(selectedItem));
-                                    }
+                                    setSelectedDate(newDate);
+                                    setYear(parseInt(selectedItem));
                                 }}
                                 renderDropdownIcon={isOpened => {
                                     return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;

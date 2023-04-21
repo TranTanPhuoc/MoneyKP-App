@@ -49,9 +49,11 @@ function DetailOther({ navigation, route }) {
                     var objtemp = {
                         id: item.id, name: item.name, population: item.precent, userId: item.userId, precent: item.precent, totalIncome: item.totalIncome,
                         totalSpending: item.totalSpending, availableBalances: item.availableBalances, moneyPurpose: item.moneyPurpose, isCash: item.isCash, quantity: item.quantity,
-                        type : item.type,code : item.code , createdDate : item.createdDate, datedComplete : item.datedComplete,status: item.status
+                        type: item.type, code: item.code, createdDate: item.createdDate, datedComplete: item.datedComplete, status: item.status
                     };
-                    moneyI += item.availableBalances;
+                    if (item.status == 0) {
+                        moneyI += item.availableBalances;
+                    }
                     moneyT += item.moneyPurpose;
                     return objtemp;
                 }));
@@ -66,31 +68,42 @@ function DetailOther({ navigation, route }) {
             headers: { authorization: accessToken },
         })
             .then((res) => {
-                if (res.data.length !== 0 && res.data.length > 1) {
-                    setdataPieChart(res.data.map((item, index) => {
+                var countLenght = 0;
+                var moneyAv = 0;
+                res.data.map((item, index) => {
+                    if (item.status == 0) {
+                        countLenght++;
+                        moneyAv += parseInt(item.moneyPurpose);
+                    }
+                    return;
+                })
+                var list = [];
+                if (countLenght > 1) {
+                    for (let index = 0; index < res.data.length; index++) {
                         var precent = 0;
-                        if (parseInt(moneyChart) == 0) {
-                            precent = 100;
+                        if (res.data[index].status == 0) {
+                            precent = parseInt(res.data[index].moneyPurpose) / parseInt(moneyAv);
+                            let randomColor = colorJar[index];
+                            var obj = { id: res.data[index].id, name: res.data[index].name, population: precent, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
+                            list.push(obj);
                         }
-                        else {
-                            precent = parseInt(item.moneyPurpose) / parseInt(moneyChart);
+                    }
+                }
+                else if (countLenght == 1) {
+                    for (let index = 0; index < res.data.length; index++) {
+                        var precent = 0;
+                        if (res.data[index].status == 0) {
+                            let randomColor = colorJar[index];
+                            var obj = { id: res.data[index].id, name: res.data[index].name, population: 100, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
+                            list.push(obj);
                         }
-                        let randomColor = colorJar[index]
-                        var obj = { id: item.id, name: item.name, population: precent, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
-                        return obj;
-                    }));
+                    }
                 }
-                else if (res.data.length == 1) {
-                    setdataPieChart(res.data.map((item, index) => {
-                        let randomColor = colorJar[index]
-                        var obj = { id: item.id, name: item.name, population: 100, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
-                        return obj;
-                    }));
-                }
+                setdataPieChart(list);
             }).catch((err) => {
                 console.log(err);
             })
-    }, [moneyChart]);
+    }, [moneyChart,idReload]);
     // Biểu đồ tròn
     const chartConfigPie = {
         backgroundColor: '#e26a00',
@@ -123,7 +136,7 @@ function DetailOther({ navigation, route }) {
             <ScrollView style={styles.viewBody}>
                 <View style={styles.containerMoney}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: 50 }}>
-                        <Text style={{ fontSize: 16, fontWeight: '600' }}>Tổng số tiền {name}</Text>
+                        <Text style={{ fontSize: 16, fontWeight: '600' }}>Số tiền tích lũy</Text>
                     </View>
                     <View style={{ justifyContent: 'center', alignItems: 'center', height: 100 }}>
                         <Text style={{ fontSize: 35, fontWeight: '700' }}>{moneyFormat(moneyR)}</Text>
@@ -152,50 +165,52 @@ function DetailOther({ navigation, route }) {
                                 {
                                     data.map((item, index) => {
                                         if (item != null) {
-                                            return (
-                                                <TouchableOpacity key={index} onPress={
-                                                    () => {
-                                                        navigation.navigate("Detail", {
-                                                            id: id, name: name, itemName: item.name, money: item.availableBalances, idJar: item.id,
-                                                            moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status, isCash: item.isCash, quantity: item.quantity, item: item
-                                                        });
-                                                    }} style={styles.buttomItem}>
-                                                    <View
-                                                        style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 50, marginLeft: 10, marginRight: 10 }}>
-                                                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 10 }}>
-                                                            <View style={{ height: 30, width: 30, justifyContent: 'center', alignItems: 'center' }}>
-                                                                {
-                                                                    id == 4 && item.isCash &&
-                                                                    <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
-                                                                }
+                                            if (item.status == 0) {
+                                                return (
+                                                    <TouchableOpacity key={index} onPress={
+                                                        () => {
+                                                            navigation.navigate("Detail", {
+                                                                id: id, name: name, itemName: item.name, money: item.availableBalances, idJar: item.id,
+                                                                moneyPurpose: item.moneyPurpose, availableBalances: item.availableBalances, status: item.status, isCash: item.isCash, quantity: item.quantity, item: item
+                                                            });
+                                                        }} style={styles.buttomItem}>
+                                                        <View
+                                                            style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 50, marginLeft: 10, marginRight: 10 }}>
+                                                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 10 }}>
+                                                                <View style={{ height: 30, width: 30, justifyContent: 'center', alignItems: 'center' }}>
+                                                                    {
+                                                                        id == 4 && item.isCash &&
+                                                                        <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
+                                                                    }
+                                                                    {
+                                                                        id == 4 && !item.isCash &&
+                                                                        <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/stock.png')} />
+                                                                    }
+                                                                    {
+                                                                        id != 4 &&
+                                                                        <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
+                                                                    }
+                                                                </View>
+                                                                <Text style={{ fontSize: 16, marginLeft: 15, fontWeight: 'bold', marginRight: 15, }}> {item.name}</Text>
                                                                 {
                                                                     id == 4 && !item.isCash &&
-                                                                    <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/stock.png')} />
+                                                                    <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}> Số lượng: {item.quantity}</Text>
                                                                 }
                                                                 {
                                                                     id != 4 &&
-                                                                    <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/money.png')} />
+                                                                    <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}>({(item.availableBalances / item.moneyPurpose * 100).toFixed(2)} %)</Text>
                                                                 }
-                                                            </View>
-                                                            <Text style={{ fontSize: 16, marginLeft: 15, fontWeight: 'bold', marginRight: 15, }}> {item.name}</Text>
-                                                            {
-                                                                id == 4 && !item.isCash &&
-                                                                <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}> Số lượng: {item.quantity}</Text>
-                                                            }
-                                                            {
-                                                                id != 4 &&
-                                                                <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}>({(item.availableBalances / item.moneyPurpose * 100).toFixed(2)} %)</Text>
-                                                            }
-                                                            {
-                                                                id != 4 && (item.status == 1 || item.moneyPurpose == item.availableBalances) &&
-                                                                <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/checked.png')} />
-                                                            }
+                                                                {
+                                                                    id != 4 && (item.status == 1 || item.moneyPurpose == item.availableBalances) &&
+                                                                    <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/checked.png')} />
+                                                                }
 
+                                                            </View>
+                                                            <Text style={{ fontSize: 16, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
                                                         </View>
-                                                        <Text style={{ fontSize: 16, marginRight: 10 }}>{moneyFormat(item.availableBalances)}</Text>
-                                                    </View>
-                                                </TouchableOpacity>
-                                            );
+                                                    </TouchableOpacity>
+                                                );
+                                            }
                                         }
                                     })
 

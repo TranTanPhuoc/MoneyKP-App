@@ -246,7 +246,7 @@ function ExchangeItem({ navigation, route }) {
             setNoteGD(`Chuyển tiền từ lọ ${nameJar} sang ${nameJarTo}`)
             : (isSelected) ?
                 setNoteGD('Tiền phân bố đều cho tất cả các lọ') : setNoteGD("")
-    }, [type, isSelected, idJarTo]);
+    }, [type, nameJar, nameJarTo,isSelected]);
     useEffect(() => {
         if (dateGD != "") {
             const newDate = new Date(dateGD);

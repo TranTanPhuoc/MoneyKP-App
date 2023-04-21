@@ -21,7 +21,7 @@ function Chart({ navigation, route }) {
     const dataTK = ['Theo tháng', 'Theo năm'];
     const [valuesDefaut, setvaluesDefaut] = useState("Theo tháng");
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [month, setMonth] = useState(selectedDate.getMonth()+1);
+    const [month, setMonth] = useState(selectedDate.getMonth() + 1);
     const [dataMonth, setDataMonth] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     // Năm hiện tại
     const now = new Date(); // lấy thời gian hiện tại
@@ -269,7 +269,7 @@ function Chart({ navigation, route }) {
                 </View>
             </View>
             <ScrollView style={styles.viewBody}>
-            <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, alignItems: 'center',marginLeft:10,marginRight:10}}>
+                <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, alignItems: 'center', marginLeft: 10, marginRight: 10 }}>
                     <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Tháng: </Text>
                     <SelectDropdown
                         data={dataMonth}
@@ -277,13 +277,8 @@ function Chart({ navigation, route }) {
                         buttonTextStyle={{ fontSize: 16, }}
                         onSelect={(selectedItem, index) => {
                             const newDate = new Date(year, parseInt(selectedItem) - 1, 2);
-                            if (now < newDate) {
-                                Alert.alert("Thông báo", "Không có dữ liệu");
-                            }
-                            else {
-                                setSelectedDate(newDate);
-                                setMonth(parseInt(selectedItem));
-                            }
+                            setSelectedDate(newDate);
+                            setMonth(parseInt(selectedItem));
                         }}
                         renderDropdownIcon={isOpened => {
                             return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
@@ -304,13 +299,8 @@ function Chart({ navigation, route }) {
                         buttonTextStyle={{ fontSize: 16, }}
                         onSelect={(selectedItem, index) => {
                             const newDate = new Date(parseInt(selectedItem), month, 2);
-                            if (now < newDate) {
-                                Alert.alert("Thông báo", "Không có dữ liệu");
-                            }
-                            else {
-                                setSelectedDate(newDate);
-                                setYear(parseInt(selectedItem));
-                            }
+                            setSelectedDate(newDate);
+                            setYear(parseInt(selectedItem));
                         }}
                         renderDropdownIcon={isOpened => {
                             return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
