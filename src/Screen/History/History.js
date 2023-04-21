@@ -16,6 +16,13 @@ import SelectDropdown from 'react-native-select-dropdown';
 function History({ navigation, route }) {
     const { id, name, year, month, typeBasket } = route.params;
     const [idJar, setIdJar] = useState(id);
+    const [monthR, setMonth] = useState(month);
+    const [dataMonth, setDataMonth] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    // Năm hiện tại
+    const now = new Date(); // lấy thời gian hiện tại
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [yearR, setYear] = useState(year);
+    const [dataYear, setDataYear] = useState([selectedDate.getFullYear() - 2, selectedDate.getFullYear() - 1, selectedDate.getFullYear()]);
     const [dataHistory, setdataHistory] = useState([]);
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
@@ -25,7 +32,7 @@ function History({ navigation, route }) {
         });
     };
     const dataTK = ['Tất cả', 'Thu nhập', 'Chi tiêu'];
-    const [valuesDefaut, setvaluesDefaut] = useState("Hình thức");
+    const [valuesDefaut, setvaluesDefaut] = useState("Loại");
     const [typeID, settypeID] = useState(null);
     const idReload = useSelector(state => state.reload.idReload);
     // Connect FireBase
@@ -41,9 +48,9 @@ function History({ navigation, route }) {
         axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-all-by-userId-and-type-and-type-basket',
             {
                 userId: idUser,
-                year: year,
+                year: yearR,
                 basketId: idJar,
-                month: month,
+                month: monthR,
                 type: typeID,
                 typeBasket: typeBasket,
                 pageSize: 1000,
@@ -73,24 +80,27 @@ function History({ navigation, route }) {
                             userId: item.userId,
                             color: colorJar[0],
                             name: name,
-                            nameBasket : item.nameBasket
+                            nameBasket: item.nameBasket
                         };
                         return obj;
                     }));
                 } else {
                     setdataHistory([]);
+                    // Alert.alert("Thông báo","Không có dữ liệu");
+                    // setMonth(now.getMonth()+1);
+                    // setYear(now.getFullYear());
                 }
             }).catch((err) => {
                 console.log(err);
             });
 
-    }, [idReload, typeID, idJar])
+    }, [idReload, typeID, idJar, monthR, yearR])
 
     useEffect(() => {
         if (idJar == null) {
             axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
-                monthNumber: parseInt(month),
-                yearNumber: parseInt(year)
+                monthNumber: parseInt(monthR),
+                yearNumber: parseInt(yearR)
             },
                 {
                     headers: { authorization: accessToken },
@@ -129,7 +139,63 @@ function History({ navigation, route }) {
 
                 </View>
             </View>
-            <ScrollView style={styles.viewBody}>
+            <View style={styles.viewBody}>
+                <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, alignItems: 'center',marginLeft:10,marginRight:10}}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Tháng: </Text>
+                    <SelectDropdown
+                        data={dataMonth}
+                        defaultButtonText={monthR}
+                        buttonTextStyle={{ fontSize: 16, }}
+                        onSelect={(selectedItem, index) => {
+                            const newDate = new Date(year, parseInt(selectedItem) - 1, 2);
+                            if (now < newDate) {
+                                Alert.alert("Thông báo", "Không có dữ liệu");
+                            }
+                            else {
+                                setSelectedDate(newDate);
+                                setMonth(parseInt(selectedItem));
+                            }
+                        }}
+                        renderDropdownIcon={isOpened => {
+                            return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
+                        }}
+                        renderCustomizedButtonChild={value => {
+                            return (
+                                <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
+                                    <Text style={{ fontSize: 16 }}>{monthR}</Text>
+                                </View>
+                            );
+                        }}
+                        buttonStyle={styles.containerSelectDropDown}
+                    />
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 10, }}>, năm : </Text>
+                    <SelectDropdown
+                        data={dataYear}
+                        defaultButtonText={yearR}
+                        buttonTextStyle={{ fontSize: 16, }}
+                        onSelect={(selectedItem, index) => {
+                            const newDate = new Date(parseInt(selectedItem), month, 2);
+                            if (now < newDate) {
+                                Alert.alert("Thông báo", "Không có dữ liệu");
+                            }
+                            else {
+                                setSelectedDate(newDate);
+                                setYear(parseInt(selectedItem));
+                            }
+                        }}
+                        renderDropdownIcon={isOpened => {
+                            return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
+                        }}
+                        renderCustomizedButtonChild={value => {
+                            return (
+                                <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
+                                    <Text style={{ fontSize: 16 }}>{yearR}</Text>
+                                </View>
+                            );
+                        }}
+                        buttonStyle={styles.containerSelectDropDown}
+                    />
+                </View>
                 <View style={styles.containerItem}>
                     <SelectDropdown
                         data={dataTK}
@@ -183,36 +249,43 @@ function History({ navigation, route }) {
                     }
 
                 </View>
-
-                {
-                    dataHistory.map((item, index) => {
-                        const date = new Date(item.createDate);
-                        return (
-                            <View key={index} style={styles.containerItem}>
-                                <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: item.color, height: 50, width: 50, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
-                                        <Image source={require('../../../assets/icons/jar.png')} style={{ tintColor: '#000' }} />
+                <ScrollView style={{ flex: 1 }}>
+                    {
+                        dataHistory.map((item, index) => {
+                            const date = new Date(item.createDate);
+                            return (
+                                <View key={index} style={styles.containerItem}>
+                                    <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center' }}>
+                                        <View style={{ backgroundColor: item.color, height: 50, width: 50, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
+                                            <Image source={require('../../../assets/icons/jar.png')} style={{ tintColor: '#000' }} />
+                                        </View>
+                                    </View>
+                                    <View style={{ flex: 0.45, }}>
+                                        <View style={{ marginBottom: 10, }}>
+                                            <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.note}</Text>
+                                        </View>
+                                        <Text> {item.nameBasket}</Text>
+                                    </View>
+                                    <View style={{ flex: 0.35, justifyContent: 'center', alignItems: 'flex-end' }}>
+                                        {
+                                            (item.type == 1) ?
+                                                <Text style={{ color: '#339900', fontSize: 16, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
+                                                <Text style={{ color: '#EE0000', fontSize: 16, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
+                                        }
+                                        <Text style={{ color: '#000', fontSize: 13, marginTop: 10, }}>{date.toLocaleDateString('VN', { second: '2-digit', minute: '2-digit', hour: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
                                     </View>
                                 </View>
-                                <View style={{ flex: 0.45, }}>
-                                    <View style={{ marginBottom: 10, }}>
-                                        <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.note}</Text>
-                                    </View>
-                                    <Text> {item.nameBasket}</Text>
-                                </View>
-                                <View style={{ flex: 0.35, justifyContent: 'center', alignItems: 'flex-end' }}>
-                                    {
-                                        (item.type == 1) ?
-                                            <Text style={{ color: '#339900', fontSize: 16, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
-                                            <Text style={{ color: '#EE0000', fontSize: 16, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
-                                    }
-                                    <Text style={{ color: '#000', fontSize: 13, marginTop: 10, }}>{date.toLocaleDateString('VN', { second: '2-digit', minute: '2-digit', hour: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
-                                </View>
-                            </View>
-                        );
-                    })
-                }
-            </ScrollView>
+                            );
+                        })
+                    }
+                    {
+                        dataHistory.length == 0 &&
+                        <View style={{ justifyContent:'center',alignItems:'center',flex:1,marginTop:100}}>
+                            <Text style={{ color: 'grey', fontSize: 20, fontWeight: 'bold' }}>Không có dữ liệu</Text>
+                        </View>
+                    }
+                </ScrollView>
+            </View>
 
         </SafeAreaView>
     );

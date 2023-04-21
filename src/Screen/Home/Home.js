@@ -19,6 +19,7 @@ import { Linking } from 'react-native';
 import moment from 'moment-timezone';
 import { Modal } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
+import SelectDropdown from 'react-native-select-dropdown';
 function Home({ navigation }) {
     const { width } = Dimensions.get('window');
     const idReload = useSelector(state => state.reload.idReload);
@@ -35,8 +36,10 @@ function Home({ navigation }) {
     const [selectedDate, setSelectedDate] = useState(new Date());
     // Tháng hiện tại
     const [month, setMonth] = useState(selectedDate.getMonth() + 1);
+    const [dataMonth, setDataMonth] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     // Năm hiện tại
     const [year, setYear] = useState(selectedDate.getFullYear());
+    const [dataYear, setDataYear] = useState([selectedDate.getFullYear() - 2,selectedDate.getFullYear() - 1, selectedDate.getFullYear()]);
     const [labels, setlabels] = useState([["1", "2", "3", "4"]]);
     // Data biểu đồ cột của thu nhập
     const [datasets, setdatasets] = useState([400000, 813880, 0, 0,]);
@@ -54,20 +57,20 @@ function Home({ navigation }) {
 
     const [loading, setisLoading] = useState(false);
 
-    const onDateChange = (date) => {
-        const newDate = new Date(date);
-        if (now < newDate) {
-            setModalVisible(!modalVisible);
-            Alert.alert("Thông báo", "Không có dữ liệu");
-        }
-        else {
-            setSelectedDate(newDate);
-            setModalVisible(!modalVisible);
-            setMonth(newDate.getMonth() + 1);
-            setYear(newDate.getFullYear());
-        }
+    // const onDateChange = (date) => {
+    //     const newDate = new Date(date);
+    //     if (now < newDate) {
+    //         setModalVisible(!modalVisible);
+    //         Alert.alert("Thông báo", "Không có dữ liệu");
+    //     }
+    //     else {
+    //         setSelectedDate(newDate);
+    //         setModalVisible(!modalVisible);
+    //         setMonth(newDate.getMonth() + 1);
+    //         setYear(newDate.getFullYear());
+    //     }
+    // }
 
-    }
     // Data biểu đồ cột của chi tiêu
     const [datasets2, setdatasets2] = useState([0, 0, 0, 0,]);
     // Data biểu đồ tròn % các lọ
@@ -121,6 +124,7 @@ function Home({ navigation }) {
                     setSelectedDate(now);
                     setMonth(now.getMonth() + 1);
                     setYear(now.getFullYear());
+                    setisLoading(false);
                 }
                 else if (res.data.length == 0) {
                     if (month == 1) {
@@ -194,7 +198,7 @@ function Home({ navigation }) {
                                                 type: 1,
                                                 note: `Tiền dư của lọ ${item.name} tháng cũ sang tháng mới`,
                                                 typeBasket: 1,
-                                                nameBasket : item.name
+                                                nameBasket: item.name
                                             },
                                             {
                                                 headers: {
@@ -214,7 +218,7 @@ function Home({ navigation }) {
                                                 type: -1,
                                                 note: `Tiền thiếu của lọ ${item.name} tháng cũ sang tháng mới`,
                                                 typeBasket: 1,
-                                                nameBasket : item.name
+                                                nameBasket: item.name
                                             },
                                             {
                                                 headers: {
@@ -424,7 +428,7 @@ function Home({ navigation }) {
 
 
                 <SafeAreaView style={styles.container} >
-                    <Modal
+                    {/* <Modal
                         animationType="slide"
                         transparent={true}
                         visible={modalVisible}
@@ -443,7 +447,7 @@ function Home({ navigation }) {
                                 </CalendarPicker>
                             </View>
                         </View>
-                    </Modal>
+                    </Modal> */}
                     <ScrollView style={styles.scrollview}>
                         <View style={styles.containerTop}>
                             <View style={styles.containerTopImage}>
@@ -508,12 +512,60 @@ function Home({ navigation }) {
 
                         </ScrollView>
                         <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
-                            <Text style={{ fontSize: 16, fontWeight: 'bold', }}>{selectedDate.toLocaleDateString('VN', { month: '2-digit', year: 'numeric' })}</Text>
-                            <TouchableOpacity style={styles.buttom} onPress={() => setModalVisible(true)} >
-                                <Text>
-                                    Chọn tháng
-                                </Text>
-                            </TouchableOpacity>
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Tháng: </Text>
+                            <SelectDropdown
+                                data={dataMonth}
+                                defaultButtonText={month}
+                                buttonTextStyle={{ fontSize: 16, }}
+                                onSelect={(selectedItem, index) => {
+                                    const newDate = new Date(year, parseInt(selectedItem)-1, 2);
+                                    if (now < newDate) {
+                                        Alert.alert("Thông báo", "Không có dữ liệu");
+                                    }
+                                    else {
+                                        setSelectedDate(newDate);
+                                        setMonth(parseInt(selectedItem));
+                                    }
+                                }}
+                                renderDropdownIcon={isOpened => {
+                                    return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
+                                }}
+                                renderCustomizedButtonChild={value => {
+                                    return (
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
+                                            <Text style={{ fontSize: 16 }}>{month}</Text>
+                                        </View>
+                                    );
+                                }}
+                                buttonStyle={styles.containerSelectDropDown}
+                            />
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 10, }}>, năm : </Text>
+                            <SelectDropdown
+                                data={dataYear}
+                                defaultButtonText={year}
+                                buttonTextStyle={{ fontSize: 16, }}
+                                onSelect={(selectedItem, index) => {
+                                    const newDate = new Date(parseInt(selectedItem), month, 2);
+                                    if (now < newDate) {
+                                        Alert.alert("Thông báo", "Không có dữ liệu");
+                                    }
+                                    else {
+                                        setSelectedDate(newDate);
+                                        setYear(parseInt(selectedItem));
+                                    }
+                                }}
+                                renderDropdownIcon={isOpened => {
+                                    return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
+                                }}
+                                renderCustomizedButtonChild={value => {
+                                    return (
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
+                                            <Text style={{ fontSize: 16 }}>{year}</Text>
+                                        </View>
+                                    );
+                                }}
+                                buttonStyle={styles.containerSelectDropDown}
+                            />
                         </View>
                         <View style={styles.containerListJar}>
                             <Text style={{ color: '#000', fontSize: 22, marginLeft: 10, marginRight: 10, }}>Danh sách lọ</Text>

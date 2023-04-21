@@ -41,8 +41,22 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.5,
       shadowRadius: 2,
    },
+    viewBodyTop:{
+      marginLeft:10,
+      marginRight:10,
+      marginTop:10,
+      marginBottom:10,
+      borderRadius:20,
+      backgroundColor:'#fff',
+      shadowOffset:{
+        width:0,
+        height:1,
+      },
+      shadowColor:'#999999',
+      shadowOpacity: 0.5,
+      shadowRadius: 2,
+   },
    containerItem:{
-    height:80,
     margin:5,
     borderRadius:10,
     alignItems:'center',
@@ -50,8 +64,9 @@ const styles = StyleSheet.create({
     marginRight:10,
     display:'flex',
     flexDirection:'row',
-    flex:1,
-    justifyContent:'space-between'
+    justifyContent:'space-between',
+    marginBottom:10,
+    marginTop:10
    },
    containerSelectDropDown:{
     borderRadius:20,

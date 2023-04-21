@@ -483,26 +483,6 @@ function ExchangeOtherItem({ navigation,route }) {
                         return obj;
                     }));
                 }
-                else {
-                    setdataJarTo([]);
-                    setdataJarTemp([]);
-                    setvaluesDefaut("");
-                    setvaluesDefautTo("");
-                    setisJar()
-                    settotalIncome();
-                    settotalSpending();
-                    setNameJar();
-                    SetprecentJar();
-                    setavailableBalancesI();
-                    setmoneyPurpose();
-                    setstatus();
-                    setdatedComplete();
-                    setcreatedDate();
-                    setcode();
-                    setIsCash();
-                    setquantity();
-                }
-
             }).catch((err) => {
                 console.log(err);
             })
@@ -644,10 +624,6 @@ function ExchangeOtherItem({ navigation,route }) {
                     <View style={styles.containerMoneyWords}>
                         <Text style={{ fontSize: 16, fontStyle: 'italic', textAlign: 'center' }}>{wordsMoney}</Text>
                     </View>
-                }
-                {
-                    (type == 2) &&
-                    <Text style={{ fontSize: 16, marginLeft: 20, marginTop: 15, }}>Mục mơ ước gởi :</Text>
                 }
                 {/* <View style={styles.containerJar}>
                     <SelectDropdown

@@ -21,8 +21,12 @@ function Chart({ navigation, route }) {
     const dataTK = ['Theo tháng', 'Theo năm'];
     const [valuesDefaut, setvaluesDefaut] = useState("Theo tháng");
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [month, setMonth] = useState(selectedDate.getMonth() + 1);
+    const [month, setMonth] = useState(selectedDate.getMonth()+1);
+    const [dataMonth, setDataMonth] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    // Năm hiện tại
+    const now = new Date(); // lấy thời gian hiện tại
     const [year, setYear] = useState(selectedDate.getFullYear());
+    const [dataYear, setDataYear] = useState([selectedDate.getFullYear() - 2, selectedDate.getFullYear() - 1, selectedDate.getFullYear()]);
 
     const [labels, setlabels] = useState(["1", "2", "3", "4"]);
     const [datasets, setdatasets] = useState([0, 0, 0, 0,]);
@@ -265,17 +269,62 @@ function Chart({ navigation, route }) {
                 </View>
             </View>
             <ScrollView style={styles.viewBody}>
-                {
-                    (valuesDefaut == "Theo tháng" || valuesDefaut == "Theo năm") &&
-                    <View style={styles.containerItemSelect}>
-                        <TouchableOpacity style={styles.buttom} onPress={() => setModalVisible(true)} >
-                            <Text>
-                                {valuesDefaut == "Theo tháng" ? 'Chọn tháng' : ' Chọn năm'}
-                            </Text>
-                        </TouchableOpacity>
-                        <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, }}>{selectedDate.toLocaleDateString('VN', { month: 'long', year: 'numeric' })}</Text>
-                    </View>
-                }
+            <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, alignItems: 'center',marginLeft:10,marginRight:10}}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Tháng: </Text>
+                    <SelectDropdown
+                        data={dataMonth}
+                        defaultButtonText={month}
+                        buttonTextStyle={{ fontSize: 16, }}
+                        onSelect={(selectedItem, index) => {
+                            const newDate = new Date(year, parseInt(selectedItem) - 1, 2);
+                            if (now < newDate) {
+                                Alert.alert("Thông báo", "Không có dữ liệu");
+                            }
+                            else {
+                                setSelectedDate(newDate);
+                                setMonth(parseInt(selectedItem));
+                            }
+                        }}
+                        renderDropdownIcon={isOpened => {
+                            return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
+                        }}
+                        renderCustomizedButtonChild={value => {
+                            return (
+                                <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
+                                    <Text style={{ fontSize: 16 }}>{month}</Text>
+                                </View>
+                            );
+                        }}
+                        buttonStyle={styles.containerSelectDropDown}
+                    />
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 10, }}>, năm : </Text>
+                    <SelectDropdown
+                        data={dataYear}
+                        defaultButtonText={year}
+                        buttonTextStyle={{ fontSize: 16, }}
+                        onSelect={(selectedItem, index) => {
+                            const newDate = new Date(parseInt(selectedItem), month, 2);
+                            if (now < newDate) {
+                                Alert.alert("Thông báo", "Không có dữ liệu");
+                            }
+                            else {
+                                setSelectedDate(newDate);
+                                setYear(parseInt(selectedItem));
+                            }
+                        }}
+                        renderDropdownIcon={isOpened => {
+                            return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
+                        }}
+                        renderCustomizedButtonChild={value => {
+                            return (
+                                <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
+                                    <Text style={{ fontSize: 16 }}>{year}</Text>
+                                </View>
+                            );
+                        }}
+                        buttonStyle={styles.containerSelectDropDown}
+                    />
+                </View>
                 <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10, }}>Biểu đồ ngày trong tháng</Text>
                 <ScrollView horizontal={true}>
                     <LineChart

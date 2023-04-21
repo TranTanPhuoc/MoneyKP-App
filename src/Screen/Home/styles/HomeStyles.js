@@ -232,6 +232,21 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
     },
+    containerSelectDropDown:{
+        borderRadius:10,
+        borderWidth:0.5,
+        borderColor:'black',
+        height:30,
+        backgroundColor:'#fff',
+        shadowOffset:{
+          width:0,
+          height:1,
+        },
+        shadowColor:'#999999',
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+        width:100,    
+       },
 });
 
 export default styles;

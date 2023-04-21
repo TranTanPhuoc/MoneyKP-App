@@ -81,6 +81,7 @@ function DetailJar({ navigation, route }) {
                 type: 1,
                 userId: idUser,
                 year: year,
+                basketId: id,
                 month: month,
                 typeBasket: 1,
                 isDay: false,
@@ -107,6 +108,7 @@ function DetailJar({ navigation, route }) {
         axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-chart',
             {
                 type: -1,
+                basketId: id,
                 userId: idUser,
                 year: year,
                 month: month,
