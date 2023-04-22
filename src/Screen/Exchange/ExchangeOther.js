@@ -45,7 +45,7 @@ function ExchangeOther({ navigation }) {
     const [colorMoUoc, setcolorMoUoc] = useState("");
     const [colorMoUocThem, setcolorMoUocThem] = useState(colorJar[5]);
     const [colorMoUocChuyen, setcolorMoUocChuyen] = useState("");
-    const [typeBasket, settypeBasket] = useState(4);
+    const [typeBasket, settypeBasket] = useState(3);
     const [type, settype] = useState(1);
     const [dateNote, setdateNote] = useState(selectedDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' }));
     const [moneyPurpose, setmoneyPurpose] = useState();
@@ -438,8 +438,8 @@ function ExchangeOther({ navigation }) {
                         clearField();
                         navigation.goBack();
                     }
-                    else{
-                        Alert.alert("Thông báo","Mời bạn chọn lọ để chuyển tiền");
+                    else {
+                        Alert.alert("Thông báo", "Mời bạn chọn lọ để chuyển tiền");
                     }
                 }
             }
@@ -463,7 +463,12 @@ function ExchangeOther({ navigation }) {
         })
             .then((res) => {
                 if (res.data.length != 0) {
-                    hanldMoUoc();
+                    if (typeBasket == 2) {
+                        hanldNo();
+                    }
+                    if (typeBasket == 3) {
+                        hanldMoUoc();
+                    }
                     setDataJar(res.data.map((item, index) => {
                         var obj = item.name;
                         if (index == 0) {
@@ -533,7 +538,7 @@ function ExchangeOther({ navigation }) {
             setNoteGD("")
         }
         else {
-            setNoteGD(`Chuyển tiền từ lọ ${valuesDefaut} sang ${valuesDefautTo}`);
+            setNoteGD(`Chuyển tiền từ lọ ${valuesDefaut} `);
         }
     }, [type, valuesDefaut, valuesDefautTo]);
     useEffect(() => {
@@ -612,7 +617,7 @@ function ExchangeOther({ navigation }) {
                 {typeBasket != 4 && dataJarTemp.length > 0 &&
                     <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
-                            Số tiền cần thêm vào để hoàn thành ước mơ là :{'\n'}{moneyFormat(moneyPurpose - availableBalancesI)} vnđ</Text>
+                            Số tiền cần thêm vào để hoàn thành là :{'\n'}{moneyFormat(moneyPurpose - availableBalancesI)} vnđ</Text>
                     </View>
                 }
                 <View style={styles.containerInputMoney}>

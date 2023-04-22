@@ -201,8 +201,8 @@ function DetailOther({ navigation, route }) {
                                                                     <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15, }}>({(item.availableBalances / item.moneyPurpose * 100).toFixed(2)} %)</Text>
                                                                 }
                                                                 {
-                                                                    id != 4 && (item.status == 1 || item.moneyPurpose == item.availableBalances) &&
-                                                                    <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/checked.png')} />
+                                                                    id != 4 && (item.moneyPurpose == item.availableBalances) &&
+                                                                    <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/warning.png')} />
                                                                 }
 
                                                             </View>

@@ -305,7 +305,9 @@ function ExchangeItem({ navigation, route }) {
                                     type: type,
                                     note: noteGD,
                                     typeBasket: typeBasket,
-                                    name: nameJar
+                                    name: nameJar,
+                                    nameBasket: nameJar
+                                    
                                 },
                                 {
                                     headers: {
@@ -711,7 +713,7 @@ function ExchangeItem({ navigation, route }) {
                         <View style={{ flex: 0.8, justifyContent: 'center', borderBottomWidth: 1 }}>
                             <TextInput value={
                                 (type == 2) ?
-                                    `Chuyển tiền từ lọ ${nameJar} sang ${nameJarTo}`
+                                    `Chuyển tiền từ lọ ${nameJar}`
                                     : (isSelected) ?
                                         'Tiền phân bổ tất cả các lọ' : noteGD
                             } onChangeText={x => setNoteGD(x)} placeholder='Nhập chú thích giao dịch' style={{ fontSize: 16, marginLeft: 10, marginRight: 20, }} />

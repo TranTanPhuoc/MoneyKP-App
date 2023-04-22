@@ -23,7 +23,7 @@ import { reload_IU } from '../../redux/action/ActionRedux';
 import { colorJar } from '../../../assets/AppColors/AppColors';
 
 function ExchangeOtherItem({ navigation,route }) {
-    const {item} = route.params;
+    const {item,typeBasketId} = route.params;
     const [money, setMoney] = useState("");
     const [wordsMoney, setWordsMoney] = useState("");
     const [colorSelect, setColorSelect] = useState("#FF9999");
@@ -47,7 +47,7 @@ function ExchangeOtherItem({ navigation,route }) {
     const [colorMoUoc, setcolorMoUoc] = useState("");
     const [colorMoUocThem, setcolorMoUocThem] = useState(colorJar[5]);
     const [colorMoUocChuyen, setcolorMoUocChuyen] = useState("");
-    const [typeBasket, settypeBasket] = useState(4);
+    const [typeBasket, settypeBasket] = useState(typeBasketId);
     const [type, settype] = useState(1);
     const [dateNote, setdateNote] = useState(selectedDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' }));
     const [moneyPurpose, setmoneyPurpose] = useState(item.moneyPurpose);
@@ -464,7 +464,12 @@ function ExchangeOtherItem({ navigation,route }) {
         })
             .then((res) => {
                 if (res.data.length != 0) {
-                    hanldMoUoc();
+                    if(typeBasket == 2){
+                        hanldNo();
+                    }
+                    if(typeBasket == 3){
+                        hanldMoUoc();
+                    }
                     setdataJarTemp(res.data.map((item) => {
                         var objtemp = {
                             id: item.id, name: item.name, population: item.precent, userId: item.userId,
@@ -492,7 +497,7 @@ function ExchangeOtherItem({ navigation,route }) {
             setNoteGD("")
         }
         else {
-            setNoteGD(`Chuyển tiền từ lọ ${valuesDefaut} sang ${valuesDefautTo}`);
+            setNoteGD(`Chuyển tiền từ lọ ${valuesDefaut}`);
         }
     }, [type, valuesDefaut, valuesDefautTo]);
     useEffect(() => {
@@ -544,17 +549,17 @@ function ExchangeOtherItem({ navigation,route }) {
 
                     </View>
                 </View>
-                <View style={styles.containerTop}>
-                    {/* <TouchableOpacity onPress={hanldTaiSan} style={{ flex: 0.33333, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorTS }}>
+                {/* <View style={styles.containerTop}>
+                    <TouchableOpacity onPress={hanldTaiSan} style={{ flex: 0.33333, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorTS }}>
                         <Text style={{ fontSize: 16 }}>Tài sản</Text>
-                    </TouchableOpacity> */}
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={hanldMoUoc} style={{ flex: 0.5, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorMoUoc }}>
                         <Text style={{ fontSize: 16 }}>Mơ ước</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={hanldNo} style={{ flex: 0.5, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorNo }}>
                         <Text style={{ fontSize: 16 }}>Nợ</Text>
                     </TouchableOpacity>
-                </View>
+                </View> */}
                 {typeBasket == 4 &&
                     <View style={[styles.containerTop, { marginLeft: 40, marginRight: 40 }]}>
                         <TouchableOpacity onPress={hanldTaiSanNap} style={{ flex: 0.5, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorTSNap }}>
@@ -588,7 +593,7 @@ function ExchangeOtherItem({ navigation,route }) {
                 {typeBasket != 4 && dataJarTemp.length > 0 &&
                     <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
-                            Số tiền cần thêm vào để hoàn thành ước mơ là :{'\n'}{moneyFormat(moneyPurpose - availableBalancesI)} vnđ</Text>
+                            Số tiền cần thêm vào để hoàn thành  là :{'\n'}{moneyFormat(moneyPurpose - availableBalancesI)} vnđ</Text>
                     </View>
                 }
                 <View style={styles.containerInputMoney}>

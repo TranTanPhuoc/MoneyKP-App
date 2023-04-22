@@ -25,30 +25,33 @@ function Jar({ navigation, route }) {
     const accessToken = `Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const dispatch = useDispatch();
     const hanldhanldAddJar = () => {
-        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
-            {
-                userId: idUser,
-                name: jar,
-                precent: 0,
-                availableBalances: 0,
-                totalSpending: 0,
-                totalIncome: 0,
-                type: 1,
-                monthNumber: month,
-                yearNumber: year
-            },
-            {
-                headers: {
-                    authorization: accessToken
-                }
-            }).then((res) => {
-                dispatch(reload_IU(idReload + 1));
-                Alert.alert("Thông báo", "Thêm thành công");
-                navigation.goBack();
 
-            }).catch((err) => {
-                console.log(err);
-            })
+        if (jar == "" || jar == null) {
+            axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
+                {
+                    userId: idUser,
+                    name: jar,
+                    precent: 0,
+                    availableBalances: 0,
+                    totalSpending: 0,
+                    totalIncome: 0,
+                    type: 1,
+                    monthNumber: month,
+                    yearNumber: year
+                },
+                {
+                    headers: {
+                        authorization: accessToken
+                    }
+                }).then((res) => {
+                    dispatch(reload_IU(idReload + 1));
+                    Alert.alert("Thông báo", "Thêm thành công");
+                    navigation.goBack();
+
+                }).catch((err) => {
+                    console.log(err);
+                })
+        }
     }
 
     return (

@@ -43,6 +43,10 @@ function Exchange({ navigation, route }) {
     const datePic = useSelector(state => state.reload.date);
     const [isSelected, setSelection] = useState(false);
     useEffect(() => {
+        setMoney("");
+        setNoteGD("");
+        setDate(now);
+        setdateNote(now.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' }));
         if (moneyPic != undefined && notePic != undefined && datePic != undefined) {
             hanldChiTieu();
             setMoney(parseInt(moneyPic));
@@ -258,7 +262,7 @@ function Exchange({ navigation, route }) {
     }
     useEffect(() => {
         (type == 2) ?
-            setNoteGD(`Chuyển tiền từ lọ ${valuesDefaut} sang ${valuesDefautTo}`)
+            setNoteGD(`Chuyển tiền từ lọ ${valuesDefaut}`)
             : (isSelected) ?
                 setNoteGD('Tiền phân bố đều cho tất cả các lọ') : setNoteGD("")
     }, [type, valuesDefaut, valuesDefautTo,isSelected]);
@@ -343,8 +347,6 @@ function Exchange({ navigation, route }) {
                         })
 
                 }
-
-
                 if (type == -1) {
                     const spending = parseInt(totalSpending) + parseInt(money);
                     if (availableBalancesI > 0 && availableBalancesI - parseInt(money) < 0) {
@@ -379,6 +381,7 @@ function Exchange({ navigation, route }) {
                                                     type: type,
                                                     note: noteGD,
                                                     typeBasket: typeBasket,
+                                                    nameBasket: valuesDefaut
                                                 },
                                                 {
                                                     headers: {

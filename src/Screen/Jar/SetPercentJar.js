@@ -88,7 +88,7 @@ function SetPercentJar({ navigation,route }) {
     }
     const deleteItem = (item) => {
         if (item.population == 0 && tong == 100) {
-            Alert.alert("Thông báo", "Bạn có chắc chắn muốn xóa lọ không", [
+            Alert.alert("Thông báo", "Bạn có chắc chắn muốn xóa lọ không ?", [
                 {
                     text: 'Thoát',
                     onPress: () => console.log('Cancel Pressed'),

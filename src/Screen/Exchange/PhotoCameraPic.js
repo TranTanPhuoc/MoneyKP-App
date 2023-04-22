@@ -34,6 +34,7 @@ function PhotoCameraPic({ navigation, route }) {
             const money = response.data.document.inference.pages[0].prediction.total_amount.value * 1000;
             const note = response.data.document.inference.pages[0].prediction.supplier.value;
             const date = response.data.document.inference.started_at;
+            console.log(money);
             dispatch(send_Photo_Success(money, note, date));
             let randomNumber = Math.floor(Math.random() * 90000) + 10000;
             dispatch(reload_IU(randomNumber));
