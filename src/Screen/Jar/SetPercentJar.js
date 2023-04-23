@@ -52,7 +52,11 @@ function SetPercentJar({ navigation,route }) {
     };
 
     const hanldSave = () => {
+        var conunt = 0 ;
         const listdata = data.map((item) => {
+            if(item.name == null || item.name == ""){
+                conunt++;
+            }
             return {
                 id: item.id,
                 userId: item.userId,
@@ -66,7 +70,7 @@ function SetPercentJar({ navigation,route }) {
                 yearNumber : item.year
             };
         });
-        if (tong == 100) {
+        if (tong == 100 && conunt == 0) {
             axios({
                 url: 'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
                 method: 'POST',
@@ -83,7 +87,7 @@ function SetPercentJar({ navigation,route }) {
             });
         }
         else {
-            Alert.alert("Thông báo", "Tổng tỉ lệ phải bằng 100");
+            Alert.alert("Thông báo", "Tổng tỉ lệ phải bằng 100 và tên các lọ thay đổi không được rỗng");
         }
     }
     const deleteItem = (item) => {
@@ -103,7 +107,7 @@ function SetPercentJar({ navigation,route }) {
                             const newData = data.filter(i => i.id !== item.id);
                             setData(newData);
                             dispatch(reload_IU(idReload+1));
-                            navigation.navigate("Tabs");
+                            // navigation.navigate("Tabs");
 
                         }).catch((err) => {
                             console.log(err)

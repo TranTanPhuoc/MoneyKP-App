@@ -41,7 +41,7 @@ function ExchangeOther({ navigation }) {
     const [colorTSRut, setcolorTSRut] = useState("");
     const [colorNo, setcolorNo] = useState("");
     const [colorNoThem, setcolorNoThem] = useState(colorJar[5]);
-    const [colorNoGiam, setcolorNoGiam] = useState("");
+    const [colorNoGiam, setcolorNoChuyen] = useState("");
     const [colorMoUoc, setcolorMoUoc] = useState("");
     const [colorMoUocThem, setcolorMoUocThem] = useState(colorJar[5]);
     const [colorMoUocChuyen, setcolorMoUocChuyen] = useState("");
@@ -52,29 +52,29 @@ function ExchangeOther({ navigation }) {
     const [status, setstatus] = useState();
     const [createdDate, setcreatedDate] = useState();
     const [datedComplete, setdatedComplete] = useState();
-    const hanldTaiSan = () => {
-        setcolorLo("#E6E6FA");
-        setcolorTS(colorJar[1]);
-        setcolorNo("#E6E6FA");
-        setcolorMoUoc("#E6E6FA");
-        settypeBasket(4);
-        hanldTaiSanNap();
-    }
-    const hanldTaiSanNap = () => {
-        setcolorTSNap(colorJar[8]);
-        setcolorTSRut("#E6E6FA");
-        settypeBasket(4);
-        settype(1);
-    }
-    const hanldTaiSanRut = () => {
-        setcolorTSRut(colorJar[9]);
-        setcolorTSNap("#E6E6FA");
-        settypeBasket(4);
-        settype(-1);
-    }
+    // const hanldTaiSan = () => {
+    //     setcolorLo("#E6E6FA");
+    //     setcolorTS(colorJar[1]);
+    //     setcolorNo("#E6E6FA");
+    //     setcolorMoUoc("#E6E6FA");
+    //     settypeBasket(4);
+    //     hanldTaiSanNap();
+    // }
+    // const hanldTaiSanNap = () => {
+    //     setcolorTSNap(colorJar[8]);
+    //     setcolorTSRut("#E6E6FA");
+    //     settypeBasket(4);
+    //     settype(1);
+    // }
+    // const hanldTaiSanRut = () => {
+    //     setcolorTSRut(colorJar[9]);
+    //     setcolorTSNap("#E6E6FA");
+    //     settypeBasket(4);
+    //     settype(-1);
+    // }
     const hanldMoUoc = () => {
         setcolorTS("#E6E6FA");
-        setcolorMoUoc(colorJar[2]);
+        setcolorMoUoc("#fedcba");
         setcolorNo("#E6E6FA");
         setcolorLo("#E6E6FA");
         settypeBasket(3);
@@ -87,14 +87,14 @@ function ExchangeOther({ navigation }) {
         settype(1);
     }
     const hanldMoUocChuyen = () => {
-        setcolorMoUocChuyen(colorJar[6]);
+        setcolorMoUocChuyen("#F9B79C");
         setcolorMoUocThem("#E6E6FA");
         settypeBasket(3);
         settype(2);
     }
     const hanldNo = () => {
         setcolorTS("#E6E6FA");
-        setcolorNo(colorJar[3]);
+        setcolorNo("#fedcba");
         setcolorLo("#E6E6FA");
         setcolorMoUoc("#E6E6FA");
         settypeBasket(2);
@@ -102,13 +102,13 @@ function ExchangeOther({ navigation }) {
     }
     const hanldNoThem = () => {
         setcolorNoThem(colorJar[5]);
-        setcolorNoGiam("#E6E6FA");
+        setcolorNoChuyen("#E6E6FA");
         settype(1);
     }
-    const hanldNoGiam = () => {
-        setcolorNoGiam(colorJar[6]);
+    const hanldNoChuyen = () => {
+        setcolorNoChuyen("#F9B79C");
         setcolorNoThem("#E6E6FA");
-        settype(-1);
+        settype(2);
     }
     function convertVNDToWords(amount) {
         const units = ["", "Một ", "Hai ", "Ba ", "Bốn ", "Năm ", "Sáu ", "Bảy ", "Tám ", "Chín "];
@@ -222,7 +222,7 @@ function ExchangeOther({ navigation }) {
             Alert.alert("Thông báo", "Không được chọn trước ngày hiện tại");
         }
         else {
-            setDate(date);
+            setDate(newDate);
             setModalVisible(!modalVisible);
         }
     }
@@ -243,10 +243,13 @@ function ExchangeOther({ navigation }) {
         if (noteGD == "") {
             mess += "\nGhi chú giao dịch không được rỗng ";
         }
-        if (money <= 0 || noteGD == "" || dateGD == "") {
+        if (now.getMonth() + 1 != dateGD.getMonth() + 1) {
+            mess += "\n Chỉ phát sinh giao dịch trong tháng hiện tại!";
+        }
+        if (money <= 0 || noteGD == "" || dateGD == "" || now.getMonth() + 1 != dateGD.getMonth() + 1) {
             Alert.alert("Thông báo", mess);
         }
-        if (money > 0 && noteGD != "" && dateGD != "") {
+        if (money > 0 && noteGD != "" && dateGD != "" && now.getMonth() + 1 == dateGD.getMonth() + 1) {
             if (type != 2) {
                 if (type == 1) {
                     if (availableBalancesI + parseInt(money) > moneyPurpose) {
@@ -261,7 +264,8 @@ function ExchangeOther({ navigation }) {
                                 moneyTransaction: parseFloat(money),
                                 type: type,
                                 note: noteGD,
-                                typeBasket: typeBasket
+                                typeBasket: typeBasket,
+                                nameBasket: nameJar
                             },
                             {
                                 headers: {
@@ -352,7 +356,8 @@ function ExchangeOther({ navigation }) {
                             moneyTransaction: parseFloat(money),
                             type: type,
                             note: noteGD,
-                            typeBasket: typeBasket
+                            typeBasket: typeBasket,
+                            nameBasket: nameJar
                         },
                         {
                             headers: {
@@ -409,6 +414,9 @@ function ExchangeOther({ navigation }) {
             else if (type == 2) {
                 if (idJar == idJarTo) {
                     Alert.alert("Thông báo", "Không được chọn lọ trùng nhau");
+                }
+                else if(parseFloat(money)> parseFloat(availableBalancesI)){
+                    Alert.alert("Thông báo", "Không được vượt mức số tiền hiện có của lọ");
                 }
                 else {
                     if (idJar != null && idJarTo != null) {
@@ -584,7 +592,7 @@ function ExchangeOther({ navigation }) {
                         <Text style={{ fontSize: 16 }}>Nợ</Text>
                     </TouchableOpacity>
                 </View>
-                {typeBasket == 4 &&
+                {/* {typeBasket == 4 &&
                     <View style={[styles.containerTop, { marginLeft: 40, marginRight: 40 }]}>
                         <TouchableOpacity onPress={hanldTaiSanNap} style={{ flex: 0.5, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorTSNap }}>
                             <Text style={{ fontSize: 16 }}>Nạp</Text>
@@ -593,14 +601,14 @@ function ExchangeOther({ navigation }) {
                             <Text style={{ fontSize: 16 }}>Rút</Text>
                         </TouchableOpacity>
                     </View>
-                }
+                } */}
                 {typeBasket == 2 &&
                     <View style={[styles.containerTop, { marginLeft: 40, marginRight: 40 }]}>
                         <TouchableOpacity onPress={hanldNoThem} style={{ flex: 0.5, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorNoThem }}>
                             <Text style={{ fontSize: 16 }}>Thêm</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={hanldNoGiam} style={{ flex: 0.5, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorNoGiam }}>
-                            <Text style={{ fontSize: 16 }}>Giảm</Text>
+                        <TouchableOpacity onPress={hanldNoChuyen} style={{ flex: 0.5, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorNoGiam }}>
+                            <Text style={{ fontSize: 16 }}>Chuyển</Text>
                         </TouchableOpacity>
                     </View>
                 }
@@ -614,10 +622,16 @@ function ExchangeOther({ navigation }) {
                         </TouchableOpacity>
                     </View>
                 }
-                {typeBasket != 4 && dataJarTemp.length > 0 &&
+                {typeBasket != 4 && dataJarTemp.length > 0 && type == 1 &&
                     <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
                             Số tiền cần thêm vào để hoàn thành là :{'\n'}{moneyFormat(moneyPurpose - availableBalancesI)} vnđ</Text>
+                    </View>
+                }
+                {typeBasket != 4 && dataJarTemp.length > 0 && type == 2 &&
+                    <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
+                            Số tiền chuyển không vượt quá tiền trong lọ {nameJar} :{moneyFormat(availableBalancesI)} vnđ</Text>
                     </View>
                 }
                 <View style={styles.containerInputMoney}>

@@ -25,8 +25,10 @@ function Jar({ navigation, route }) {
     const accessToken = `Bearer ${auth.currentUser.stsTokenManager.accessToken}`;
     const dispatch = useDispatch();
     const hanldhanldAddJar = () => {
-
         if (jar == "" || jar == null) {
+            Alert.alert("Thông báo","Tên lọ không được rỗng"); 
+        }
+        else {
             axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket',
                 {
                     userId: idUser,

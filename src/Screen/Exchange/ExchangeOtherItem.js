@@ -22,8 +22,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { reload_IU } from '../../redux/action/ActionRedux';
 import { colorJar } from '../../../assets/AppColors/AppColors';
 
-function ExchangeOtherItem({ navigation,route }) {
-    const {item,typeBasketId} = route.params;
+function ExchangeOtherItem({ navigation, route }) {
+    const { item, typeBasketId,moneyReal,moneyPurposeReal,totalSpendingReal,totalIncomeReal } = route.params;
     const [money, setMoney] = useState("");
     const [wordsMoney, setWordsMoney] = useState("");
     const [colorSelect, setColorSelect] = useState("#FF9999");
@@ -43,40 +43,41 @@ function ExchangeOtherItem({ navigation,route }) {
     const [colorTSRut, setcolorTSRut] = useState("");
     const [colorNo, setcolorNo] = useState("");
     const [colorNoThem, setcolorNoThem] = useState(colorJar[5]);
-    const [colorNoGiam, setcolorNoGiam] = useState("");
+    const [colorNoGiam, setcolorNoChuyen] = useState("");
     const [colorMoUoc, setcolorMoUoc] = useState("");
     const [colorMoUocThem, setcolorMoUocThem] = useState(colorJar[5]);
     const [colorMoUocChuyen, setcolorMoUocChuyen] = useState("");
     const [typeBasket, settypeBasket] = useState(typeBasketId);
     const [type, settype] = useState(1);
     const [dateNote, setdateNote] = useState(selectedDate.toLocaleDateString('VN', { day: '2-digit', month: '2-digit', year: 'numeric' }));
-    const [moneyPurpose, setmoneyPurpose] = useState(item.moneyPurpose);
+    const [moneyPurpose, setmoneyPurpose] = useState(moneyPurposeReal);
     const [status, setstatus] = useState(item.status);
     const [createdDate, setcreatedDate] = useState(item.createdDate);
     const [datedComplete, setdatedComplete] = useState(item.datedComplete);
-    const hanldTaiSan = () => {
-        setcolorLo("#E6E6FA");
-        setcolorTS(colorJar[1]);
-        setcolorNo("#E6E6FA");
-        setcolorMoUoc("#E6E6FA");
-        settypeBasket(4);
-        hanldTaiSanNap();
-    }
-    const hanldTaiSanNap = () => {
-        setcolorTSNap(colorJar[8]);
-        setcolorTSRut("#E6E6FA");
-        settypeBasket(4);
-        settype(1);
-    }
-    const hanldTaiSanRut = () => {
-        setcolorTSRut(colorJar[9]);
-        setcolorTSNap("#E6E6FA");
-        settypeBasket(4);
-        settype(-1);
-    }
+    // const hanldTaiSan = () => {
+    //     setcolorLo("#E6E6FA");
+    //     setcolorTS(colorJar[1]);
+    //     setcolorNo("#E6E6FA");
+    //     setcolorMoUoc("#E6E6FA");
+    //     settypeBasket(4);
+    //     hanldTaiSanNap();
+    // }
+    // const hanldTaiSanNap = () => {
+    //     setcolorTSNap(colorJar[8]);
+    //     setcolorTSRut("#E6E6FA");
+    //     settypeBasket(4);
+    //     settype(1);
+    // }
+    // const hanldTaiSanRut = () => {
+    //     setcolorTSRut(colorJar[9]);
+    //     setcolorTSNap("#E6E6FA");
+    //     settypeBasket(4);
+    //     settype(-1);
+    // }
+    const [moneyInJarTo,setmoneyinTo] = useState(0);
     const hanldMoUoc = () => {
         setcolorTS("#E6E6FA");
-        setcolorMoUoc(colorJar[2]);
+        setcolorMoUoc("#fedcba");
         setcolorNo("#E6E6FA");
         setcolorLo("#E6E6FA");
         settypeBasket(3);
@@ -89,14 +90,14 @@ function ExchangeOtherItem({ navigation,route }) {
         settype(1);
     }
     const hanldMoUocChuyen = () => {
-        setcolorMoUocChuyen(colorJar[6]);
+        setcolorMoUocChuyen("#F9B79C");
         setcolorMoUocThem("#E6E6FA");
         settypeBasket(3);
         settype(2);
     }
     const hanldNo = () => {
         setcolorTS("#E6E6FA");
-        setcolorNo(colorJar[3]);
+        setcolorNo("#fedcba");
         setcolorLo("#E6E6FA");
         setcolorMoUoc("#E6E6FA");
         settypeBasket(2);
@@ -104,13 +105,13 @@ function ExchangeOtherItem({ navigation,route }) {
     }
     const hanldNoThem = () => {
         setcolorNoThem(colorJar[5]);
-        setcolorNoGiam("#E6E6FA");
+        setcolorNoChuyen("#E6E6FA");
         settype(1);
     }
-    const hanldNoGiam = () => {
-        setcolorNoGiam(colorJar[6]);
+    const hanldNoChuyen = () => {
+        setcolorNoChuyen("#F9B79C");
         setcolorNoThem("#E6E6FA");
-        settype(-1);
+        settype(2);
     }
     function convertVNDToWords(amount) {
         const units = ["", "Một ", "Hai ", "Ba ", "Bốn ", "Năm ", "Sáu ", "Bảy ", "Tám ", "Chín "];
@@ -223,7 +224,7 @@ function ExchangeOtherItem({ navigation,route }) {
             Alert.alert("Thông báo", "Không được chọn trước ngày hiện tại");
         }
         else {
-            setDate(date);
+            setDate(newDate);
             setModalVisible(!modalVisible);
         }
     }
@@ -244,10 +245,13 @@ function ExchangeOtherItem({ navigation,route }) {
         if (noteGD == "") {
             mess += "\nGhi chú giao dịch không được rỗng ";
         }
-        if (money <= 0 || noteGD == "" || dateGD == "") {
+        if (now.getMonth() + 1 != dateGD.getMonth() + 1) {
+            mess += "\n Chỉ phát sinh giao dịch trong tháng hiện tại!";
+        }
+        if (money <= 0 || noteGD == "" || dateGD == "" || now.getMonth() + 1 != dateGD.getMonth() + 1) {
             Alert.alert("Thông báo", mess);
         }
-        if (money > 0 && noteGD != "" && dateGD != "") {
+        if (money > 0 && noteGD != "" && dateGD != "" && now.getMonth() + 1 == dateGD.getMonth() + 1) {
             if (type != 2) {
                 if (type == 1) {
                     if (availableBalancesI + parseInt(money) > moneyPurpose) {
@@ -262,7 +266,8 @@ function ExchangeOtherItem({ navigation,route }) {
                                 moneyTransaction: parseFloat(money),
                                 type: type,
                                 note: noteGD,
-                                typeBasket: typeBasket
+                                typeBasket: typeBasket,
+                                nameBasket: nameJar
                             },
                             {
                                 headers: {
@@ -353,7 +358,8 @@ function ExchangeOtherItem({ navigation,route }) {
                             moneyTransaction: parseFloat(money),
                             type: type,
                             note: noteGD,
-                            typeBasket: typeBasket
+                            typeBasket: typeBasket,
+                            nameBasket: nameJar
                         },
                         {
                             headers: {
@@ -410,6 +416,14 @@ function ExchangeOtherItem({ navigation,route }) {
             else if (type == 2) {
                 if (idJar == idJarTo) {
                     Alert.alert("Thông báo", "Không được chọn lọ trùng nhau");
+                    return;
+                }
+                else if (parseFloat(money) > parseFloat(availableBalancesI)) {
+                    Alert.alert("Thông báo", "Không được vượt mức số tiền hiện có của lọ");
+                    return;
+                }
+                else if (parseFloat(money) > parseFloat(moneyInJarTo)) {
+                    Alert.alert("Thông báo", `Tiền lọ nhận không vượt quá ${moneyFormat(moneyInJarTo)}vnđ`);
                 }
                 else {
                     if (idJar != null && idJarTo != null) {
@@ -450,11 +464,11 @@ function ExchangeOtherItem({ navigation,route }) {
     const idUser = auth.currentUser.uid;
     const [idJar, setisJar] = useState(item.id);
     const [idJarTo, setidJarTo] = useState();
-    const [totalIncome, settotalIncome] = useState(item.totalIncome);
-    const [totalSpending, settotalSpending] = useState(item.totalSpending);
+    const [totalIncome, settotalIncome] = useState(totalIncomeReal);
+    const [totalSpending, settotalSpending] = useState(totalSpendingReal);
     const [nameJar, setNameJar] = useState(item.name);
     const [precentJar, SetprecentJar] = useState(item.population);
-    const [availableBalancesI, setavailableBalancesI] = useState(item.availableBalances);
+    const [availableBalancesI, setavailableBalancesI] = useState(moneyReal);
     const [code, setcode] = useState(item.code);
     const [isCash, setIsCash] = useState(item.isCash);
     const [quantity, setquantity] = useState(item.quantity);
@@ -464,10 +478,10 @@ function ExchangeOtherItem({ navigation,route }) {
         })
             .then((res) => {
                 if (res.data.length != 0) {
-                    if(typeBasket == 2){
+                    if (typeBasket == 2) {
                         hanldNo();
                     }
-                    if(typeBasket == 3){
+                    if (typeBasket == 3) {
                         hanldMoUoc();
                     }
                     setdataJarTemp(res.data.map((item) => {
@@ -484,6 +498,7 @@ function ExchangeOtherItem({ navigation,route }) {
                         if (index == 0) {
                             setvaluesDefautTo(item.name)
                             setidJarTo(item.id)
+                            setmoneyinTo(parseInt(item.moneyPurpose)-parseInt(item.availableBalances));
                         }
                         return obj;
                     }));
@@ -560,7 +575,7 @@ function ExchangeOtherItem({ navigation,route }) {
                         <Text style={{ fontSize: 16 }}>Nợ</Text>
                     </TouchableOpacity>
                 </View> */}
-                {typeBasket == 4 &&
+                {/* {typeBasket == 4 &&
                     <View style={[styles.containerTop, { marginLeft: 40, marginRight: 40 }]}>
                         <TouchableOpacity onPress={hanldTaiSanNap} style={{ flex: 0.5, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorTSNap }}>
                             <Text style={{ fontSize: 16 }}>Nạp</Text>
@@ -569,14 +584,14 @@ function ExchangeOtherItem({ navigation,route }) {
                             <Text style={{ fontSize: 16 }}>Rút</Text>
                         </TouchableOpacity>
                     </View>
-                }
+                } */}
                 {typeBasket == 2 &&
                     <View style={[styles.containerTop, { marginLeft: 40, marginRight: 40 }]}>
                         <TouchableOpacity onPress={hanldNoThem} style={{ flex: 0.5, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorNoThem }}>
                             <Text style={{ fontSize: 16 }}>Thêm</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={hanldNoGiam} style={{ flex: 0.5, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorNoGiam }}>
-                            <Text style={{ fontSize: 16 }}>Giảm</Text>
+                        <TouchableOpacity onPress={hanldNoChuyen} style={{ flex: 0.5, borderRadius: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: colorNoGiam }}>
+                            <Text style={{ fontSize: 16 }}>Chuyển</Text>
                         </TouchableOpacity>
                     </View>
                 }
@@ -590,10 +605,16 @@ function ExchangeOtherItem({ navigation,route }) {
                         </TouchableOpacity>
                     </View>
                 }
-                {typeBasket != 4 && dataJarTemp.length > 0 &&
+                {typeBasket != 4 && dataJarTemp.length > 0 && type == 1 &&
                     <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
-                            Số tiền cần thêm vào để hoàn thành  là :{'\n'}{moneyFormat(moneyPurpose - availableBalancesI)} vnđ</Text>
+                            Số tiền cần thêm vào để hoàn thành là :{'\n'}{moneyFormat(moneyPurpose - availableBalancesI)} vnđ</Text>
+                    </View>
+                }
+                {typeBasket != 4 && dataJarTemp.length > 0 && type == 2 &&
+                    <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
+                            Số tiền chuyển không vượt quá tiền trong lọ {nameJar} :{moneyFormat(availableBalancesI)} vnđ</Text>
                     </View>
                 }
                 <View style={styles.containerInputMoney}>
@@ -696,6 +717,7 @@ function ExchangeOtherItem({ navigation,route }) {
                                     dataJarTemp.map((item, index) => {
                                         if (selectedItem == item.name) {
                                             setidJarTo(item.id)
+                                            setmoneyinTo(parseInt(item.moneyPurpose)-parseInt(item.availableBalances));
                                         }
                                     })
                                 }}

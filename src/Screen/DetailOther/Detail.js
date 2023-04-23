@@ -20,8 +20,12 @@ function Detail({ navigation, route }) {
     const { id, name, itemName, money, idJar, moneyPurpose, status, availableBalances, isCash, quantity, item } = route.params;
     const moneyR = parseInt(money);
     const statusR = parseInt(status);
+    const moneyPurposeR = parseInt(moneyPurpose);
     const [moneyReal, setMoneyReal] = useState(moneyR);
     const [statusReal, setStatusReal] = useState(statusR)
+    const [moneyPurposeReal, setmoneyPurposeReal] = useState(moneyPurposeR)
+    const [totalIncome, settotalIncome] = useState(0);
+    const [totalSpending,settotalSpending] = useState(0);
     const moneyFormat = (amount) => {
         return amount.toLocaleString("vi-VN", {
             style: "currency",
@@ -92,7 +96,8 @@ function Detail({ navigation, route }) {
                         type: item.type,
                         userId: item.userId,
                         color: colorJar[0],
-                        name: name
+                        name: name,
+                        nameBasket : item.nameBasket
                     };
                     return obj;
                 }));
@@ -157,6 +162,9 @@ function Detail({ navigation, route }) {
         }).then((res) => {
             setMoneyReal(res.data.availableBalances);
             setStatusReal(res.data.status);
+            setmoneyPurposeReal(res.data.moneyPurpose);
+            settotalSpending(res.data.totalSpending);
+            settotalIncome(res.data.totalIncome);
 
         })
     }, [idReload])
@@ -287,7 +295,7 @@ function Detail({ navigation, route }) {
                                     shadowRadius: 4,
                                     elevation: 5,
                                 }} onPress={() => {
-                                    navigation.navigate("ExchangeOtherItem", { item: item, typeBasketId: id });
+                                    navigation.navigate("ExchangeOtherItem", { item: item, typeBasketId: id,moneyReal: moneyReal,moneyPurposeReal: moneyPurposeReal,totalIncomeReal: totalIncome, totalSpendingReal : totalSpending});
                                 }}>
                                     {/* <Image style={{ height: 20, width: 20 }} source={require('../../../assets/icons/add.png')} /> */}
                                     <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500', marginLeft: 15, marginRight: 15 }}>Nạp tiền</Text>
@@ -342,6 +350,7 @@ function Detail({ navigation, route }) {
                             <ScrollView style={{ marginTop: 20, marginLeft: 20, marginRight: 20, maxHeight: 150 }}>
                                 {
                                     dataHistory.map((item, index) => {
+                                        const date = new Date(item.createDate);
                                         return (
                                             <View key={index} style={styles.containerItem}>
                                                 <View style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center' }}>
@@ -353,9 +362,7 @@ function Detail({ navigation, route }) {
                                                     <View style={{ marginBottom: 10, }}>
                                                         <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.note}</Text>
                                                     </View>
-                                                    {
-                                                        (item.type == 1) ? <Text>Thu nhập</Text> : <Text>Chi tiền</Text>
-                                                    }
+                                                    <Text> {item.nameBasket} </Text>
                                                 </View>
                                                 <View style={{ flex: 0.35 }}>
                                                     {
@@ -363,6 +370,7 @@ function Detail({ navigation, route }) {
                                                             <Text style={{ color: '#339900', fontSize: 16, fontWeight: 'bold' }}>+ {moneyFormat(item.moneyTransaction)}</Text> :
                                                             <Text style={{ color: '#EE0000', fontSize: 16, fontWeight: 'bold' }}>- {moneyFormat(item.moneyTransaction)}</Text>
                                                     }
+                                                    <Text style={{ color: '#000', fontSize: 13, marginTop: 10, }}>{date.toLocaleDateString('VN', { second: '2-digit', minute: '2-digit', hour: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
                                                 </View>
                                             </View>
                                         );
