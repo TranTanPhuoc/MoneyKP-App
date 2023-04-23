@@ -243,10 +243,10 @@ function ExchangeItem({ navigation, route }) {
     }
     useEffect(() => {
         (type == 2) ?
-            setNoteGD(`Chuyển tiền từ lọ ${nameJar} sang ${nameJarTo}`)
+            setNoteGD(`Chuyển tiền lọ: ${nameJar}`)
             : (isSelected) ?
                 setNoteGD('Tiền phân bố đều cho tất cả các lọ') : setNoteGD("")
-    }, [type, nameJar, nameJarTo,isSelected]);
+    }, [type, nameJar, nameJarTo, isSelected]);
     useEffect(() => {
         if (dateGD != "") {
             const newDate = new Date(dateGD);
@@ -273,7 +273,7 @@ function ExchangeItem({ navigation, route }) {
         if (money <= 0 || noteGD == "" || dateGD == "" || now.getMonth() + 1 != dateGD.getMonth() + 1) {
             Alert.alert("Thông báo", mess);
         }
-        
+
         if (money > 0 && noteGD != "" && dateGD != "" && now.getMonth() + 1 == dateGD.getMonth() + 1) {
             if (type != 2 && !isSelected) {
                 if (type == 1) {
@@ -307,7 +307,7 @@ function ExchangeItem({ navigation, route }) {
                                     typeBasket: typeBasket,
                                     name: nameJar,
                                     nameBasket: nameJar
-                                    
+
                                 },
                                 {
                                     headers: {
@@ -412,6 +412,7 @@ function ExchangeItem({ navigation, route }) {
                                     authorization: accessToken
                                 }
                             }).then((res) => {
+
                                 axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
                                     {
                                         userId: idUser,
@@ -454,6 +455,10 @@ function ExchangeItem({ navigation, route }) {
             else if (type == 2) {
                 if (idJar == idJarTo) {
                     Alert.alert("Thông báo", "Không được chọn lọ trùng nhau")
+                }
+                else if (parseFloat(money) > parseFloat(availableBalancesI)) {
+                    Alert.alert("Thông báo", "Không được vượt mức số tiền hiện có của lọ");
+                    return;
                 }
                 else {
                     axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/transfer-money',
@@ -601,6 +606,13 @@ function ExchangeItem({ navigation, route }) {
                         <Text style={{ fontSize: 16 }}>Chuyển tiền</Text>
                     </TouchableOpacity>
                 </View>
+                {
+                    type == 2 &&
+                    <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
+                            Số tiền chuyển không vượt quá tiền trong lọ {nameJar} :{moneyFormat(availableBalancesI)} vnđ</Text>
+                    </View>
+                }
                 {
                     type == -1 &&
                     <View style={{ marginLeft: 20, marginTop: 20 }}>
