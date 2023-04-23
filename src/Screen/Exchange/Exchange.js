@@ -262,7 +262,7 @@ function Exchange({ navigation, route }) {
     }
     useEffect(() => {
         (type == 2) ?
-            setNoteGD(`Chuyển tiền từ lọ ${valuesDefaut}`)
+            setNoteGD(`Chuyển tiền lọ ${valuesDefaut}`)
             : (isSelected) ?
                 setNoteGD('Tiền phân bố đều cho tất cả các lọ') : setNoteGD("")
     }, [type, valuesDefaut, valuesDefautTo,isSelected]);

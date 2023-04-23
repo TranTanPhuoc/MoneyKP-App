@@ -23,7 +23,7 @@ import { reload_IU } from '../../redux/action/ActionRedux';
 import { colorJar } from '../../../assets/AppColors/AppColors';
 
 function ExchangeOtherItem({ navigation, route }) {
-    const { item, typeBasketId,moneyReal,moneyPurposeReal,totalSpendingReal,totalIncomeReal } = route.params;
+    const { item, typeBasketId, moneyReal, moneyPurposeReal, totalSpendingReal, totalIncomeReal } = route.params;
     const [money, setMoney] = useState("");
     const [wordsMoney, setWordsMoney] = useState("");
     const [colorSelect, setColorSelect] = useState("#FF9999");
@@ -74,7 +74,7 @@ function ExchangeOtherItem({ navigation, route }) {
     //     settypeBasket(4);
     //     settype(-1);
     // }
-    const [moneyInJarTo,setmoneyinTo] = useState(0);
+    const [moneyInJarTo, setmoneyinTo] = useState(0);
     const hanldMoUoc = () => {
         setcolorTS("#E6E6FA");
         setcolorMoUoc("#fedcba");
@@ -498,7 +498,7 @@ function ExchangeOtherItem({ navigation, route }) {
                         if (index == 0) {
                             setvaluesDefautTo(item.name)
                             setidJarTo(item.id)
-                            setmoneyinTo(parseInt(item.moneyPurpose)-parseInt(item.availableBalances));
+                            setmoneyinTo(parseInt(item.moneyPurpose) - parseInt(item.availableBalances));
                         }
                         return obj;
                     }));
@@ -512,7 +512,7 @@ function ExchangeOtherItem({ navigation, route }) {
             setNoteGD("")
         }
         else {
-            setNoteGD(`Chuyển tiền từ lọ ${valuesDefaut}`);
+            setNoteGD(`Chuyển tiền lọ:  ${nameJar}`);
         }
     }, [type, valuesDefaut, valuesDefautTo]);
     useEffect(() => {
@@ -615,6 +615,8 @@ function ExchangeOtherItem({ navigation, route }) {
                     <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
                             Số tiền chuyển không vượt quá tiền trong lọ {nameJar} :{moneyFormat(availableBalancesI)} vnđ</Text>
+                        <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
+                            Tiền lọ nhận không vượt quá: {moneyFormat(moneyInJarTo)}vnđ</Text>
                     </View>
                 }
                 <View style={styles.containerInputMoney}>
@@ -717,7 +719,7 @@ function ExchangeOtherItem({ navigation, route }) {
                                     dataJarTemp.map((item, index) => {
                                         if (selectedItem == item.name) {
                                             setidJarTo(item.id)
-                                            setmoneyinTo(parseInt(item.moneyPurpose)-parseInt(item.availableBalances));
+                                            setmoneyinTo(parseInt(item.moneyPurpose) - parseInt(item.availableBalances));
                                         }
                                     })
                                 }}

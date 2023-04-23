@@ -52,6 +52,8 @@ function ExchangeOther({ navigation }) {
     const [status, setstatus] = useState();
     const [createdDate, setcreatedDate] = useState();
     const [datedComplete, setdatedComplete] = useState();
+    const [moneyInJarTo, setmoneyinTo] = useState(0);
+
     // const hanldTaiSan = () => {
     //     setcolorLo("#E6E6FA");
     //     setcolorTS(colorJar[1]);
@@ -414,9 +416,14 @@ function ExchangeOther({ navigation }) {
             else if (type == 2) {
                 if (idJar == idJarTo) {
                     Alert.alert("Thông báo", "Không được chọn lọ trùng nhau");
+                    return;
                 }
-                else if(parseFloat(money)> parseFloat(availableBalancesI)){
+                else if (parseFloat(money) > parseFloat(availableBalancesI)) {
                     Alert.alert("Thông báo", "Không được vượt mức số tiền hiện có của lọ");
+                    return;
+                }
+                else if (parseFloat(money) > parseFloat(moneyInJarTo)) {
+                    Alert.alert("Thông báo", `Tiền lọ nhận không vượt quá ${moneyFormat(moneyInJarTo)}vnđ`);
                 }
                 else {
                     if (idJar != null && idJarTo != null) {
@@ -512,6 +519,7 @@ function ExchangeOther({ navigation }) {
                         if (index == 0) {
                             setvaluesDefautTo(item.name)
                             setidJarTo(item.id)
+                            setmoneyinTo(parseInt(item.moneyPurpose) - parseInt(item.availableBalances));
                         }
                         return obj;
                     }));
@@ -546,7 +554,7 @@ function ExchangeOther({ navigation }) {
             setNoteGD("")
         }
         else {
-            setNoteGD(`Chuyển tiền từ lọ ${valuesDefaut} `);
+            setNoteGD(`Chuyển tiền lọ : ${valuesDefaut} `);
         }
     }, [type, valuesDefaut, valuesDefautTo]);
     useEffect(() => {
@@ -632,6 +640,9 @@ function ExchangeOther({ navigation }) {
                     <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
                             Số tiền chuyển không vượt quá tiền trong lọ {nameJar} :{moneyFormat(availableBalancesI)} vnđ</Text>
+                        <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
+                            Tiền lọ nhận không vượt quá: {moneyFormat(moneyInJarTo)}vnđ</Text>
+
                     </View>
                 }
                 <View style={styles.containerInputMoney}>
@@ -738,6 +749,7 @@ function ExchangeOther({ navigation }) {
                                     dataJarTemp.map((item, index) => {
                                         if (selectedItem == item.name) {
                                             setidJarTo(item.id)
+                                            setmoneyinTo(parseInt(item.moneyPurpose) - parseInt(item.availableBalances));
                                         }
                                     })
                                 }}

@@ -519,13 +519,14 @@ function Home({ navigation }) {
                                 buttonTextStyle={{ fontSize: 16, }}
                                 onSelect={(selectedItem, index) => {
                                     const newDate = new Date(year, parseInt(selectedItem) - 1, 2);
-                                    // if (now < newDate) {
-                                    //     Alert.alert("Thông báo", "Không có dữ liệu");
-                                    // }
-                                    // else {
+                                    // Chặn ngày tương lai tương lai
+                                    if (now < newDate) {
+                                        Alert.alert("Thông báo", "Không có dữ liệu");
+                                    }
+                                    else {
                                         setSelectedDate(newDate);
                                         setMonth(parseInt(selectedItem));
-                                    // }
+                                    }
                                 }}
                                 renderDropdownIcon={isOpened => {
                                     return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
