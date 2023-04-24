@@ -423,7 +423,7 @@ function ExchangeOtherItem({ navigation, route }) {
                     return;
                 }
                 else if (parseFloat(money) > parseFloat(moneyInJarTo)) {
-                    Alert.alert("Thông báo", `Tiền lọ nhận không vượt quá ${moneyFormat(moneyInJarTo)}vnđ`);
+                    Alert.alert("Thông báo", `Hạn mức lọ nhận ${moneyFormat(moneyInJarTo)}vnđ`);
                 }
                 else {
                     if (idJar != null && idJarTo != null) {
@@ -614,9 +614,9 @@ function ExchangeOtherItem({ navigation, route }) {
                 {typeBasket != 4 && dataJarTemp.length > 0 && type == 2 &&
                     <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
-                            Số tiền chuyển không vượt quá tiền trong lọ {nameJar} :{moneyFormat(availableBalancesI)} vnđ</Text>
+                            Tiền khả dụng lọ gửi  {nameJar} :{moneyFormat(availableBalancesI)} vnđ</Text>
                         <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
-                            Tiền lọ nhận không vượt quá: {moneyFormat(moneyInJarTo)}vnđ</Text>
+                            Hạn mức lọ nhận: {moneyFormat(moneyInJarTo)}vnđ</Text>
                     </View>
                 }
                 <View style={styles.containerInputMoney}>

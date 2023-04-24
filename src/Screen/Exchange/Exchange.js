@@ -593,7 +593,7 @@ function Exchange({ navigation, route }) {
                     type == 2 &&
                     <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
-                            Số tiền chuyển không vượt quá tiền trong lọ {nameJar} :{moneyFormat(availableBalancesI)} vnđ</Text>
+                            Tiền khả dụng lọ gửi  {nameJar} :{moneyFormat(availableBalancesI)} vnđ</Text>
                     </View>
                 }
                 {
