@@ -9,6 +9,7 @@ import Wallet from '../Screen/Wallet/Wallet';
 import { AntDesign } from '@expo/vector-icons';
 import { Text } from 'react-native';
 import ExchangeOther from '../Screen/Exchange/ExchangeOther';
+import NewScreen from './New_Screen';
 const Tab = createBottomTabNavigator();
 const Tabs = ({ navigation }) => {
     return (
@@ -43,10 +44,10 @@ const Tabs = ({ navigation }) => {
                 title: "Thêm giao dịch",headerTitleAlign:'center'
 
             }} />
-            <Tab.Screen name='ExchangeOther' component={ExchangeOther} options={{
+            <Tab.Screen name='ExchangeOther' component={NewScreen} options={{
                 tabBarIcon: ({ focused }) => (
                     <Image source={require('../../assets/icons/transaction.png')} resizeMode="contain" style={{ width: 22, height: 22, tintColor: focused ? '#000' : '#748c94' }} />
-                ), title: "Giao dịch ước mơ, nợ",headerTitleAlign:'center'
+                ), title: " ",headerTitleAlign:'center'
             }} />
             <Tab.Screen name='Settings' component={Account} options={{
                 tabBarIcon: ({ focused }) => (

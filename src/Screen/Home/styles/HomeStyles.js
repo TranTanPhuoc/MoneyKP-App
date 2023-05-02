@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     containerListJarItem_Item: {
-        height: 90,
+        height: 70,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',

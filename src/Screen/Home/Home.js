@@ -196,7 +196,7 @@ function Home({ navigation }) {
                                                 createDate: now,
                                                 moneyTransaction: parseFloat(dataListJar[index].availableBalances),
                                                 type: 1,
-                                                note: `Tiền dư của lọ ${item.name} tháng cũ sang tháng mới`,
+                                                note: `Tiền dư của lọ ${item.name} tháng ${now.getMonth() - 1}`,
                                                 typeBasket: 1,
                                                 nameBasket: item.name
                                             },
@@ -216,7 +216,7 @@ function Home({ navigation }) {
                                                 createDate: now,
                                                 moneyTransaction: parseFloat(dataListJar[index].availableBalances),
                                                 type: -1,
-                                                note: `Tiền thiếu của lọ ${item.name} tháng cũ sang tháng mới`,
+                                                note: `Tiền thiếu của lọ ${item.name} tháng ${now.getMonth() - 1}`,
                                                 typeBasket: 1,
                                                 nameBasket: item.name
                                             },
@@ -416,7 +416,6 @@ function Home({ navigation }) {
             setsession('Chào buổi khuya!');
         }
     }, [vietnamTime.hour()]);
-    const [modalVisible, setModalVisible] = useState(false);
     return (
         <>
             {loading &&
@@ -504,7 +503,6 @@ function Home({ navigation }) {
                                             <Text style={{ color: '#000', fontSize: 16, marginTop: 10, marginLeft: 10, marginRight: 10, }}>{moneyFormat(item.price)}</Text>
                                         </View>
                                     </View>
-
                                 })
                             }
                         </ScrollView>
@@ -580,20 +578,15 @@ function Home({ navigation }) {
                                                 <View style={{ flex: 0.7, height: "100%", justifyContent: 'center' }}>
                                                     <View style={{ flex: 0.3333, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                                                         <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
-                                                        <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.totalIncome)}</Text>
-                                                    </View>
-                                                    <View style={{ flex: 0.3333, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
-                                                        <Text style={{ color: '#000', fontSize: 16, }}>Khả dụng</Text>
-                                                        <Text style={{ color: '#000', fontSize: 16, }}>{(item.totalIncome == 0 && item.totalSpending == 0) ? 0 : ((item.totalIncome - item.totalSpending) / item.totalIncome * 100).toFixed(2)} %</Text>
-                                                    </View>
-                                                    <View style={{ flex: 0.3333, alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                        <Text style={{ color: '#000', fontSize: 16, }}>Tiền khả dụng: </Text>
                                                         {
                                                             item.availableBalances >= 0 ?
                                                                 <Text style={{ color: '#339900', fontSize: 16, }}>{moneyFormat(item.availableBalances)}</Text>
                                                                 : <Text style={{ color: 'red', fontSize: 16, }}>{moneyFormat(item.availableBalances)}</Text>
                                                         }
-
+                                                    </View>
+                                                    <View style={{ flex: 0.3333, justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
+                                                        <Text style={{ color: '#000', fontSize: 16, }}>Khả dụng</Text>
+                                                        <Text style={{ color: '#000', fontSize: 16, }}>{(item.totalIncome == 0 && item.totalSpending == 0) ? 0 : (item.totalIncome == 0 && item.totalSpending != 0) ? ((item.totalIncome - item.totalSpending) / item.totalSpending * 100).toFixed(2) : ((item.totalIncome - item.totalSpending) / item.totalIncome * 100).toFixed(2)} %</Text>
                                                     </View>
                                                 </View>
                                                 <View style={{ flex: 0.1, height: "100%", justifyContent: 'center', alignItems: 'center' }}>
@@ -724,22 +717,17 @@ function Home({ navigation }) {
                                     paddingLeft='10'
                                 />
                             </View>
-                            {
-                                now.getMonth() + 1 == month ?
-                                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                        <TouchableOpacity onPress={() => {
-                                            navigation.navigate("SetPercentJar", {
-                                                month: month,
-                                                year: year
-                                            });
-                                        }} style={styles.buttonStyle}>
-                                            <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Cập nhật, Thêm lọ</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                    :
-                                    <View>
-                                    </View>
-                            }
+
+                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <TouchableOpacity onPress={() => {
+                                    navigation.navigate("SetPercentJar", {
+                                        month: month,
+                                        year: year
+                                    });
+                                }} style={styles.buttonStyle}>
+                                    <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Cập nhật, Thêm lọ</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                         <View style={{ marginTop: 20, }}></View>
                     </ScrollView>

@@ -349,7 +349,7 @@ function Exchange({ navigation, route }) {
                 }
                 if (type == -1) {
                     const spending = parseInt(totalSpending) + parseInt(money);
-                    if (availableBalancesI > 0 && availableBalancesI - parseInt(money) < 0) {
+                    if (availableBalancesI == 0 && availableBalancesI - parseInt(money) < 0) {
                         Alert.alert("Thông báo", "Số tiền chi tiêu vượt quá số tiền khả dụng\nBạn có muốn tiếp tục chi tiêu", [
                             { text: "Thoát", onPress: () => { }, style: 'cancel' },
                             {
