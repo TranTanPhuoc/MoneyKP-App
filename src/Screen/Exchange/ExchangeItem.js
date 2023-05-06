@@ -607,7 +607,7 @@ function ExchangeItem({ navigation, route }) {
                     </TouchableOpacity>
                 </View>
                 {
-                    type == 2 &&
+                    (type == 2 || type == -1) &&
                     <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>
                             Tiền khả dụng lọ gửi  {nameJar} :{moneyFormat(availableBalancesI)} vnđ</Text>

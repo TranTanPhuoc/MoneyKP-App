@@ -54,7 +54,7 @@ function Home({ navigation }) {
             },
         ],
     });
-
+    const [moneyTransaction, setmoneyTransaction] = useState(0);
     const [loading, setisLoading] = useState(false);
 
     // const onDateChange = (date) => {
@@ -104,11 +104,11 @@ function Home({ navigation }) {
     useEffect(() => {
         setdataIncomeAndSpending(
             [
-                { id: 1, name: 'Thu nhập', price: totalIncome, color: '#03fc41', icon: require('../../../assets/icons/add.png') },
-                { id: 2, name: 'Chi tiêu', price: totalSpending, color: '#fc3030', icon: require('../../../assets/icons/minus.png') },
+                { id: 1, name: 'Thu nhập', price: totalIncome -moneyTransaction, color: '#03fc41', icon: require('../../../assets/icons/add.png') },
+                { id: 2, name: 'Chi tiêu', price: totalSpending-moneyTransaction, color: '#fc3030', icon: require('../../../assets/icons/minus.png') },
             ]
         )
-    }, [totalIncome, totalSpending]);
+    }, [totalIncome, totalSpending,moneyTransaction]);
 
     useEffect(() => {
         setisLoading(true);
@@ -117,153 +117,167 @@ function Home({ navigation }) {
             yearNumber: parseInt(year)
         }, {
             headers: { authorization: accessToken },
+        }).then((res) => {
+            if (res.data.length == 0 && now > selectedDate) {
+                Alert.alert("Thông báo", "Dữ liệu không tồn tại");
+                setSelectedDate(now);
+                setMonth(now.getMonth() + 1);
+                setYear(now.getFullYear());
+                setisLoading(false);
+            }
+            else if (res.data.length == 0) {
+                if (month == 1) {
+                    axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
+                        monthNumber: 12,
+                        yearNumber: parseInt(year - 1)
+                    }, {
+                        headers: { authorization: accessToken },
+                    }).then((res) => {
+                        const dataListJar = res.data.map((item, index) => {
+                            var obj;
+                            if (item.availableBalances >= 0) {
+                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: item.availableBalances, type: 1, monthNumber: month, yearNumber: year };
+                            }
+                            else {
+                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: item.availableBalances, totalIncome: 0, type: 1, monthNumber: month, yearNumber: year };
+                            }
+                            return obj;
+                        });
+                        axios({
+                            url: 'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
+                            method: 'POST',
+                            headers: {
+                                authorization: accessToken
+                            },
+                            data: dataListJar
+                        }).then((res) => {
+                            setisLoading(false);
+                            dispatch(reload_IU(idReload + 1));
+                        }).catch((err) => {
+                            console.log(err);
+                        });
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+                }
+                else {
+                    axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
+                        monthNumber: parseInt(month - 1),
+                        yearNumber: parseInt(year)
+                    }, {
+                        headers: { authorization: accessToken },
+                    }).then((res) => {
+                        const dataListJar = res.data.map((item, index) => {
+                            var obj;
+                            if (item.availableBalances >= 0) {
+                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: item.availableBalances, type: 1, monthNumber: month, yearNumber: year };
+                            }
+                            else {
+                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: item.availableBalances, totalIncome: 0, type: 1, monthNumber: month, yearNumber: year };
+                            }
+                            return obj;
+                        });
+
+                        axios({
+                            url: 'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
+                            method: 'POST',
+                            headers: {
+                                authorization: accessToken
+                            },
+                            data: dataListJar
+                        })
+                            .then((res2) => {
+                                // res2.data.map((item, index) => {
+                                //     if (item.availableBalances > 0) {
+                                //         axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
+                                //             {
+                                //                 userId: idUser,
+                                //                 basketId: item.id,
+                                //                 createDate: now,
+                                //                 moneyTransaction: parseFloat(dataListJar[index].availableBalances),
+                                //                 type: 1,
+                                //                 note: `Tiền dư của lọ ${item.name} tháng ${now.getMonth() - 1}`,
+                                //                 typeBasket: 1,
+                                //                 nameBasket: item.name
+                                //             },
+                                //             {
+                                //                 headers: {
+                                //                     authorization: accessToken
+                                //                 }
+                                //             }).then((res3) => {
+                                //                 return;
+                                //             })
+                                //     }
+                                //     else if (item.availableBalances < 0) {
+                                //         axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
+                                //             {
+                                //                 userId: idUser,
+                                //                 basketId: item.id,
+                                //                 createDate: now,
+                                //                 moneyTransaction: parseFloat(dataListJar[index].availableBalances),
+                                //                 type: -1,
+                                //                 note: `Tiền thiếu của lọ ${item.name} tháng ${now.getMonth() - 1}`,
+                                //                 typeBasket: 1,
+                                //                 nameBasket: item.name
+                                //             },
+                                //             {
+                                //                 headers: {
+                                //                     authorization: accessToken
+                                //                 }
+                                //             }).then((res3) => {
+                                //                 return;
+                                //             })
+                                //     }
+                                //     return;
+
+                                // });
+                                setisLoading(false);
+                                dispatch(reload_IU(idReload + 1));
+                            }).catch((err) => {
+                                console.log(err);
+                            });
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+                }
+
+            }
+            if (res.data.length != 0) {
+                setdataListJar(res.data);
+                setdataPieChart(res.data.map((item, index) => {
+                    let randomColor = colorJar[index]
+                    var obj = { id: item.id, name: item.name, population: item.precent, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
+                    return obj;
+                }));
+                var totalIncomeItem = 0;
+                var totalSpendingItem = 0;
+                res.data.map((item) => {
+                    totalIncomeItem += item.totalIncome;
+                })
+                settotalIncome(totalIncomeItem);
+                res.data.map((item) => {
+                    totalSpendingItem += item.totalSpending
+                })
+                settotalSpending(totalSpendingItem);
+                axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction/get-value-toltal-income-tranferMoney`, {
+                    userId: idUser,
+                    month: parseInt(month),
+                    year: parseInt(year),
+                    typeBasket: 1,
+                    pageSize: 1000,
+                    pageNumber: 0
+                }, {
+                    headers: { authorization: accessToken },
+                }).then((res) => {
+                    setmoneyTransaction(parseInt(res.data));
+                }).catch((err) => {
+                    console.log(err);
+                })
+                setisLoading(false);
+            }
+        }).catch((err) => {
+            console.log(err);
         })
-            .then((res) => {
-                if (res.data.length == 0 && now > selectedDate) {
-                    Alert.alert("Thông báo", "Dữ liệu không tồn tại");
-                    setSelectedDate(now);
-                    setMonth(now.getMonth() + 1);
-                    setYear(now.getFullYear());
-                    setisLoading(false);
-                }
-                else if (res.data.length == 0) {
-                    if (month == 1) {
-                        axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
-                            monthNumber: 12,
-                            yearNumber: parseInt(year - 1)
-                        }, {
-                            headers: { authorization: accessToken },
-                        }).then((res) => {
-                            const dataListJar = res.data.map((item, index) => {
-                                var obj;
-                                if (item.availableBalances >= 0) {
-                                    var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: item.availableBalances, type: 1, monthNumber: month, yearNumber: year };
-                                }
-                                else {
-                                    var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: item.availableBalances, totalIncome: 0, type: 1, monthNumber: month, yearNumber: year };
-                                }
-                                return obj;
-                            });
-                            axios({
-                                url: 'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
-                                method: 'POST',
-                                headers: {
-                                    authorization: accessToken
-                                },
-                                data: dataListJar
-                            }).then((res) => {
-                                setisLoading(false);
-                                dispatch(reload_IU(idReload + 1));
-                            }).catch((err) => {
-                                console.log(err);
-                            });
-                        }).catch((err) => {
-                            console.log(err);
-                        })
-                    }
-                    else {
-                        axios.post(`http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/get-all-by-userId-and-type-by-time/${idUser}/1`, {
-                            monthNumber: parseInt(month - 1),
-                            yearNumber: parseInt(year)
-                        }, {
-                            headers: { authorization: accessToken },
-                        }).then((res) => {
-                            const dataListJar = res.data.map((item, index) => {
-                                var obj;
-                                if (item.availableBalances >= 0) {
-                                    var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: item.availableBalances, type: 1, monthNumber: month, yearNumber: year };
-                                }
-                                else {
-                                    var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: item.availableBalances, totalIncome: 0, type: 1, monthNumber: month, yearNumber: year };
-                                }
-                                return obj;
-                            });
-
-                            axios({
-                                url: 'http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/basket/create-list-basket',
-                                method: 'POST',
-                                headers: {
-                                    authorization: accessToken
-                                },
-                                data: dataListJar
-                            }).then((res2) => {
-                                res2.data.map((item, index) => {
-                                    if (item.availableBalances > 0) {
-                                        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
-                                            {
-                                                userId: idUser,
-                                                basketId: item.id,
-                                                createDate: now,
-                                                moneyTransaction: parseFloat(dataListJar[index].availableBalances),
-                                                type: 1,
-                                                note: `Tiền dư của lọ ${item.name} tháng ${now.getMonth() - 1}`,
-                                                typeBasket: 1,
-                                                nameBasket: item.name
-                                            },
-                                            {
-                                                headers: {
-                                                    authorization: accessToken
-                                                }
-                                            }).then((res3) => {
-                                                return;
-                                            })
-                                    }
-                                    else if (item.availableBalances < 0) {
-                                        axios.post('http://ec2-54-250-86-78.ap-northeast-1.compute.amazonaws.com:8080/api/transaction',
-                                            {
-                                                userId: idUser,
-                                                basketId: item.id,
-                                                createDate: now,
-                                                moneyTransaction: parseFloat(dataListJar[index].availableBalances),
-                                                type: -1,
-                                                note: `Tiền thiếu của lọ ${item.name} tháng ${now.getMonth() - 1}`,
-                                                typeBasket: 1,
-                                                nameBasket: item.name
-                                            },
-                                            {
-                                                headers: {
-                                                    authorization: accessToken
-                                                }
-                                            }).then((res3) => {
-                                                return;
-                                            })
-                                    }
-                                    return;
-
-                                });
-                                setisLoading(false);
-                                dispatch(reload_IU(idReload + 1));
-                            }).catch((err) => {
-                                console.log(err);
-                            });
-                        }).catch((err) => {
-                            console.log(err);
-                        })
-                    }
-
-                }
-                if (res.data.length != 0) {
-                    setdataListJar(res.data);
-                    setdataPieChart(res.data.map((item, index) => {
-                        let randomColor = colorJar[index]
-                        var obj = { id: item.id, name: item.name, population: item.precent, color: randomColor, legendFontColor: '#000', legendFontSize: 15 };
-                        return obj;
-                    }));
-                    var totalIncomeItem = 0;
-                    var totalSpendingItem = 0;
-                    res.data.map((item) => {
-                        totalIncomeItem += item.totalIncome;
-                    })
-                    settotalIncome(totalIncomeItem);
-                    res.data.map((item) => {
-                        totalSpendingItem += item.totalSpending
-                    })
-                    settotalSpending(totalSpendingItem);
-                    setisLoading(false);
-                }
-            }).catch((err) => {
-                console.log(err);
-            })
     }, [idReload, month, year]);
     useEffect(() => {
         setisLoading(true);
