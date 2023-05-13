@@ -252,6 +252,10 @@ function ExchangeOtherItem({ navigation, route }) {
             Alert.alert("Thông báo", mess);
         }
         if (money > 0 && noteGD != "" && dateGD != "" && now.getMonth() + 1 == dateGD.getMonth() + 1) {
+            var dateCheck = dateGD;
+            if(dateGD.getMonth() == now.getMonth() && dateGD.getFullYear() == now.getFullYear()){
+                dateCheck = new Date();
+            }
             if (type != 2) {
                 if (type == 1) {
                     if (availableBalancesI + parseInt(money) > moneyPurpose) {
@@ -262,7 +266,7 @@ function ExchangeOtherItem({ navigation, route }) {
                             {
                                 userId: idUser,
                                 basketId: idJar,
-                                createDate: dateGD,
+                                createDate: dateCheck,
                                 moneyTransaction: parseFloat(money),
                                 type: type,
                                 note: noteGD,
@@ -354,7 +358,7 @@ function ExchangeOtherItem({ navigation, route }) {
                         {
                             userId: idUser,
                             basketId: idJar,
-                            createDate: dateGD,
+                            createDate: dateCheck,
                             moneyTransaction: parseFloat(money),
                             type: type,
                             note: noteGD,
@@ -433,7 +437,7 @@ function ExchangeOtherItem({ navigation, route }) {
                                 sentBasketId: idJar,
                                 receiveBasketId: idJarTo,
                                 money: parseFloat(money),
-                                createdDate: dateGD,
+                                createdDate: dateCheck,
                                 note: noteGD
                             },
                             {
@@ -631,13 +635,14 @@ function ExchangeOtherItem({ navigation, route }) {
                                 arr.map((x) => {
                                     moneyG += x;
                                 });
-                                if (moneyG > 10000000001) {
-                                    Alert.alert("Lỗi", `Không nhập quá 10 tỷ`)
+                                if (parseInt(moneyG) > 1000000000) {
+                                    Alert.alert("Lỗi", `Không nhập quá 1 tỷ`)
+                                    setMoney(0);
+                                    return;
                                 }
-                                setMoney(moneyG);
-                            }
-                            else {
-                                setMoney(x)
+                                else{
+                                    setMoney(moneyG);
+                                }
                             }
 
                         }} placeholder="0" placeholderTextColor={'#000'} style={{ fontSize: 30, flex: 1, }}>{moneyR}</TextInput>

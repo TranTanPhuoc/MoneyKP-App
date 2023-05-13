@@ -37,17 +37,17 @@ function Wallet({ navigation }) {
     const [totalSpending, settotalSpending] = useState(5);
     const [dataDS, setdataDS] = useState([
         // { id: 4, name: "Tài sản", money: 0 },
-        { id: 3, name: "Mơ ước", money: 0 },
         { id: 1, name: "6 Lọ", money: 0 },
-        // { id: 2, name: "Nợ", money: 0 },
+        { id: 3, name: "Mơ ước", money: 0 },
+        { id: 2, name: "Nợ", money: 0 },
     ]);
     // Data biểu đồ tròn
     const [total, settotal] = useState(0);
     const [dataPieChart, setdataPieChart] = useState([
         // { id: 1, name: "Tài sản", population: 25, color: colorJar[0], legendFontColor: '#000', legendFontSize: 15 },
-        { id: 2, name: "Mơ ước", population: 25, color: colorJar[1], legendFontColor: '#000', legendFontSize: 15 },
         { id: 3, name: "6 Lọ", population: 25, color: colorJar[2], legendFontColor: '#000', legendFontSize: 15 },
-        // { id: 4, name: "Nợ", population: 25, color: colorJar[3], legendFontColor: '#000', legendFontSize: 15 },
+        { id: 2, name: "Mơ ước", population: 25, color: colorJar[1], legendFontColor: '#000', legendFontSize: 15 },
+        { id: 4, name: "Nợ", population: 25, color: colorJar[3], legendFontColor: '#000', legendFontSize: 15 },
     ]);
     const dataLineChart = {
         labels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4', 'Tuần 5'],
@@ -128,8 +128,9 @@ function Wallet({ navigation }) {
                 })
                 setdataDS(
                     [
-                        { id: 3, name: "Mơ ước", money: listdata[1] },
                         { id: 1, name: "6 Lọ", money: listdata[2] },
+                        { id: 3, name: "Mơ ước", money: listdata[1] },
+                        { id: 2, name: "Nợ", money: listdata[3] },
                     ]
                 );
                 const totalMoney = parseInt(listdata[0]) + parseInt(listdata[1]) + parseInt(listdata[2]) + parseInt(listdata[3]) 
@@ -150,10 +151,11 @@ function Wallet({ navigation }) {
                     precent4 =  parseInt(listdata[3])/ totalMoney * 100;
                 }
                 setdataPieChart([
-                    { id: 2, name: "Mơ ước", population: precent2, color: colorJar[1], legendFontColor: '#000', legendFontSize: 15 },
                     { id: 3, name: "6 Lọ", population: precent3, color: colorJar[2], legendFontColor: '#000', legendFontSize: 15 },
+                    { id: 2, name: "Mơ ước", population: precent2, color: colorJar[1], legendFontColor: '#000', legendFontSize: 15 },
+                    { id: 4, name: "Nợ", population: precent4, color: colorJar[3], legendFontColor: '#000', legendFontSize: 15 },
                 ]);
-                settotal(parseInt(listdata[0]) + parseInt(listdata[1]) + parseInt(listdata[2]));
+                settotal(parseInt(listdata[0]) + parseInt(listdata[1]) + parseInt(listdata[2]) +  parseInt(listdata[3]));
             }).catch((err) => {
                 console.log(err);
             });
@@ -185,7 +187,7 @@ function Wallet({ navigation }) {
                             dataDS.map((item, index) => {
                                 return (
                                     <TouchableOpacity onPress={() => {
-                                        (index == 1) ?
+                                        (index == 0) ?
                                             navigation.goBack()
                                             :
                                             navigation.navigate("DetailOther", { name: item.name, id: item.id, money: item.money });

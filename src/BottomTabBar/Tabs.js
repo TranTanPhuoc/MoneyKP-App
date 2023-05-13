@@ -44,10 +44,10 @@ const Tabs = ({ navigation }) => {
                 title: "Thêm giao dịch",headerTitleAlign:'center'
 
             }} />
-            <Tab.Screen name='ExchangeOther' component={NewScreen} options={{
+            <Tab.Screen name='ExchangeOther' component={ExchangeOther} options={{
                 tabBarIcon: ({ focused }) => (
                     <Image source={require('../../assets/icons/transaction.png')} resizeMode="contain" style={{ width: 22, height: 22, tintColor: focused ? '#000' : '#748c94' }} />
-                ), title: " ",headerTitleAlign:'center'
+                ), title: "Giao dịch ước mơ, nợ",headerTitleAlign:'center'
             }} />
             <Tab.Screen name='Settings' component={Account} options={{
                 tabBarIcon: ({ focused }) => (

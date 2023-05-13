@@ -552,7 +552,7 @@ function Home({ navigation }) {
                                 }}
                                 buttonStyle={styles.containerSelectDropDown}
                             />
-                            <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 10, }}>, năm : </Text>
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 10, }}> Năm : </Text>
                             <SelectDropdown
                                 data={dataYear}
                                 defaultButtonText={year}
