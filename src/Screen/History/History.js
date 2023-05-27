@@ -15,6 +15,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 
 function History({ navigation, route }) {
     const { id, name, year, month, typeBasket } = route.params;
+    console.log(typeBasket);
     const [idJar, setIdJar] = useState(id);
     const [monthR, setMonth] = useState(month);
     const [dataMonth, setDataMonth] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
@@ -119,7 +120,7 @@ function History({ navigation, route }) {
                     setvaluesDefautJar("Chọn lọ");
                 });
         }
-    }, [idReload])
+    }, [idReload, monthR, yearR])
     return (
         <SafeAreaView style={styles.container} >
             <View style={styles.containerheader}>
@@ -140,52 +141,106 @@ function History({ navigation, route }) {
                 </View>
             </View>
             <View style={styles.viewBody}>
-                <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, alignItems: 'center', marginLeft: 10, marginRight: 10 }}>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Tháng: </Text>
-                    <SelectDropdown
-                        data={dataMonth}
-                        defaultButtonText={monthR}
-                        buttonTextStyle={{ fontSize: 16, }}
-                        onSelect={(selectedItem, index) => {
-                            const newDate = new Date(year, parseInt(selectedItem) - 1, 2);
-                            setSelectedDate(newDate);
-                            setMonth(parseInt(selectedItem));
-                        }}
-                        renderDropdownIcon={isOpened => {
-                            return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
-                        }}
-                        renderCustomizedButtonChild={value => {
-                            return (
-                                <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
-                                    <Text style={{ fontSize: 16 }}>{monthR}</Text>
-                                </View>
-                            );
-                        }}
-                        buttonStyle={styles.containerSelectDropDown}
-                    />
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 10, }}> Năm : </Text>
-                    <SelectDropdown
-                        data={dataYear}
-                        defaultButtonText={yearR}
-                        buttonTextStyle={{ fontSize: 16, }}
-                        onSelect={(selectedItem, index) => {
-                            const newDate = new Date(parseInt(selectedItem), month, 2);
-                            setSelectedDate(newDate);
-                            setYear(parseInt(selectedItem));
-                        }}
-                        renderDropdownIcon={isOpened => {
-                            return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
-                        }}
-                        renderCustomizedButtonChild={value => {
-                            return (
-                                <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
-                                    <Text style={{ fontSize: 16 }}>{yearR}</Text>
-                                </View>
-                            );
-                        }}
-                        buttonStyle={styles.containerSelectDropDown}
-                    />
-                </View>
+                {
+                    id == null && typeBasket == 1 &&
+                    <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, alignItems: 'center', marginLeft: 10, marginRight: 10 }}>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Tháng: </Text>
+                        <SelectDropdown
+                            data={dataMonth}
+                            defaultButtonText={monthR}
+                            buttonTextStyle={{ fontSize: 16, }}
+                            onSelect={(selectedItem, index) => {
+                                const newDate = new Date(year, parseInt(selectedItem) - 1, 2);
+                                setSelectedDate(newDate);
+                                setMonth(parseInt(selectedItem));
+                                setIdJar(null);
+                            }}
+                            renderDropdownIcon={isOpened => {
+                                return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
+                            }}
+                            renderCustomizedButtonChild={value => {
+                                return (
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
+                                        <Text style={{ fontSize: 16 }}>{monthR}</Text>
+                                    </View>
+                                );
+                            }}
+                            buttonStyle={styles.containerSelectDropDown}
+                        />
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 10, }}> Năm : </Text>
+                        <SelectDropdown
+                            data={dataYear}
+                            defaultButtonText={yearR}
+                            buttonTextStyle={{ fontSize: 16, }}
+                            onSelect={(selectedItem, index) => {
+                                const newDate = new Date(parseInt(selectedItem), month, 2);
+                                setSelectedDate(newDate);
+                                setYear(parseInt(selectedItem));
+                                setIdJar(null);
+                            }}
+                            renderDropdownIcon={isOpened => {
+                                return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
+                            }}
+                            renderCustomizedButtonChild={value => {
+                                return (
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
+                                        <Text style={{ fontSize: 16 }}>{yearR}</Text>
+                                    </View>
+                                );
+                            }}
+                            buttonStyle={styles.containerSelectDropDown}
+                        />
+                    </View>
+                }
+                {
+                    id != null && typeBasket != 1 &&
+                    <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, alignItems: 'center', marginLeft: 10, marginRight: 10 }}>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Tháng: </Text>
+                        <SelectDropdown
+                            data={dataMonth}
+                            defaultButtonText={monthR}
+                            buttonTextStyle={{ fontSize: 16, }}
+                            onSelect={(selectedItem, index) => {
+                                const newDate = new Date(year, parseInt(selectedItem) - 1, 2);
+                                setSelectedDate(newDate);
+                                setMonth(parseInt(selectedItem));
+                            }}
+                            renderDropdownIcon={isOpened => {
+                                return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
+                            }}
+                            renderCustomizedButtonChild={value => {
+                                return (
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
+                                        <Text style={{ fontSize: 16 }}>{monthR}</Text>
+                                    </View>
+                                );
+                            }}
+                            buttonStyle={styles.containerSelectDropDown}
+                        />
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 10, }}> Năm : </Text>
+                        <SelectDropdown
+                            data={dataYear}
+                            defaultButtonText={yearR}
+                            buttonTextStyle={{ fontSize: 16, }}
+                            onSelect={(selectedItem, index) => {
+                                const newDate = new Date(parseInt(selectedItem), month, 2);
+                                setSelectedDate(newDate);
+                                setYear(parseInt(selectedItem));
+                            }}
+                            renderDropdownIcon={isOpened => {
+                                return <AntDesign name={isOpened ? 'down' : 'right'} color={'black'} size={16} />;
+                            }}
+                            renderCustomizedButtonChild={value => {
+                                return (
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', display: 'flex', justifyContent: "center" }}>
+                                        <Text style={{ fontSize: 16 }}>{yearR}</Text>
+                                    </View>
+                                );
+                            }}
+                            buttonStyle={styles.containerSelectDropDown}
+                        />
+                    </View>
+                }
                 <View style={styles.containerItem}>
                     <SelectDropdown
                         data={dataTK}

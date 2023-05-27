@@ -188,11 +188,11 @@ function SetPercentJar({ navigation,route }) {
                         accessor="population"
                     />
                 </View>
-                <View style={styles.containerButton}>
+                {/* <View style={styles.containerButton}>
                     <TouchableOpacity onPress={hanldhanldAddJar} style={styles.buttonStyle}>
                         <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Thêm lọ mới</Text>
                     </TouchableOpacity>
-                </View>
+                </View> */}
             </View>
             <ScrollView style={styles.scrollView}>
                 {data.map((item, index) => {
@@ -209,12 +209,12 @@ function SetPercentJar({ navigation,route }) {
                                         {item.population}
                                     </TextInput>
                                 </View>
-                                {
+                                {/* {
                                     (index == 0) ? <View style={{ flex: 0.2, alignItems: 'center' }} /> :
                                         <TouchableOpacity onPress={() => deleteItem(item)} style={{ flex: 0.25, alignItems: 'center' }}>
                                             <Feather name="x" size={24} color="red" />
                                         </TouchableOpacity>
-                                }
+                                } */}
 
                             </View>
                         </View>

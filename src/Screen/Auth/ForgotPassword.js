@@ -83,7 +83,7 @@ function ForgotPassword() {
                     </View>
                     <View style={styles.containerFooter}>
                         <View style={{ justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'row', }}>
-                            <TouchableOpacity style={{ height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 20, backgroundColor: "#DCDCDC" }} >
+                            {/* <TouchableOpacity style={{ height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 20, backgroundColor: "#DCDCDC" }} >
                                 <Image source={require('../../../assets/icons/google.png')} />
                             </TouchableOpacity>
                             <View style={{ marginRight: 20, }}></View>
@@ -93,7 +93,7 @@ function ForgotPassword() {
                             <View style={{ marginRight: 20, }}></View>
                             <TouchableOpacity style={{ height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 20, backgroundColor: "#DCDCDC" }} >
                                 <Image source={require('../../../assets/icons/twitter.png')} />
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'row', marginTop: 20, }}>
                             <Text style={{ fontSize: 16, marginRight: 10, }}>Chưa có tài khoản?</Text>

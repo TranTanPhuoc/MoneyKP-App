@@ -56,6 +56,8 @@ const styles = StyleSheet.create({
     paddingBottom:15
   },
   bodyView:{
+    justifyContent:'center',
+    alignItems:'center',
     height:300,
     marginTop:10,
     marginLeft:10,

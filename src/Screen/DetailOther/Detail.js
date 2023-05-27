@@ -137,7 +137,7 @@ function Detail({ navigation, route }) {
             {
                 type: -1,
                 userId: idUser,
-                basketId: id,
+                basketId: idJar,
                 year: year,
                 month: month,
                 typeBasket: 1,
@@ -149,6 +149,7 @@ function Detail({ navigation, route }) {
                     authorization: accessToken
                 }
             }).then((res) => {
+                console.log(res.data);
                 setdatasets2(
                     res.data.map((item) => {
                         return parseInt(item);

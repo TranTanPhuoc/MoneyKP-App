@@ -136,10 +136,10 @@ function Home({ navigation }) {
                         const dataListJar = res.data.map((item, index) => {
                             var obj;
                             if (item.availableBalances >= 0) {
-                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: item.availableBalances, type: 1, monthNumber: month, yearNumber: year };
+                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: 0, type: 1, monthNumber: month, yearNumber: year };
                             }
                             else {
-                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: item.availableBalances, totalIncome: 0, type: 1, monthNumber: month, yearNumber: year };
+                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: 0, type: 1, monthNumber: month, yearNumber: year };
                             }
                             return obj;
                         });
@@ -170,10 +170,10 @@ function Home({ navigation }) {
                         const dataListJar = res.data.map((item, index) => {
                             var obj;
                             if (item.availableBalances >= 0) {
-                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: item.availableBalances, type: 1, monthNumber: month, yearNumber: year };
+                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: 0, type: 1, monthNumber: month, yearNumber: year };
                             }
                             else {
-                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: item.availableBalances, totalIncome: 0, type: 1, monthNumber: month, yearNumber: year };
+                                var obj = { userId: item.userId, name: item.name, precent: item.precent, availableBalances: item.availableBalances, totalSpending: 0, totalIncome: 0, type: 1, monthNumber: month, yearNumber: year };
                             }
                             return obj;
                         });
